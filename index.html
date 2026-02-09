@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECHA STUDIO+ | Home in a Pocket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script>
+        /**
+         * Global image error handler defined in head to prevent ReferenceErrors 
+         * when images fail before the bottom scripts are parsed.
+         */
+        function handleImgError(img) {
+            const parent = img.parentElement;
+            if (!parent) return;
+            img.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'w-full h-full bg-[#1A1A1A] flex flex-col items-center justify-center text-white/10 p-8 text-center min-h-[250px]';
+            placeholder.innerHTML = `
+                <i class="fas fa-drafting-compass text-3xl mb-4"></i>
+                <div class="text-[8px] uppercase tracking-[0.4em] font-bold">SECHA STUDIO+<br>CURATED SPACE</div>
+            `;
+            parent.appendChild(placeholder);
+        }
+    </script>
+    <style>
+        :root {
+            --brand-gold: #C5A059;
+            --brand-dark: #111111;
+            --brand-light: #FBFBF9;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--brand-light);
+            color: var(--brand-dark);
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, .studio-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(251, 251, 249, 0.92), rgba(251, 251, 249, 0.8)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+        .nav-blur {
+            backdrop-filter: blur(12px);
+            background-color: rgba(251, 251, 249, 0.85);
+        }
+        .lang-active {
+            color: var(--brand-gold);
+            font-weight: 700;
+            border-bottom: 2px solid var(--brand-gold);
+        }
+        .section-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .section-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .editorial-line {
+            width: 0;
+            height: 1px;
+            background-color: var(--brand-dark);
+            transition: width 1.5s ease;
+        }
+        .visible .editorial-line {
+            width: 60px;
+        }
+        .btn-hover-grow {
+            transition: all 0.4s ease;
+        }
+        .btn-hover-grow:hover {
+            letter-spacing: 0.15em;
+            background-color: var(--brand-gold);
+            color: white;
+        }
+        .bg-studio-dark {
+            background-color: #111111;
+        }
+        .chapter-card {
+            background: white;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .chapter-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.12);
+        }
+        .img-zoom {
+            transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .chapter-card:hover .img-zoom {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 nav-blur border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
+            <div class="flex flex-col">
+                <div class="text-xl font-bold tracking-tighter text-gray-900">
+                    SECHA<span class="text-[#C5A059]">STUDIO+</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex space-x-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                <a href="#prologue" data-lang-en="The Story" data-lang-id="Cerita Kami" class="hover:text-black transition">The Story</a>
+                <a href="#collections" data-lang-en="Collections" data-lang-id="Koleksi" class="hover:text-black transition">Collections</a>
+                <a href="#calculator" data-lang-en="Estimate" data-lang-id="Estimasi" class="hover:text-black transition">Estimate</a>
+            </div>
+
+            <div class="flex items-center space-x-4 sm:space-x-8">
+                <div class="flex items-center space-x-2 text-[9px] font-bold uppercase tracking-widest border-r border-gray-200 pr-4 sm:pr-8">
+                    <button onclick="setLanguage('en')" id="lang-en" class="transition-all hover:text-[#C5A059]">EN</button>
+                    <span class="text-gray-300">/</span>
+                    <button onclick="setLanguage('id')" id="lang-id" class="lang-active transition-all hover:text-[#C5A059]">ID</button>
+                </div>
+                <a href="#contact" class="text-[10px] font-bold uppercase tracking-[0.2em] border border-black px-4 sm:px-6 py-3 hover:bg-black hover:text-white transition duration-500">
+                    <span data-lang-en="Inquire" data-lang-id="Hubungi">Hubungi</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[90vh] lg:min-h-screen flex items-center py-24 hero-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full grid lg:grid-cols-2 gap-12 items-center">
+            <div class="z-10">
+                <div class="mb-6 flex items-center space-x-4 section-reveal">
+                    <div class="editorial-line"></div>
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-400" data-lang-en="A New Way to Home" data-lang-id="Cara Baru Berhuni">Cara Baru Berhuni</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl mb-8 leading-[1.15] font-normal section-reveal">
+                    <span data-lang-en="Designer Living," data-lang-id="Hunian Berkelas,">Hunian Berkelas,</span><br>
+                    <span class="italic font-light" data-lang-en="tailored for your pocket." data-lang-id="dalam jangkauan saku.">dalam jangkauan saku.</span>
+                </h1>
+                <p class="text-gray-600 text-base md:text-lg mb-10 max-w-lg font-light leading-relaxed section-reveal">
+                    <span data-lang-en="We believe great design shouldn't be a luxury for the few. SECHA brings the soul of a high-end studio into a compact, affordable package." 
+                          data-lang-id="Kami percaya desain hebat bukan hanya milik segelintir orang. SECHA menghadirkan jiwa studio desain kelas atas ke dalam paket praktis yang terjangkau.">
+                        Kami percaya desain hebat bukan hanya milik segelintir orang. SECHA menghadirkan jiwa studio desain kelas atas ke dalam paket praktis yang terjangkau.
+                    </span>
+                </p>
+                <div class="flex flex-wrap gap-4 section-reveal">
+                    <a href="#collections" class="bg-black text-white px-8 py-5 text-[10px] font-bold uppercase tracking-[0.3em] btn-hover-grow shadow-lg">
+                        <span data-lang-en="Explore Collections" data-lang-id="Eksplor Koleksi">Eksplor Koleksi</span>
+                    </a>
+                </div>
+            </div>
+            <div class="relative hidden lg:block section-reveal">
+                <div class="aspect-square max-w-lg mx-auto bg-gray-200 overflow-hidden rounded-tl-[80px] shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1615876234886-fd9a39faa97f?auto=format&fit=crop&q=80&w=1200" alt="Intimate interior" class="w-full h-full object-cover transition-opacity duration-1000 opacity-0" onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100')" onerror="handleImgError(this)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Prologue -->
+    <section id="prologue" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="text-center mb-20 section-reveal">
+                <span class="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.5em] mb-4 block">PROLOGUE</span>
+                <h2 class="text-3xl md:text-5xl italic font-light leading-snug">
+                    <span data-lang-en="A house is built by hands," data-lang-id="Rumah dibangun oleh tangan,">Rumah dibangun oleh tangan,</span><br>
+                    <span class="font-bold text-gray-900" data-lang-en="but a home is shaped by heart." data-lang-id="namun hunian dibentuk oleh hati.">namun hunian dibentuk oleh hati.</span>
+                </h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-24 items-center section-reveal">
+                <p class="text-gray-500 text-base md:text-lg font-light leading-relaxed">
+                    <span data-lang-en="We created SECHA for those who just got their first keys, those who are building family sanctuaries, and those who want their soul reflected in every corner." 
+                          data-lang-id="Kami menciptakan SECHA untuk mereka yang baru saja menerima kunci pertama, mereka yang membangun tempat bernaung keluarga, dan mereka yang ingin jiwanya tercermin di setiap sudut.">
+                        Kami menciptakan SECHA untuk mereka yang baru saja menerima kunci pertama, mereka yang membangun tempat bernaung keluarga, dan mereka yang ingin jiwanya tercermin di setiap sudut.
+                    </span>
+                </p>
+                <div class="relative aspect-video lg:aspect-square bg-gray-100 rounded-sm overflow-hidden shadow-inner">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover grayscale opacity-80" alt="Moodboard" onerror="handleImgError(this)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section id="collections" class="bg-studio-dark text-white py-24 pb-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 section-reveal">
+                <div class="mb-6 md:mb-0">
+                    <div class="editorial-line bg-[#C5A059] mb-6"></div>
+                    <h2 class="text-4xl md:text-6xl font-light mb-4" data-lang-en="The Chapters" data-lang-id="Bab Koleksi">The Chapters</h2>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em]" data-lang-en="Curated paths to belonging" data-lang-id="Jalur kurasi untuk berhuni">Curated paths to belonging</p>
+                </div>
+                <div class="hidden md:block">
+                    <span class="text-[#C5A059] text-[10px] font-bold uppercase tracking-widest border-b border-[#C5A059] pb-2">Completed in 45 Days</span>
+                </div>
+            </div>
+
+            <!-- Grid: Responsive columns -->
+            <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
+                
+                <!-- Chapter 01: Essential -->
+                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 100ms;">
+                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Essential" onerror="handleImgError(this)">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">01 / Essential</div>
+                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 45M+</div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
+                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="The Studio Soul" data-lang-id="Jiwa Studio">The Studio Soul</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
+                            <span data-lang-en="Proof that you arrived. Our Essential collection celebrates independence—giving your first space the designer breath it deserves." 
+                                  data-lang-id="Bukti pencapaian Anda. Koleksi Essential kami merayakan kemandirian—memberikan sentuhan desainer pada ruang pertama Anda.">
+                                Bukti pencapaian Anda. Koleksi Essential kami merayakan kemandirian—memberikan sentuhan desainer pada ruang pertama Anda.
+                            </span>
+                        </p>
+                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
+                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chapter 02: Premium (Urban Haven) - Fixed reliable living room image -->
+                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 200ms;">
+                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Premium" onerror="handleImgError(this)">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">02 / Premium</div>
+                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 85M+</div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
+                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="Urban Haven" data-lang-id="Peraduan Urban">Urban Haven</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
+                            <span data-lang-en="A durable sanctuary for the growing family. Silence the city noise and let your family's laughter flourish." 
+                                  data-lang-id="Tempat bernaung bagi keluarga yang berkembang. Redam bising kota dan biarkan tawa keluarga Anda bersemi.">
+                                Tempat bernaung bagi keluarga yang berkembang. Redam bising kota dan biarkan tawa keluarga Anda bersemi.
+                            </span>
+                        </p>
+                        <button class="w-full py-3.5 bg-black text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#C5A059] transition duration-500 border border-black">
+                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chapter 03: Legacy (Heritage) -->
+                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 300ms;">
+                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Legacy" onerror="handleImgError(this)">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">03 / Heritage</div>
+                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 150M+</div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
+                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="The Legacy Home" data-lang-id="Rumah Warisan">The Legacy Home</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
+                            <span data-lang-en="Timeless elegance that spans generations. Designed for large estates where quality is a statement of enduring cultural depth." 
+                                  data-lang-id="Keanggunan abadi melintasi generasi. Dirancang untuk hunian luas di mana kualitas adalah pernyataan kedalaman budaya.">
+                                Keanggunan abadi melintasi generasi. Dirancang untuk hunian luas di mana kualitas adalah pernyataan kedalaman budaya.
+                            </span>
+                        </p>
+                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
+                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chapter 04: Signature (Atelier) -->
+                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 400ms;">
+                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Signature" onerror="handleImgError(this)">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">04 / Signature</div>
+                        <div class="absolute bottom-0 right-0 bg-black text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest">Atelier</div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
+                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="Atelier Custom" data-lang-id="Atelier Kustom">Atelier Kustom</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
+                            <span data-lang-en="A dialogue with you. We take your wildest visions and craft a home that feels like a bespoke suit, made for no one else." 
+                                  data-lang-id="Dialog dengan Anda. Kami mewujudkan visi terjauh Anda ke dalam hunian yang terasa kustom, hanya untuk Anda.">
+                                Dialog dengan Anda. Kami mewujudkan visi terjauh Anda ke dalam hunian yang terasa kustom, hanya untuk Anda.
+                            </span>
+                        </p>
+                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
+                            <span data-lang-en="Inquire Now" data-lang-id="Mulai Diskusi">Mulai Diskusi</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator -->
+    <section id="calculator" class="py-24 bg-white section-reveal">
+        <div class="max-w-4xl mx-auto px-4 sm:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl mb-4 font-light" data-lang-en="Price Transparency" data-lang-id="Transparansi Harga">Transparansi Harga</h2>
+                <p class="text-gray-400 text-[10px] uppercase tracking-[0.3em] font-bold" data-lang-en="Plan your journey" data-lang-id="Rencanakan perjalanan Anda">Plan your journey</p>
+            </div>
+            <div class="bg-[#FBFBF9] border border-gray-100 p-8 sm:p-12 shadow-xl rounded-sm">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-[0.3em] mb-5 text-gray-400" data-lang-en="Property Type" data-lang-id="Tipe Properti">Property Type</label>
+                            <div class="flex flex-col space-y-3">
+                                <label class="flex items-center space-x-3 cursor-pointer group">
+                                    <input type="radio" name="propType" value="1.5" checked onchange="calculateQuote()" class="w-4 h-4 accent-[#C5A059]">
+                                    <span class="text-xs font-bold uppercase tracking-widest group-hover:text-[#C5A059] transition">Apartment</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer group">
+                                    <input type="radio" name="propType" value="2.2" onchange="calculateQuote()" class="w-4 h-4 accent-[#C5A059]">
+                                    <span class="text-xs font-bold uppercase tracking-widest group-hover:text-[#C5A059] transition">Landed House</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-[0.3em] mb-5 text-gray-400" data-lang-en="Estimated Area" data-lang-id="Estimasi Luas">Estimated Area</label>
+                            <input type="range" min="20" max="250" value="36" id="sqmSlider" oninput="calculateQuote()" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#C5A059]">
+                            <div class="mt-4 text-[11px] font-bold text-[#C5A059]" id="sqmDisplay">36 SQM</div>
+                        </div>
+                    </div>
+                    <div class="bg-black text-white p-8 sm:p-10 flex flex-col justify-center items-center text-center">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-3" data-lang-en="Estimated Investment" data-lang-id="Estimasi Investasi">Investment</span>
+                        <div class="text-3xl font-bold mb-6 text-[#C5A059]" id="quoteResult">IDR 54,000,000</div>
+                        <button class="w-full py-4 bg-[#C5A059] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                            <span data-lang-en="Request Details" data-lang-id="Minta Detail">Request Details</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-black text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="grid lg:grid-cols-4 gap-12 mb-16 text-center lg:text-left">
+                <div class="col-span-2">
+                    <div class="text-2xl font-bold tracking-tighter mb-6">
+                        SECHA<span class="text-[#C5A059]">STUDIO+</span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm text-sm leading-relaxed mx-auto lg:mx-0" data-lang-en="Designer living in a pocket. Made with heart in Jakarta." data-lang-id="Hunian berkelas dalam jangkauan saku. Dibuat dengan hati di Jakarta.">Designer living in a pocket. Made with heart in Jakarta.</p>
+                </div>
+                <div>
+                    <h4 class="text-[9px] font-bold uppercase tracking-widest mb-6 text-gray-600">Explore</h4>
+                    <a href="#" class="block text-xs text-gray-400 mb-3 hover:text-[#C5A059] transition">Instagram</a>
+                    <a href="#" class="block text-xs text-gray-400 hover:text-[#C5A059] transition">WhatsApp</a>
+                </div>
+                <div>
+                    <h4 class="text-[9px] font-bold uppercase tracking-widest mb-6 text-gray-600">Office</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed uppercase tracking-wider">Senopati,<br>South Jakarta</p>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[9px] text-gray-600 tracking-widest font-bold uppercase">
+                <p>&copy; 2024 SECHA STUDIO+</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition">Privacy</a>
+                    <a href="#" class="hover:text-white transition">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(el => {
+                el.innerText = el.getAttribute(`data-lang-${lang}`);
+            });
+            document.getElementById('lang-en').classList.toggle('lang-active', lang === 'en');
+            document.getElementById('lang-id').classList.toggle('lang-active', lang === 'id');
+            localStorage.setItem('secha_lang_final', lang);
+            calculateQuote();
+        }
+
+        function calculateQuote() {
+            const propTypeInput = document.querySelector('input[name="propType"]:checked');
+            if(!propTypeInput) return;
+            const propMultiplier = parseFloat(propTypeInput.value);
+            const sqm = document.getElementById('sqmSlider').value;
+            document.getElementById('sqmDisplay').innerText = `${sqm} SQM`;
+            const total = propMultiplier * sqm * 1000000;
+            const formatted = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(total);
+            document.getElementById('quoteResult').innerText = formatted.replace('Rp', 'IDR');
+        }
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section-reveal').forEach(el => observer.observe(el));
+
+        window.onload = () => {
+            setLanguage(localStorage.getItem('secha_lang_final') || 'id');
+        };
+    </script>
+</body>
+</html>
