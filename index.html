@@ -1,290 +1,472 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECHA STUDIO+ | Home in a Pocket</title>
+    <title>SECHA Studio+ | Your Space, Realized</title>
+    
+    <!-- Fonts: Strictly Inter for a clean, modern, breathing aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D Showroom VR Walkthrough -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <script>
-        /**
-         * Global image error handler defined in head to prevent ReferenceErrors 
-         * when images fail before the bottom scripts are parsed.
-         */
-        function handleImgError(img) {
-            const parent = img.parentElement;
-            if (!parent) return;
-            img.style.display = 'none';
-            const placeholder = document.createElement('div');
-            placeholder.className = 'w-full h-full bg-[#1A1A1A] flex flex-col items-center justify-center text-white/10 p-8 text-center min-h-[250px]';
-            placeholder.innerHTML = `
-                <i class="fas fa-drafting-compass text-3xl mb-4"></i>
-                <div class="text-[8px] uppercase tracking-[0.4em] font-bold">SECHA STUDIO+<br>CURATED SPACE</div>
-            `;
-            parent.appendChild(placeholder);
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        sand: {
+                            50: '#F9F8F6',
+                            100: '#F0EFEA',
+                            200: '#E5E3DC',
+                            900: '#1C1B1A'
+                        }
+                    },
+                    animation: {
+                        'slow-pan': 'panImage 30s linear infinite alternate',
+                    },
+                    keyframes: {
+                        panImage: {
+                            '0%': { transform: 'scale(1.05) translate(0, 0)' },
+                            '100%': { transform: 'scale(1.1) translate(-2%, -1%)' }
+                        },
+                        loadingProgress: {
+                            '0%': { transform: 'scaleX(0)' },
+                            '40%': { transform: 'scaleX(0.4)' },
+                            '100%': { transform: 'scaleX(1)' }
+                        }
+                    }
+                }
+            }
         }
     </script>
+
     <style>
-        :root {
-            --brand-gold: #C5A059;
-            --brand-dark: #111111;
-            --brand-light: #FBFBF9;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--brand-light);
-            color: var(--brand-dark);
-            scroll-behavior: smooth;
-        }
-        h1, h2, h3, .studio-title {
-            font-family: 'Playfair Display', serif;
-        }
-        .hero-bg {
-            background: linear-gradient(rgba(251, 251, 249, 0.92), rgba(251, 251, 249, 0.8)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-        }
-        .nav-blur {
-            backdrop-filter: blur(12px);
-            background-color: rgba(251, 251, 249, 0.85);
-        }
-        .lang-active {
-            color: var(--brand-gold);
-            font-weight: 700;
-            border-bottom: 2px solid var(--brand-gold);
-        }
-        .section-reveal {
+        /* Custom Utilities for Transitions */
+        .fade-in-section {
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: opacity, transform;
         }
-        .section-reveal.visible {
+        .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .editorial-line {
-            width: 0;
-            height: 1px;
-            background-color: var(--brand-dark);
-            transition: width 1.5s ease;
+        
+        /* Accordion Animation */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            opacity: 0;
         }
-        .visible .editorial-line {
-            width: 60px;
+        .accordion-item.active .accordion-content {
+            max-height: 400px;
+            opacity: 1;
         }
-        .btn-hover-grow {
-            transition: all 0.4s ease;
+        .accordion-item.active .icon-plus { display: none; }
+        .accordion-item:not(.active) .icon-minus { display: none; }
+
+        ::selection {
+            background-color: #E5E3DC;
+            color: #1C1B1A;
         }
-        .btn-hover-grow:hover {
-            letter-spacing: 0.15em;
-            background-color: var(--brand-gold);
-            color: white;
+
+        /* Modal Transitions */
+        .modal-step {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .bg-studio-dark {
-            background-color: #111111;
+        .modal-step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
-        .chapter-card {
-            background: white;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        
+        body.modal-open, body.preloader-active {
+            overflow: hidden;
+        }
+        
+        /* Custom scrollbar for modal */
+        #journey-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+        #journey-modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #journey-modal::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* Preloader Styles */
+        #cinematic-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background-color: #080808;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .chapter-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.12);
-        }
-        .img-zoom {
-            transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .chapter-card:hover .img-zoom {
+        #cinematic-preloader.fade-out {
+            opacity: 0;
+            pointer-events: none;
             transform: scale(1.05);
         }
     </style>
 </head>
-<body class="antialiased overflow-x-hidden">
+<body class="bg-sand-50 text-stone-800 font-sans antialiased overflow-x-hidden preloader-active">
+
+    <!-- ========================================== -->
+    <!-- CINEMATIC VIDEO PRELOADER                  -->
+    <!-- ========================================== -->
+    <div id="cinematic-preloader">
+        <video class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-3d-animation-of-a-modern-house-41584-large.mp4" type="video/mp4">
+        </video>
+        
+        <div class="relative z-10 flex flex-col items-center">
+            <h1 class="text-white text-sm tracking-[0.5em] font-light uppercase mb-8">SECHA Studio+</h1>
+            <div class="w-48 h-[1px] bg-white/20 relative overflow-hidden">
+                <div class="absolute top-0 left-0 h-full bg-white w-full origin-left animate-[loadingProgress_3.5s_ease-in-out_forwards]"></div>
+            </div>
+            <p class="text-white/50 text-[9px] tracking-[0.3em] uppercase mt-6 animate-pulse">Rendering Virtual Environment</p>
+        </div>
+    </div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 nav-blur border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
-            <div class="flex flex-col">
-                <div class="text-xl font-bold tracking-tighter text-gray-900">
-                    SECHA<span class="text-[#C5A059]">STUDIO+</span>
-                </div>
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-8 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center mix-blend-difference text-white">
+            <h1 class="text-xs tracking-[0.2em] uppercase font-medium">SECHA Studio+</h1>
+            <div class="hidden md:flex space-x-12 text-[10px] tracking-[0.2em] uppercase">
+                <a href="#purpose" class="hover:opacity-70 transition-opacity">Our Purpose</a>
+                <a href="#designers" class="hover:opacity-70 transition-opacity">Designers</a>
+                <a href="#process" class="hover:opacity-70 transition-opacity">Process</a>
+                <a href="#investment" class="hover:opacity-70 transition-opacity">Packages</a>
             </div>
-            
-            <div class="hidden lg:flex space-x-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                <a href="#prologue" data-lang-en="The Story" data-lang-id="Cerita Kami" class="hover:text-black transition">The Story</a>
-                <a href="#collections" data-lang-en="Collections" data-lang-id="Koleksi" class="hover:text-black transition">Collections</a>
-                <a href="#calculator" data-lang-en="Estimate" data-lang-id="Estimasi" class="hover:text-black transition">Estimate</a>
-            </div>
-
-            <div class="flex items-center space-x-4 sm:space-x-8">
-                <div class="flex items-center space-x-2 text-[9px] font-bold uppercase tracking-widest border-r border-gray-200 pr-4 sm:pr-8">
-                    <button onclick="setLanguage('en')" id="lang-en" class="transition-all hover:text-[#C5A059]">EN</button>
-                    <span class="text-gray-300">/</span>
-                    <button onclick="setLanguage('id')" id="lang-id" class="lang-active transition-all hover:text-[#C5A059]">ID</button>
-                </div>
-                <a href="#contact" class="text-[10px] font-bold uppercase tracking-[0.2em] border border-black px-4 sm:px-6 py-3 hover:bg-black hover:text-white transition duration-500">
-                    <span data-lang-en="Inquire" data-lang-id="Hubungi">Hubungi</span>
-                </a>
-            </div>
+            <button class="open-journey-trigger text-[10px] tracking-[0.2em] uppercase border-b border-white/50 pb-1 hover:border-white transition-all">
+                Let's Talk
+            </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-h-[90vh] lg:min-h-screen flex items-center py-24 hero-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full grid lg:grid-cols-2 gap-12 items-center">
-            <div class="z-10">
-                <div class="mb-6 flex items-center space-x-4 section-reveal">
-                    <div class="editorial-line"></div>
-                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-400" data-lang-en="A New Way to Home" data-lang-id="Cara Baru Berhuni">Cara Baru Berhuni</span>
-                </div>
-                <h1 class="text-4xl sm:text-5xl md:text-7xl mb-8 leading-[1.15] font-normal section-reveal">
-                    <span data-lang-en="Designer Living," data-lang-id="Hunian Berkelas,">Hunian Berkelas,</span><br>
-                    <span class="italic font-light" data-lang-en="tailored for your pocket." data-lang-id="dalam jangkauan saku.">dalam jangkauan saku.</span>
-                </h1>
-                <p class="text-gray-600 text-base md:text-lg mb-10 max-w-lg font-light leading-relaxed section-reveal">
-                    <span data-lang-en="We believe great design shouldn't be a luxury for the few. SECHA brings the soul of a high-end studio into a compact, affordable package." 
-                          data-lang-id="Kami percaya desain hebat bukan hanya milik segelintir orang. SECHA menghadirkan jiwa studio desain kelas atas ke dalam paket praktis yang terjangkau.">
-                        Kami percaya desain hebat bukan hanya milik segelintir orang. SECHA menghadirkan jiwa studio desain kelas atas ke dalam paket praktis yang terjangkau.
-                    </span>
-                </p>
-                <div class="flex flex-wrap gap-4 section-reveal">
-                    <a href="#collections" class="bg-black text-white px-8 py-5 text-[10px] font-bold uppercase tracking-[0.3em] btn-hover-grow shadow-lg">
-                        <span data-lang-en="Explore Collections" data-lang-id="Eksplor Koleksi">Eksplor Koleksi</span>
-                    </a>
+    <header class="relative h-screen w-full flex flex-col justify-end pb-32 px-6 md:px-12 overflow-hidden bg-sand-900">
+        <!-- Image with Loading State -->
+        <div class="absolute inset-0 z-0 overflow-hidden bg-stone-800 animate-pulse" id="hero-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2400" 
+                 alt="Interior Design" 
+                 class="lazy-image hero-img w-full h-full object-cover animate-slow-pan mix-blend-luminosity opacity-80">
+            <!-- Warm Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-sand-900 via-sand-900/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-[#3A3530]/20 mix-blend-multiply"></div>
+        </div>
+        
+        <div class="relative z-10 w-full max-w-7xl mx-auto">
+            <p class="fade-in-section text-[11px] tracking-[0.3em] uppercase text-white/70 mb-6 font-light">
+                Interior Architecture & Design
+            </p>
+            <h2 class="fade-in-section text-5xl md:text-7xl lg:text-[7rem] leading-[1.05] font-light text-white tracking-tighter" style="transition-delay: 200ms;">
+                We believe your <br class="hidden md:block">
+                <span class="font-light text-sand-200 lg:pl-24">space</span> should <br class="hidden md:block">
+                tell your story.
+            </h2>
+            <div class="fade-in-section mt-10 flex gap-6" style="transition-delay: 300ms;">
+                <button id="open-showroom-btn" class="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-sand-900 transition-colors">
+                    Enter 3D VR Showroom
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- The Reason Why We Exist (Manifesto) -->
+    <section id="purpose" class="py-32 md:py-48 bg-sand-50">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="fade-in-section mb-12">
+                <span class="text-[10px] tracking-[0.2em] uppercase text-stone-400 font-medium">Why We Exist</span>
+            </div>
+            <h3 class="fade-in-section text-2xl md:text-4xl leading-relaxed text-stone-800 font-light tracking-tight" style="transition-delay: 100ms;">
+                "Design shouldn't be intimidating.<br class="hidden md:block"> 
+                We exist to bridge the gap between your dream <br class="hidden md:block">
+                space and reality. We don't just decorate rooms; <br class="hidden md:block">
+                we craft sanctuaries where you can truly <br class="hidden md:block">
+                breathe, live, and be yourself."
+            </h3>
+        </div>
+    </section>
+
+    <!-- The Soul Experience (With Modal Trigger) -->
+    <section id="experience" class="py-24 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-16 md:gap-24">
+            <div class="w-full md:w-1/2 fade-in-section">
+                <!-- Image Wrapper with Pulse Loading -->
+                <div class="aspect-square md:aspect-[4/5] overflow-hidden bg-stone-200 animate-pulse relative">
+                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200" 
+                         alt="Warm Japandi Interior Detail" 
+                         class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000">
                 </div>
             </div>
-            <div class="relative hidden lg:block section-reveal">
-                <div class="aspect-square max-w-lg mx-auto bg-gray-200 overflow-hidden rounded-tl-[80px] shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1615876234886-fd9a39faa97f?auto=format&fit=crop&q=80&w=1200" alt="Intimate interior" class="w-full h-full object-cover transition-opacity duration-1000 opacity-0" onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100')" onerror="handleImgError(this)">
+            <div class="w-full md:w-1/2 fade-in-section" style="transition-delay: 200ms;">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-stone-400 font-medium block mb-6">Designing By Knowing You</span>
+                <h3 class="text-4xl md:text-5xl leading-tight text-stone-900 mb-8 font-light tracking-tight">
+                    A space that speaks your truth.
+                </h3>
+                <div class="space-y-6 text-sm text-stone-600 font-light leading-relaxed mb-10">
+                    <p>
+                        True luxury isn't about expensive furniture—it’s about resonance. Before we draw a single line, we take the time to understand your rhythms, your quiet moments, and the memories you want to cultivate. 
+                    </p>
+                    <p>
+                        Your design will tell your story. We look deep into what your soul needs in the place you live in. Whether it's a sunlit corner for morning reflection or a fluid space for gathering loved ones, we ensure your sanctuary is a physical manifestation of your inner world.
+                    </p>
+                </div>
+                <button class="open-journey-trigger px-8 py-4 bg-sand-900 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-700 transition-colors">
+                    Find Your Space Archetype
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Designers -->
+    <section id="designers" class="py-24 md:py-32 bg-sand-100">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="fade-in-section border-b border-stone-300 pb-6 mb-24">
+                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">01. The Designers</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32">
+                <!-- Daffa -->
+                <div class="fade-in-section group">
+                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-10 animate-pulse relative">
+                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200" 
+                             alt="Modern Elegance" 
+                             class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    </div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4 font-medium">Daffa • The Architect of Form</p>
+                    <h3 class="text-3xl mb-4 text-stone-900 font-light tracking-tight">Modern Elegance.</h3>
+                    <p class="text-sm font-light leading-relaxed text-stone-600">
+                        For those who love clean lines, clutter-free spaces, and a touch of everyday luxury. Daffa focuses on making your space feel expansive, calm, and effortlessly polished. By keeping the foundational elements pure, the room becomes a serene backdrop to your life.
+                    </p>
+                </div>
+
+                <!-- Audina -->
+                <div class="fade-in-section group lg:mt-32" style="transition-delay: 200ms;">
+                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-10 animate-pulse relative">
+                        <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=1200" 
+                             alt="Cozy and Functional" 
+                             class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    </div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4 font-medium">Audina • The Soul of Space</p>
+                    <h3 class="text-3xl mb-4 text-stone-900 font-light tracking-tight">Cozy & Functional.</h3>
+                    <p class="text-sm font-light leading-relaxed text-stone-600">
+                        For those who want their home to feel like a warm hug. Audina blends Japandi warmth with practical, user-first design. She creates layouts that flow naturally with your daily routine, using warm palettes and inviting textures that make a house truly feel like a home.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- The Prologue -->
-    <section id="prologue" class="py-24 bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8">
-            <div class="text-center mb-20 section-reveal">
-                <span class="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.5em] mb-4 block">PROLOGUE</span>
-                <h2 class="text-3xl md:text-5xl italic font-light leading-snug">
-                    <span data-lang-en="A house is built by hands," data-lang-id="Rumah dibangun oleh tangan,">Rumah dibangun oleh tangan,</span><br>
-                    <span class="font-bold text-gray-900" data-lang-en="but a home is shaped by heart." data-lang-id="namun hunian dibentuk oleh hati.">namun hunian dibentuk oleh hati.</span>
-                </h2>
+    <!-- The Process -->
+    <section id="process" class="py-24 md:py-40 bg-sand-50">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="fade-in-section border-b border-stone-300 pb-6 mb-24">
+                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">02. How We Work Together</h2>
             </div>
-            <div class="grid md:grid-cols-2 gap-12 lg:gap-24 items-center section-reveal">
-                <p class="text-gray-500 text-base md:text-lg font-light leading-relaxed">
-                    <span data-lang-en="We created SECHA for those who just got their first keys, those who are building family sanctuaries, and those who want their soul reflected in every corner." 
-                          data-lang-id="Kami menciptakan SECHA untuk mereka yang baru saja menerima kunci pertama, mereka yang membangun tempat bernaung keluarga, dan mereka yang ingin jiwanya tercermin di setiap sudut.">
-                        Kami menciptakan SECHA untuk mereka yang baru saja menerima kunci pertama, mereka yang membangun tempat bernaung keluarga, dan mereka yang ingin jiwanya tercermin di setiap sudut.
-                    </span>
-                </p>
-                <div class="relative aspect-video lg:aspect-square bg-gray-100 rounded-sm overflow-hidden shadow-inner">
-                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover grayscale opacity-80" alt="Moodboard" onerror="handleImgError(this)">
+
+            <div class="max-w-3xl mx-auto">
+                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10">
+                    <span class="text-3xl text-stone-300 font-light tracking-tight">01</span>
+                    <div>
+                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Getting to Know You</h4>
+                        <p class="text-sm text-stone-600 font-light leading-relaxed">We start with a conversation. We listen to your needs, understand how you live, and align our vision with your budget and space realities. No pressure, just planning.</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 100ms;">
+                    <span class="text-3xl text-stone-300 font-light tracking-tight">02</span>
+                    <div>
+                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">The Vision</h4>
+                        <p class="text-sm text-stone-600 font-light leading-relaxed">Your ideas turn into a visual plan. We create bespoke moodboards and clear 2D layouts so you can see exactly how the space will be utilized.</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 200ms;">
+                    <span class="text-3xl text-stone-300 font-light tracking-tight">03</span>
+                    <div>
+                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Bringing It to Life</h4>
+                        <p class="text-sm text-stone-600 font-light leading-relaxed">No more guessing. We provide high-quality 3D renders that show you exactly what your finished room will look like before you spend a dime on furniture or construction.</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 300ms;">
+                    <span class="text-3xl text-stone-300 font-light tracking-tight">04</span>
+                    <div>
+                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">The Blueprint</h4>
+                        <p class="text-sm text-stone-600 font-light leading-relaxed">We handle the technical details. You receive detailed engineering drawings (DED) so that contractors know exactly how to build the design flawlessly.</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 pb-10" style="transition-delay: 400ms;">
+                    <span class="text-3xl text-stone-300 font-light tracking-tight">05</span>
+                    <div>
+                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Making It Happen</h4>
+                        <p class="text-sm text-stone-600 font-light leading-relaxed">The final handover. You can take our plans to your own builder, or transition seamlessly into our bespoke furniture production to let us finish the job.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Collections Section -->
-    <section id="collections" class="bg-studio-dark text-white py-24 pb-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 section-reveal">
-                <div class="mb-6 md:mb-0">
-                    <div class="editorial-line bg-[#C5A059] mb-6"></div>
-                    <h2 class="text-4xl md:text-6xl font-light mb-4" data-lang-en="The Chapters" data-lang-id="Bab Koleksi">The Chapters</h2>
-                    <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em]" data-lang-en="Curated paths to belonging" data-lang-id="Jalur kurasi untuk berhuni">Curated paths to belonging</p>
-                </div>
-                <div class="hidden md:block">
-                    <span class="text-[#C5A059] text-[10px] font-bold uppercase tracking-widest border-b border-[#C5A059] pb-2">Completed in 45 Days</span>
-                </div>
+    <!-- Packages & Pricing -->
+    <section id="investment" class="py-24 md:py-40 bg-white border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="fade-in-section border-b border-stone-200 pb-6 mb-20 flex justify-between items-end">
+                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">03. The Investment</h2>
+                <span class="text-[10px] tracking-[0.2em] uppercase text-stone-400">Clear & Honest</span>
             </div>
 
-            <!-- Grid: Responsive columns -->
-            <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <div class="fade-in-section mb-16">
+                <h3 class="text-3xl md:text-4xl mb-4 text-stone-900 font-light tracking-tight">Curated Design Tiers.</h3>
+                <p class="text-stone-500 font-light text-sm">Select the package depth that fits your project's ambition.</p>
+            </div>
+
+            <!-- The 3 Tiers -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                 
-                <!-- Chapter 01: Essential -->
-                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 100ms;">
-                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Essential" onerror="handleImgError(this)">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">01 / Essential</div>
-                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 45M+</div>
-                    </div>
-                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
-                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="The Studio Soul" data-lang-id="Jiwa Studio">The Studio Soul</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
-                            <span data-lang-en="Proof that you arrived. Our Essential collection celebrates independence—giving your first space the designer breath it deserves." 
-                                  data-lang-id="Bukti pencapaian Anda. Koleksi Essential kami merayakan kemandirian—memberikan sentuhan desainer pada ruang pertama Anda.">
-                                Bukti pencapaian Anda. Koleksi Essential kami merayakan kemandirian—memberikan sentuhan desainer pada ruang pertama Anda.
-                            </span>
-                        </p>
-                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
-                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
-                        </button>
-                    </div>
+                <!-- Lite Package -->
+                <div class="fade-in-section flex flex-col p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 100ms;">
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Essential Foundations</p>
+                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Lite Tier</h4>
+                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 1,000,000</p>
+                    
+                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
+                    </ul>
                 </div>
 
-                <!-- Chapter 02: Premium (Urban Haven) - Fixed reliable living room image -->
-                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 200ms;">
-                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
-                        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Premium" onerror="handleImgError(this)">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">02 / Premium</div>
-                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 85M+</div>
-                    </div>
-                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
-                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="Urban Haven" data-lang-id="Peraduan Urban">Urban Haven</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
-                            <span data-lang-en="A durable sanctuary for the growing family. Silence the city noise and let your family's laughter flourish." 
-                                  data-lang-id="Tempat bernaung bagi keluarga yang berkembang. Redam bising kota dan biarkan tawa keluarga Anda bersemi.">
-                                Tempat bernaung bagi keluarga yang berkembang. Redam bising kota dan biarkan tawa keluarga Anda bersemi.
-                            </span>
-                        </p>
-                        <button class="w-full py-3.5 bg-black text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#C5A059] transition duration-500 border border-black">
-                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
-                        </button>
-                    </div>
+                <!-- Pro Package (Highlighted) -->
+                <div class="fade-in-section flex flex-col p-10 bg-sand-50 border border-stone-200 relative" style="transition-delay: 200ms;">
+                    <div class="absolute top-0 right-0 bg-stone-900 text-white px-3 py-1.5 text-[9px] uppercase tracking-widest font-medium">Most Popular</div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Complete Visuals</p>
+                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Pro Tier</h4>
+                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 2,000,000</p>
+                    
+                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Color Palette & Materials</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> High-Res 3D Renders</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Engineering Design (DED)</li>
+                    </ul>
                 </div>
 
-                <!-- Chapter 03: Legacy (Heritage) -->
-                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 300ms;">
-                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
-                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Legacy" onerror="handleImgError(this)">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">03 / Heritage</div>
-                        <div class="absolute bottom-0 right-0 bg-[#C5A059] text-white px-5 py-3 text-xs font-bold uppercase tracking-widest">Rp 150M+</div>
+                <!-- Premium Package -->
+                <div class="fade-in-section flex flex-col p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 300ms;">
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Full Service Execution</p>
+                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Premium Tier</h4>
+                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 2,600,000</p>
+                    
+                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Color Palette & Materials</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> High-Res 3D Renders</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Engineering Design (DED)</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Bill of Quantities (BOQ)</li>
+                        <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Curated Shopping List</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pricing Sizing Matrix & Accordions -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 fade-in-section" style="transition-delay: 400ms;">
+                
+                <!-- Sizing Guide -->
+                <div>
+                    <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium text-stone-900 mb-6">Area Pricing Matrix</h5>
+                    <div class="w-full overflow-x-auto">
+                        <table class="w-full text-left min-w-[400px]">
+                            <thead>
+                                <tr class="border-b border-stone-900 text-[10px] tracking-[0.2em] uppercase font-medium text-stone-500">
+                                    <th class="py-3 font-medium">Room Scale</th>
+                                    <th class="py-3 font-medium">Lite</th>
+                                    <th class="py-3 font-medium">Pro</th>
+                                    <th class="py-3 font-medium text-stone-900">Premium</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs font-light">
+                                <tr class="border-b border-stone-200">
+                                    <td class="py-4 font-medium text-stone-800">Small (≤ 10m²)</td>
+                                    <td class="py-4 text-stone-500">1M</td>
+                                    <td class="py-4 text-stone-500">2M</td>
+                                    <td class="py-4 font-medium text-stone-900">2.6M</td>
+                                </tr>
+                                <tr class="border-b border-stone-200">
+                                    <td class="py-4 font-medium text-stone-800">Medium (11-18m²)</td>
+                                    <td class="py-4 text-stone-500">1.8M</td>
+                                    <td class="py-4 text-stone-500">3.6M</td>
+                                    <td class="py-4 font-medium text-stone-900">4.7M</td>
+                                </tr>
+                                <tr class="border-b border-stone-200">
+                                    <td class="py-4 font-medium text-stone-800">Large (19-30m²)</td>
+                                    <td class="py-4 text-stone-500">3M</td>
+                                    <td class="py-4 text-stone-500">6M</td>
+                                    <td class="py-4 font-medium text-stone-900">7.8M</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
-                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="The Legacy Home" data-lang-id="Rumah Warisan">The Legacy Home</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
-                            <span data-lang-en="Timeless elegance that spans generations. Designed for large estates where quality is a statement of enduring cultural depth." 
-                                  data-lang-id="Keanggunan abadi melintasi generasi. Dirancang untuk hunian luas di mana kualitas adalah pernyataan kedalaman budaya.">
-                                Keanggunan abadi melintasi generasi. Dirancang untuk hunian luas di mana kualitas adalah pernyataan kedalaman budaya.
-                            </span>
-                        </p>
-                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
-                            <span data-lang-en="Claim Chapter" data-lang-id="Mulai Bab Ini">Mulai Bab Ini</span>
-                        </button>
-                    </div>
+                    <p class="text-[9px] tracking-[0.1em] text-stone-400 mt-4 uppercase">* Spaces > 30m² are calculated at IDR 175,000 / m².</p>
                 </div>
 
-                <!-- Chapter 04: Signature (Atelier) -->
-                <div class="chapter-card group text-gray-900 section-reveal" style="transition-delay: 400ms;">
-                    <div class="relative overflow-hidden aspect-[3/2] sm:aspect-[4/3]">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover img-zoom" alt="Signature" onerror="handleImgError(this)">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest">04 / Signature</div>
-                        <div class="absolute bottom-0 right-0 bg-black text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest">Atelier</div>
-                    </div>
-                    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white">
-                        <h3 class="text-2xl mb-4 italic font-light" data-lang-en="Atelier Custom" data-lang-id="Atelier Kustom">Atelier Kustom</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm font-light leading-relaxed mb-8 flex-grow">
-                            <span data-lang-en="A dialogue with you. We take your wildest visions and craft a home that feels like a bespoke suit, made for no one else." 
-                                  data-lang-id="Dialog dengan Anda. Kami mewujudkan visi terjauh Anda ke dalam hunian yang terasa kustom, hanya untuk Anda.">
-                                Dialog dengan Anda. Kami mewujudkan visi terjauh Anda ke dalam hunian yang terasa kustom, hanya untuk Anda.
-                            </span>
-                        </p>
-                        <button class="w-full py-3.5 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-500">
-                            <span data-lang-en="Inquire Now" data-lang-id="Mulai Diskusi">Mulai Diskusi</span>
+                <!-- Accordions -->
+                <div>
+                    <div class="accordion-item border-t border-stone-300 py-5">
+                        <button class="w-full flex justify-between items-center text-left text-stone-900 hover:text-stone-600 transition-colors focus:outline-none">
+                            <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium">Available Add-ons</h5>
+                            <svg class="icon-plus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <svg class="icon-minus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                         </button>
+                        <div class="accordion-content">
+                            <ul class="space-y-4 text-sm font-light text-stone-600 mt-6 pb-2">
+                                <li class="flex justify-between border-b border-stone-100 pb-2"><span>Extra 3D Render View</span> <span class="text-stone-900">IDR 80,000</span></li>
+                                <li class="flex justify-between border-b border-stone-100 pb-2"><span>Additional Site Visit</span> <span class="text-stone-900">IDR 1,500,000</span></li>
+                                <li class="flex justify-between border-b border-stone-100 pb-2"><span>Bill of Quantities (BOQ)</span> <span class="text-stone-900">IDR 1,000,000</span></li>
+                                <li class="flex justify-between pb-2"><span>Extra Revision Slot</span> <span class="text-stone-900">IDR 175,000</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-t border-stone-300 py-5">
+                        <button class="w-full flex justify-between items-center text-left text-stone-900 hover:text-stone-600 transition-colors focus:outline-none">
+                            <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium">Terms & Conditions</h5>
+                            <svg class="icon-plus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <svg class="icon-minus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <ul class="space-y-3 text-sm font-light leading-relaxed text-stone-600 mt-6 pb-2">
+                                <li class="flex gap-3"><span class="text-stone-300">•</span> We include 2 Major Revisions (during 3D phase) and 1 Minor Revision (technical phase).</li>
+                                <li class="flex gap-3"><span class="text-stone-300">•</span> Files are delivered in PDF/JPG. Raw SketchUp files are not provided.</li>
+                                <li class="flex gap-3"><span class="text-stone-300">•</span> Work begins the next business day after the down payment is received.</li>
+                                <li class="flex gap-3"><span class="text-stone-300">•</span> Need it faster? Expedited timelines are available for a 30% surcharge.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -292,116 +474,915 @@
         </div>
     </section>
 
-    <!-- Calculator -->
-    <section id="calculator" class="py-24 bg-white section-reveal">
-        <div class="max-w-4xl mx-auto px-4 sm:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl mb-4 font-light" data-lang-en="Price Transparency" data-lang-id="Transparansi Harga">Transparansi Harga</h2>
-                <p class="text-gray-400 text-[10px] uppercase tracking-[0.3em] font-bold" data-lang-en="Plan your journey" data-lang-id="Rencanakan perjalanan Anda">Plan your journey</p>
-            </div>
-            <div class="bg-[#FBFBF9] border border-gray-100 p-8 sm:p-12 shadow-xl rounded-sm">
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="space-y-8">
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase tracking-[0.3em] mb-5 text-gray-400" data-lang-en="Property Type" data-lang-id="Tipe Properti">Property Type</label>
-                            <div class="flex flex-col space-y-3">
-                                <label class="flex items-center space-x-3 cursor-pointer group">
-                                    <input type="radio" name="propType" value="1.5" checked onchange="calculateQuote()" class="w-4 h-4 accent-[#C5A059]">
-                                    <span class="text-xs font-bold uppercase tracking-widest group-hover:text-[#C5A059] transition">Apartment</span>
-                                </label>
-                                <label class="flex items-center space-x-3 cursor-pointer group">
-                                    <input type="radio" name="propType" value="2.2" onchange="calculateQuote()" class="w-4 h-4 accent-[#C5A059]">
-                                    <span class="text-xs font-bold uppercase tracking-widest group-hover:text-[#C5A059] transition">Landed House</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase tracking-[0.3em] mb-5 text-gray-400" data-lang-en="Estimated Area" data-lang-id="Estimasi Luas">Estimated Area</label>
-                            <input type="range" min="20" max="250" value="36" id="sqmSlider" oninput="calculateQuote()" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#C5A059]">
-                            <div class="mt-4 text-[11px] font-bold text-[#C5A059]" id="sqmDisplay">36 SQM</div>
-                        </div>
-                    </div>
-                    <div class="bg-black text-white p-8 sm:p-10 flex flex-col justify-center items-center text-center">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-3" data-lang-en="Estimated Investment" data-lang-id="Estimasi Investasi">Investment</span>
-                        <div class="text-3xl font-bold mb-6 text-[#C5A059]" id="quoteResult">IDR 54,000,000</div>
-                        <button class="w-full py-4 bg-[#C5A059] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                            <span data-lang-en="Request Details" data-lang-id="Minta Detail">Request Details</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <!-- Footer CTA -->
+    <section class="py-32 bg-sand-900 text-center">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="fade-in-section text-4xl md:text-5xl font-light mb-8 text-white tracking-tight">Let's create something beautiful together.</h2>
+            <p class="fade-in-section text-sand-200 font-light text-sm mb-12">Reach out to schedule your initial consultation.</p>
+            <button class="open-journey-trigger inline-block fade-in-section px-10 py-4 bg-transparent text-white border border-white/30 hover:bg-white hover:text-sand-900 text-[10px] tracking-[0.2em] uppercase transition-all duration-300">
+                Start Your Project
+            </button>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact" class="bg-black text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8">
-            <div class="grid lg:grid-cols-4 gap-12 mb-16 text-center lg:text-left">
-                <div class="col-span-2">
-                    <div class="text-2xl font-bold tracking-tighter mb-6">
-                        SECHA<span class="text-[#C5A059]">STUDIO+</span>
-                    </div>
-                    <p class="text-gray-500 max-w-sm text-sm leading-relaxed mx-auto lg:mx-0" data-lang-en="Designer living in a pocket. Made with heart in Jakarta." data-lang-id="Hunian berkelas dalam jangkauan saku. Dibuat dengan hati di Jakarta.">Designer living in a pocket. Made with heart in Jakarta.</p>
-                </div>
-                <div>
-                    <h4 class="text-[9px] font-bold uppercase tracking-widest mb-6 text-gray-600">Explore</h4>
-                    <a href="#" class="block text-xs text-gray-400 mb-3 hover:text-[#C5A059] transition">Instagram</a>
-                    <a href="#" class="block text-xs text-gray-400 hover:text-[#C5A059] transition">WhatsApp</a>
-                </div>
-                <div>
-                    <h4 class="text-[9px] font-bold uppercase tracking-widest mb-6 text-gray-600">Office</h4>
-                    <p class="text-xs text-gray-400 leading-relaxed uppercase tracking-wider">Senopati,<br>South Jakarta</p>
-                </div>
-            </div>
-            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[9px] text-gray-600 tracking-widest font-bold uppercase">
-                <p>&copy; 2024 SECHA STUDIO+</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white transition">Privacy</a>
-                    <a href="#" class="hover:text-white transition">Terms</a>
-                </div>
-            </div>
+    <!-- Small Footer -->
+    <footer class="py-12 bg-sand-900 border-t border-white/10 text-center">
+        <div class="text-[9px] tracking-[0.3em] text-white/50 uppercase font-light">
+            © 2026 SECHA Studio+ • Interior Architecture
         </div>
     </footer>
 
+    <!-- ========================================== -->
+    <!-- 3D SHOWROOM MODAL (VR WALKTHROUGH)         -->
+    <!-- ========================================== -->
+    <div id="showroom-modal" class="fixed inset-0 z-[110] hidden bg-[#080808] flex items-center justify-center opacity-0 transition-opacity duration-700">
+        <!-- Close Button -->
+        <button id="close-showroom" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-20 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Fade Overlay for Transitions -->
+        <div id="showroom-fade-overlay" class="absolute inset-0 bg-[#080808] z-[15] pointer-events-none opacity-0 transition-opacity duration-700"></div>
+
+        <!-- Cinematic UI Overlay -->
+        <div class="absolute top-8 left-8 md:top-12 md:left-12 text-white z-20 pointer-events-none transition-opacity duration-500" id="showroom-ui-top">
+            <span class="text-[9px] tracking-[0.4em] uppercase text-white/50 block mb-3" id="sr-subtitle">Vision 01</span>
+            <h3 class="text-3xl md:text-5xl font-light tracking-tight mb-4" id="sr-title">Sleek Architectural Luxury</h3>
+            <p class="text-xs font-light text-white/70 max-w-sm leading-relaxed" id="sr-desc">Curated by Daffa. Uncompromising geometry, sharp lines, and glossy textures that reflect a premium, absolute lifestyle.</p>
+        </div>
+
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 z-20">
+            <p class="text-[9px] uppercase tracking-[0.3em] text-white/40 animate-pulse text-center">Click floor rings to walk • Drag to look around</p>
+            <button id="switch-vision-btn" class="px-8 py-4 bg-white text-[#0a0a0a] text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+                Experience Audina's Vision
+            </button>
+        </div>
+
+        <!-- Interactive Hotspot Tooltip -->
+        <div id="hotspot-tooltip" class="absolute hidden flex-col items-start bg-black/60 backdrop-blur-md border border-white/20 p-6 max-w-[250px] z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-[-20px] transition-opacity duration-300 opacity-0">
+            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black/60 border-b border-r border-white/20 transform rotate-45 backdrop-blur-md"></div>
+            <h4 id="hs-title" class="text-white text-[11px] font-medium tracking-widest mb-2 uppercase">Title</h4>
+            <p id="hs-desc" class="text-white/70 text-xs font-light leading-relaxed">Description goes here.</p>
+        </div>
+
+        <div id="3d-canvas-container" class="absolute inset-0 w-full h-full cursor-grab z-10"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- WALKTHROUGH MODAL: "Matchmaking & Checkout"-->
+    <!-- ========================================== -->
+    <div id="journey-modal" class="fixed inset-0 z-[100] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto">
+        <!-- Close Button -->
+        <button id="close-modal" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-10 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Container for steps -->
+        <div class="w-full max-w-3xl px-6 py-20 text-center relative mx-auto my-auto min-h-screen flex items-center justify-center">
+            
+            <!-- Step 1: The Feeling -->
+            <div class="modal-step active w-full" id="step-1">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 01: The Feeling</span>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-12 tracking-tight leading-tight">When you walk through your door, what does your soul need most?</h2>
+                <div class="flex flex-col gap-4 max-w-md mx-auto">
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-2">A Deep, Calming Breath</button>
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-2">An Embrace of Warmth</button>
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-2">A Surge of Inspiration</button>
+                </div>
+            </div>
+
+            <!-- Step 2: The Rhythm -->
+            <div class="modal-step w-full" id="step-2">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 02: The Rhythm</span>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-12 tracking-tight leading-tight">Your ideal morning in this space begins with...</h2>
+                <div class="flex flex-col gap-4 max-w-md mx-auto">
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-3">Quiet Stillness and Natural Light</button>
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-3">Connection and Gathering</button>
+                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-3">Movement, Coffee, and Flow</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Matchmaking Reveal -->
+            <div class="modal-step w-full" id="step-3">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 03: The Match</span>
+                <h2 id="result-title" class="text-3xl md:text-5xl font-light text-white mb-8 tracking-tight leading-tight">Your vision aligns with...</h2>
+                
+                <div class="flex flex-col md:flex-row items-center gap-8 bg-white/5 p-6 border border-white/10 max-w-2xl mx-auto mb-10 text-left">
+                    <img id="match-img" src="" alt="Matched Designer" class="w-32 h-40 object-cover bg-stone-800">
+                    <div>
+                        <h3 id="match-name" class="text-2xl text-white font-light tracking-tight mb-2"></h3>
+                        <p id="match-desc" class="text-sm text-white/70 font-light leading-relaxed mb-6"></p>
+                        <button id="select-designer-btn" class="step-btn px-6 py-3 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors" data-next="step-4">
+                            Collaborate with Designer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: The Scope (Package Selection) -->
+            <div class="modal-step w-full" id="step-4">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 04: The Scope</span>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-10 tracking-tight leading-tight">Define your space.</h2>
+                
+                <p class="text-[11px] uppercase tracking-widest text-white/70 mb-4 font-medium">1. Select Room Size</p>
+                <div class="flex flex-wrap gap-4 justify-center mb-10">
+                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="small">Small (≤ 10m²)</button>
+                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="medium">Medium (11-18m²)</button>
+                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="large">Large (19-30m²)</button>
+                </div>
+
+                <p class="text-[11px] uppercase tracking-widest text-white/70 mb-4 font-medium">2. Select Design Tier</p>
+                <div class="flex flex-wrap gap-4 justify-center mb-10">
+                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="lite">Lite</button>
+                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="pro">Pro</button>
+                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="premium">Premium</button>
+                </div>
+
+                <div class="text-2xl font-light text-white mb-8 border-t border-white/10 pt-8 max-w-md mx-auto">
+                    Design Investment: <br class="md:hidden"><span id="calc-price" class="font-medium text-sand-200 mt-2 block md:inline md:mt-0">Select Scope to Calculate</span>
+                </div>
+                
+                <button id="proceed-checkout-btn" class="step-btn px-10 py-4 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" data-next="step-5" disabled>
+                    Proceed to Checkout
+                </button>
+            </div>
+
+            <!-- Step 5: Dummy Checkout -->
+            <div class="modal-step w-full" id="step-5">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 05: Secure Allocation</span>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-10 tracking-tight leading-tight">Finalize your commitment.</h2>
+                
+                <div class="max-w-md mx-auto text-left space-y-4">
+                    <div class="p-8 bg-white text-stone-900 shadow-xl">
+                        <div class="flex justify-between items-end border-b border-stone-200 pb-4 mb-6">
+                            <div>
+                                <span class="font-medium text-sm block mb-1">Design Retainer</span>
+                                <span class="text-xs text-stone-500 font-light block" id="summary-designer">Designer & Package</span>
+                            </div>
+                            <span class="font-medium text-lg tracking-tight" id="summary-price">IDR 0</span>
+                        </div>
+                        
+                        <!-- Dummy Form -->
+                        <div class="mb-4">
+                            <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Cardholder Name</label>
+                            <input type="text" placeholder="John Doe" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        </div>
+                        <div class="mb-6">
+                            <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Card Number</label>
+                            <input type="text" placeholder="0000 0000 0000 0000" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        </div>
+                        <div class="flex gap-6 mb-10">
+                            <div class="w-1/2">
+                                <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">CVC</label>
+                                <input type="text" placeholder="123" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                            </div>
+                        </div>
+                        
+                        <button id="pay-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors flex justify-center items-center">
+                            <span id="pay-btn-text">Authorize Payment</span>
+                            <div id="pay-spinner" class="hidden ml-3 w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        </button>
+                    </div>
+                    <p class="text-[9px] text-white/50 text-center uppercase tracking-widest mt-4">Secure encrypted connection</p>
+                </div>
+            </div>
+
+            <!-- Step 6: Success -->
+            <div class="modal-step w-full" id="step-6">
+                <div class="w-24 h-24 mx-auto rounded-full border border-white/20 flex items-center justify-center mb-10 bg-white/5">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-6 tracking-tight leading-tight">Welcome to SECHA Studio+.</h2>
+                <p class="text-white/70 font-light text-sm leading-relaxed mb-12 max-w-md mx-auto">
+                    Your payment has been successfully processed. <span id="success-designer" class="font-medium text-white"></span>'s team will contact you within 24 hours to begin mapping your architectural narrative.
+                </p>
+                <button id="close-success-btn" class="px-10 py-4 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors">
+                    Return to Experience
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactions -->
     <script>
-        function setLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang-en]');
-            elements.forEach(el => {
-                el.innerText = el.getAttribute(`data-lang-${lang}`);
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ==========================================
+            // Preloader Logic
+            // ==========================================
+            const preloader = document.getElementById('cinematic-preloader');
+            const minLoadingTime = 3500;
+            const startTime = Date.now();
+            
+            window.addEventListener('load', () => {
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+                
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    document.body.classList.remove('preloader-active');
+                    setTimeout(() => {
+                        preloader.remove();
+                    }, 1500); // Wait for transition
+                }, remainingTime);
             });
-            document.getElementById('lang-en').classList.toggle('lang-active', lang === 'en');
-            document.getElementById('lang-id').classList.toggle('lang-active', lang === 'id');
-            localStorage.setItem('secha_lang_final', lang);
-            calculateQuote();
-        }
 
-        function calculateQuote() {
-            const propTypeInput = document.querySelector('input[name="propType"]:checked');
-            if(!propTypeInput) return;
-            const propMultiplier = parseFloat(propTypeInput.value);
-            const sqm = document.getElementById('sqmSlider').value;
-            document.getElementById('sqmDisplay').innerText = `${sqm} SQM`;
-            const total = propMultiplier * sqm * 1000000;
-            const formatted = new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                maximumFractionDigits: 0
-            }).format(total);
-            document.getElementById('quoteResult').innerText = formatted.replace('Rp', 'IDR');
-        }
-
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
+            // Navbar Scroll Effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-sand-900/95', 'backdrop-blur-sm', 'border-white/10');
+                    navbar.classList.remove('border-transparent');
+                } else {
+                    navbar.classList.remove('bg-sand-900/95', 'backdrop-blur-sm', 'border-white/10');
+                    navbar.classList.add('border-transparent');
+                }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.section-reveal').forEach(el => observer.observe(el));
+            // Intersection Observer for Fade-ins
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
 
-        window.onload = () => {
-            setLanguage(localStorage.getItem('secha_lang_final') || 'id');
-        };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Image Loading Logic
+            const lazyImages = document.querySelectorAll('.lazy-image');
+            lazyImages.forEach(img => {
+                const handleLoad = () => {
+                    if(img.parentElement.classList.contains('animate-pulse')) {
+                        img.parentElement.classList.remove('animate-pulse');
+                    }
+                    img.classList.remove('opacity-0');
+                };
+
+                const handleError = () => {
+                    if(img.parentElement.classList.contains('animate-pulse')) {
+                        img.parentElement.classList.remove('animate-pulse');
+                    }
+                    img.parentElement.classList.add('bg-stone-700'); 
+                    img.style.display = 'none'; 
+                };
+
+                if (img.complete && img.naturalHeight !== 0) {
+                    handleLoad();
+                } else {
+                    img.addEventListener('load', handleLoad);
+                    img.addEventListener('error', handleError);
+                }
+            });
+
+            // Accordion Logic
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const button = item.querySelector('button');
+                button.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    accordionItems.forEach(acc => acc.classList.remove('active'));
+                    
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+            // ==========================================
+            // Walkthrough Modal & Checkout Logic
+            // ==========================================
+            const modal = document.getElementById('journey-modal');
+            const openBtns = document.querySelectorAll('.open-journey-trigger');
+            const closeBtn = document.getElementById('close-modal');
+            const closeSuccessBtn = document.getElementById('close-success-btn');
+            const stepBtns = document.querySelectorAll('.step-btn');
+            const steps = document.querySelectorAll('.modal-step');
+            
+            // Matchmaking elements
+            const matchImg = document.getElementById('match-img');
+            const matchName = document.getElementById('match-name');
+            const matchDesc = document.getElementById('match-desc');
+            const selectDesignerBtn = document.getElementById('select-designer-btn');
+            
+            // Scope / Checkout elements
+            const sizeBtns = document.querySelectorAll('.size-btn');
+            const tierBtns = document.querySelectorAll('.tier-btn');
+            const calcPriceEl = document.getElementById('calc-price');
+            const proceedBtn = document.getElementById('proceed-checkout-btn');
+            const summaryDesigner = document.getElementById('summary-designer');
+            const summaryPrice = document.getElementById('summary-price');
+            const successDesigner = document.getElementById('success-designer');
+            const payBtn = document.getElementById('pay-btn');
+            const payBtnText = document.getElementById('pay-btn-text');
+            const paySpinner = document.getElementById('pay-spinner');
+
+            // Data state
+            let userScores = { A: 0, B: 0, C: 0 };
+            let firstChoice = null;
+            let matchedDesigner = null; // 'Daffa' or 'Audina'
+            
+            let selectedSize = null;
+            let selectedTier = null;
+            
+            const pricingData = {
+                small: { lite: { val: 'IDR 1,000,000' }, pro: { val: 'IDR 2,000,000' }, premium: { val: 'IDR 2,600,000' } },
+                medium: { lite: { val: 'IDR 1,800,000' }, pro: { val: 'IDR 3,600,000' }, premium: { val: 'IDR 4,700,000' } },
+                large: { lite: { val: 'IDR 3,000,000' }, pro: { val: 'IDR 6,000,000' }, premium: { val: 'IDR 7,800,000' } }
+            };
+
+            const designersData = {
+                daffa: {
+                    name: "Daffa • The Architect of Form",
+                    desc: "Your soul craves clarity and structure. Daffa will strip away the unnecessary, focusing on pure geometry, plain ceilings, and definitive lines. Get ready for sleek, uncompromising architectural luxury.",
+                    img: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=600"
+                },
+                audina: {
+                    name: "Audina • The Soul of Space",
+                    desc: "Your soul craves connection and comfort. Audina will craft a space that feels like a warm embrace, blending inviting textures, Japandi aesthetics, and practical layouts designed to flow with your life.",
+                    img: "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=600"
+                }
+            };
+
+            function openJourneyModal() {
+                // Reset states
+                userScores = { A: 0, B: 0, C: 0 };
+                firstChoice = null;
+                matchedDesigner = null;
+                selectedSize = null;
+                selectedTier = null;
+                updateScopeSelectionUI();
+                
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; // Reflow
+                modal.classList.remove('opacity-0');
+                document.body.classList.add('modal-open');
+                
+                // Scroll modal to top
+                modal.scrollTop = 0;
+            }
+
+            function closeJourneyModal() {
+                modal.classList.add('opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                    steps.forEach((s, i) => {
+                        if (i === 0) s.classList.add('active');
+                        else s.classList.remove('active');
+                    });
+                    
+                    // Reset pay button
+                    payBtn.disabled = false;
+                    payBtnText.textContent = "Authorize Payment";
+                    paySpinner.classList.add('hidden');
+                    
+                }, 500); 
+            }
+
+            function calculateAndShowMatch() {
+                let dominantTrait = 'A';
+                
+                // Weighting logic: Step 1 breaks ties
+                let scoreA = userScores.A + (firstChoice === 'A' ? 0.1 : 0);
+                let scoreB = userScores.B + (firstChoice === 'B' ? 0.1 : 0);
+                let scoreC = userScores.C + (firstChoice === 'C' ? 0.1 : 0);
+
+                if (scoreB > scoreA && scoreB >= scoreC) dominantTrait = 'B';
+                if (scoreC > scoreA && scoreC > scoreB) dominantTrait = 'C';
+
+                // Assign Designer (A/C -> Daffa, B -> Audina)
+                if (dominantTrait === 'B') {
+                    matchedDesigner = 'audina';
+                } else {
+                    matchedDesigner = 'daffa';
+                }
+                
+                const data = designersData[matchedDesigner];
+                matchImg.src = data.img;
+                matchName.textContent = data.name;
+                matchDesc.textContent = data.desc;
+                selectDesignerBtn.textContent = `Collaborate with ${data.name.split(' ')[0]}`;
+            }
+            
+            function updateScopeSelectionUI() {
+                // Size buttons
+                sizeBtns.forEach(btn => {
+                    if (btn.getAttribute('data-size') === selectedSize) {
+                        btn.classList.add('bg-white', 'text-sand-900');
+                        btn.classList.remove('text-white', 'hover:bg-white/10');
+                    } else {
+                        btn.classList.remove('bg-white', 'text-sand-900');
+                        btn.classList.add('text-white', 'hover:bg-white/10');
+                    }
+                });
+                
+                // Tier buttons
+                tierBtns.forEach(btn => {
+                    if (btn.getAttribute('data-tier') === selectedTier) {
+                        btn.classList.add('bg-white', 'text-sand-900');
+                        btn.classList.remove('text-white', 'hover:bg-white/10');
+                    } else {
+                        btn.classList.remove('bg-white', 'text-sand-900');
+                        btn.classList.add('text-white', 'hover:bg-white/10');
+                    }
+                });
+                
+                // Update Price & Proceed Button
+                if (selectedSize && selectedTier) {
+                    const price = pricingData[selectedSize][selectedTier].val;
+                    calcPriceEl.textContent = price;
+                    calcPriceEl.classList.remove('text-sand-200');
+                    calcPriceEl.classList.add('text-white');
+                    proceedBtn.disabled = false;
+                    
+                    // Update Checkout Summary
+                    const designerFirstName = designersData[matchedDesigner].name.split(' ')[0];
+                    const tierName = selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1);
+                    summaryDesigner.textContent = `${designerFirstName} • ${tierName} Tier (${selectedSize})`;
+                    summaryPrice.textContent = price;
+                    successDesigner.textContent = designerFirstName;
+                    
+                } else {
+                    calcPriceEl.textContent = "Select Size & Tier";
+                    calcPriceEl.classList.add('text-sand-200');
+                    calcPriceEl.classList.remove('text-white');
+                    proceedBtn.disabled = true;
+                }
+            }
+
+            openBtns.forEach(btn => btn.addEventListener('click', openJourneyModal));
+            closeBtn.addEventListener('click', closeJourneyModal);
+            closeSuccessBtn.addEventListener('click', closeJourneyModal);
+
+            // Step Navigation Logic
+            stepBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const currentStep = e.target.closest('.modal-step');
+                    const nextStepId = e.target.getAttribute('data-next');
+                    const nextStep = document.getElementById(nextStepId);
+                    
+                    // Track choices for matchmaking
+                    if (currentStep.id === 'step-1' || currentStep.id === 'step-2') {
+                        const type = e.target.getAttribute('data-type');
+                        if (type) {
+                            userScores[type]++;
+                            if (!firstChoice) firstChoice = type;
+                        }
+                    }
+
+                    // Fade transition
+                    currentStep.style.opacity = '0';
+                    currentStep.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        currentStep.classList.remove('active');
+                        currentStep.style.opacity = '';
+                        currentStep.style.transform = '';
+                        
+                        if(nextStepId === 'step-3') {
+                            calculateAndShowMatch();
+                        }
+                        
+                        // Scroll modal to top on step change
+                        modal.scrollTop = 0;
+
+                        if(nextStep) {
+                            nextStep.classList.add('active');
+                        }
+                    }, 400); 
+                });
+            });
+            
+            // Scope Selection Event Listeners
+            sizeBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    selectedSize = e.target.getAttribute('data-size');
+                    updateScopeSelectionUI();
+                });
+            });
+            
+            tierBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    selectedTier = e.target.getAttribute('data-tier');
+                    updateScopeSelectionUI();
+                });
+            });
+            
+            // Dummy Payment Processing
+            payBtn.addEventListener('click', () => {
+                // UI state: loading
+                payBtn.disabled = true;
+                payBtnText.textContent = "Processing...";
+                paySpinner.classList.remove('hidden');
+                
+                // Simulate network delay
+                setTimeout(() => {
+                    const currentStep = document.getElementById('step-5');
+                    const nextStep = document.getElementById('step-6');
+                    
+                    currentStep.style.opacity = '0';
+                    currentStep.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        currentStep.classList.remove('active');
+                        currentStep.style.opacity = '';
+                        currentStep.style.transform = '';
+                        
+                        modal.scrollTop = 0;
+                        nextStep.classList.add('active');
+                    }, 400);
+                }, 1500);
+            });
+
+            // ==========================================
+            // 3D Showroom Logic: VR Rendered Walkthrough
+            // ==========================================
+            const showroomModal = document.getElementById('showroom-modal');
+            const openShowroomBtn = document.getElementById('open-showroom-btn');
+            const closeShowroomBtn = document.getElementById('close-showroom');
+            const container = document.getElementById('3d-canvas-container');
+            const switchVisionBtn = document.getElementById('switch-vision-btn');
+            const fadeOverlay = document.getElementById('showroom-fade-overlay');
+            
+            // UI Overlay Elements
+            const srSubtitle = document.getElementById('sr-subtitle');
+            const srTitle = document.getElementById('sr-title');
+            const srDesc = document.getElementById('sr-desc');
+            const tooltip = document.getElementById('hotspot-tooltip');
+            const hsTitle = document.getElementById('hs-title');
+            const hsDesc = document.getElementById('hs-desc');
+            
+            let scene, camera, renderer, controls;
+            let showroomInitialized = false;
+            let currentVision = 0; // 0 = Daffa, 1 = Audina
+            
+            let roomPanoMaterial;
+            let interactiveGroup;
+            let raycaster, mouse;
+            
+            let isWalking = false;
+            let isTransitioning = false;
+            let targetCamPos = new THREE.Vector3();
+            let clock = new THREE.Clock();
+            
+            // Store active items to animate them
+            let activeHotspots = [];
+            let activeTeleports = [];
+
+            // Vision Nodes Data (Matterport-style VR mapping)
+            const visions = [
+                {
+                    subtitle: "Vision 01",
+                    title: "Sleek Architectural Luxury",
+                    desc: "Curated by Daffa. Uncompromising geometry, sharp lines, and glossy textures that reflect a premium, absolute lifestyle.",
+                    btnText: "Experience Audina's Vision",
+                    bgColor: '#080808',
+                    nodes: [
+                        {
+                            image: "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&q=80&w=4000",
+                            teleports: [
+                                { pos: new THREE.Vector3(10, -15, -20), targetIndex: 1, label: "Explore Dining Area" }
+                            ],
+                            hotspots: [
+                                { pos: new THREE.Vector3(-20, 2, -30), title: "Uncompromising Geometry", desc: "Sharp lines and defined forms establish a powerful sense of order and serenity." }
+                            ]
+                        },
+                        {
+                            image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=4000",
+                            teleports: [
+                                { pos: new THREE.Vector3(-15, -15, 20), targetIndex: 0, label: "Return to Living Area" }
+                            ],
+                            hotspots: [
+                                { pos: new THREE.Vector3(25, -2, -20), title: "Bespoke Textures", desc: "Rich, contrasting materials elevate the spatial experience into absolute luxury." }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    subtitle: "Vision 02",
+                    title: "Warm-Dynamic Minimalism",
+                    desc: "Curated by Audina. Functional precision meets Japandi warmth. Soft textures and organic flow create a living, breathing sanctuary.",
+                    btnText: "Experience Daffa's Vision",
+                    bgColor: '#1A1816',
+                    nodes: [
+                        {
+                            image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=4000",
+                            teleports: [
+                                { pos: new THREE.Vector3(15, -15, -25), targetIndex: 1, label: "Explore Bedroom" }
+                            ],
+                            hotspots: [
+                                { pos: new THREE.Vector3(-25, 4, -35), title: "Japandi Warmth", desc: "Soft textures and grounded furniture invite human connection and relaxation." }
+                            ]
+                        },
+                        {
+                            image: "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=4000",
+                            teleports: [
+                                { pos: new THREE.Vector3(-10, -15, 25), targetIndex: 0, label: "Return to Main Area" }
+                            ],
+                            hotspots: [
+                                { pos: new THREE.Vector3(20, -5, -20), title: "Natural Light & Flow", desc: "Illumination is treated as a material, defining organic movement through the sanctuary." }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            function createTeleport(position, targetIndex) {
+                const ringGeo = new THREE.RingGeometry(2.5, 3.5, 32);
+                const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = -Math.PI / 2;
+                ring.position.copy(position);
+                ring.userData = { type: 'teleport', targetIndex: targetIndex, baseScale: 1 };
+                return ring;
+            }
+
+            function createHotspot(position, title, desc) {
+                const geometry = new THREE.SphereGeometry(0.8, 32, 32);
+                const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 });
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                const ringGeo = new THREE.RingGeometry(1.2, 1.4, 32);
+                const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                mesh.add(ring);
+                
+                mesh.position.copy(position);
+                mesh.lookAt(0, 0, 0); // Always face the camera at the center
+                mesh.userData = { type: 'info', title, desc, ring };
+                return mesh;
+            }
+
+            function loadNode(visionIndex, nodeIndex, bypassTransition = false) {
+                const visionData = visions[visionIndex];
+                const nodeData = visionData.nodes[nodeIndex];
+                
+                new THREE.TextureLoader().load(nodeData.image, (texture) => {
+                    roomPanoMaterial.map = texture;
+                    roomPanoMaterial.needsUpdate = true;
+                    
+                    // Clear existing interactions
+                    while(interactiveGroup.children.length > 0){ 
+                        interactiveGroup.remove(interactiveGroup.children[0]); 
+                    }
+                    activeHotspots = [];
+                    activeTeleports = [];
+
+                    // Rebuild Teleports
+                    nodeData.teleports.forEach(t => {
+                        const tp = createTeleport(t.pos, t.targetIndex);
+                        interactiveGroup.add(tp);
+                        activeTeleports.push(tp);
+                    });
+
+                    // Rebuild Hotspots
+                    nodeData.hotspots.forEach(h => {
+                        const hs = createHotspot(h.pos, h.title, h.desc);
+                        interactiveGroup.add(hs);
+                        activeHotspots.push(hs);
+                    });
+                    
+                    if(!bypassTransition) {
+                        fadeOverlay.style.opacity = '0';
+                        setTimeout(() => isTransitioning = false, 700);
+                    }
+                });
+            }
+
+            function initShowroom() {
+                if (showroomInitialized) return;
+                showroomInitialized = true;
+
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(visions[0].bgColor);
+
+                const aspect = container.clientWidth / container.clientHeight;
+                camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+                camera.position.set(0, 0, 0.1); // Stand in center
+
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+                container.appendChild(renderer.domElement);
+
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableZoom = false;
+                controls.enablePan = false;
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.minPolarAngle = Math.PI / 2 - 0.5; // Restrict looking too far up/down
+                controls.maxPolarAngle = Math.PI / 2 + 0.5;
+
+                raycaster = new THREE.Raycaster();
+                mouse = new THREE.Vector2();
+
+                // 360 Cylinder Geometry mapped around the camera
+                const panoramaGeo = new THREE.CylinderGeometry(50, 50, 60, 64, 1, true);
+                panoramaGeo.scale(-1, 1, 1); // Flip normals
+
+                roomPanoMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1 });
+                const roomMesh = new THREE.Mesh(panoramaGeo, roomPanoMaterial);
+                scene.add(roomMesh);
+
+                interactiveGroup = new THREE.Group();
+                scene.add(interactiveGroup);
+
+                // Initial Load
+                loadNode(0, 0, true);
+
+                // Events
+                window.addEventListener('resize', () => {
+                    if(!showroomModal.classList.contains('hidden')) {
+                        camera.aspect = container.clientWidth / container.clientHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(container.clientWidth, container.clientHeight);
+                    }
+                });
+
+                container.addEventListener('mousemove', (e) => {
+                    const rect = container.getBoundingClientRect();
+                    mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+                    mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+                });
+
+                container.addEventListener('click', (e) => {
+                    if (isTransitioning || isWalking) return;
+                    
+                    raycaster.setFromCamera(mouse, camera);
+                    const allInteractables = [...activeHotspots, ...activeTeleports];
+                    const intersects = raycaster.intersectObjects(allInteractables);
+
+                    if (intersects.length > 0) {
+                        const hit = intersects[0].object;
+                        
+                        if (hit.userData.type === 'teleport') {
+                            isWalking = true;
+                            hideTooltip();
+                            
+                            // 1. Move camera slightly towards the teleport node to simulate stepping forward
+                            targetCamPos = hit.position.clone().normalize().multiplyScalar(15); 
+                            
+                            // 2. Crossfade to black shortly after movement starts
+                            setTimeout(() => {
+                                fadeOverlay.style.opacity = '1';
+                                isTransitioning = true;
+                                
+                                // 3. Snap back, swap texture, and fade in
+                                setTimeout(() => {
+                                    isWalking = false;
+                                    camera.position.set(0, 0, 0.1);
+                                    controls.target.set(0, 0, -0.1);
+                                    controls.update();
+                                    loadNode(currentVision, hit.userData.targetIndex);
+                                }, 700);
+                            }, 400);
+
+                        } else if (hit.userData.type === 'info') {
+                            showTooltip(e.clientX, e.clientY, hit.userData.title, hit.userData.desc);
+                        }
+                    } else {
+                        hideTooltip();
+                    }
+                });
+
+                const animate = function () {
+                    requestAnimationFrame(animate);
+                    const time = clock.getElapsedTime();
+
+                    // Teleport Walk Animation
+                    if (isWalking) {
+                        camera.position.lerp(targetCamPos, 0.05);
+                    }
+
+                    controls.update();
+
+                    // Animate Hotspots & Handle Hover State
+                    if (!isTransitioning && !isWalking) {
+                        raycaster.setFromCamera(mouse, camera);
+                        const allInteractables = [...activeHotspots, ...activeTeleports];
+                        const intersects = raycaster.intersectObjects(allInteractables);
+                        let hovered = false;
+                        
+                        // Animations
+                        activeHotspots.forEach(hs => {
+                            hs.userData.ring.scale.setScalar(1 + Math.sin(time * 4) * 0.1);
+                            hs.scale.setScalar(1); 
+                        });
+                        
+                        activeTeleports.forEach(tp => {
+                            tp.scale.setScalar(1 + Math.sin(time * 3) * 0.05);
+                        });
+
+                        if (intersects.length > 0) {
+                            hovered = true;
+                            const hit = intersects[0].object;
+                            if (hit.userData.type === 'info') {
+                                hit.scale.setScalar(1.2);
+                            } else if (hit.userData.type === 'teleport') {
+                                hit.scale.setScalar(1.2 + Math.sin(time * 4) * 0.05);
+                            }
+                        }
+                        
+                        container.style.cursor = hovered ? 'pointer' : 'grab';
+                    }
+
+                    renderer.render(scene, camera);
+                };
+                animate();
+            }
+            
+            function showTooltip(x, y, title, desc) {
+                hsTitle.textContent = title;
+                hsDesc.textContent = desc;
+                tooltip.style.left = `${x}px`;
+                tooltip.style.top = `${y}px`;
+                tooltip.classList.remove('hidden');
+                setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
+            }
+
+            function hideTooltip() {
+                tooltip.classList.add('opacity-0');
+                setTimeout(() => tooltip.classList.add('hidden'), 300);
+            }
+
+            // Vision Switching Logic
+            switchVisionBtn.addEventListener('click', () => {
+                if(isTransitioning || isWalking) return;
+                isTransitioning = true;
+                hideTooltip();
+                
+                document.getElementById('showroom-ui-top').style.opacity = '0';
+                switchVisionBtn.style.opacity = '0';
+                fadeOverlay.style.opacity = '1';
+                
+                setTimeout(() => {
+                    currentVision = currentVision === 0 ? 1 : 0;
+                    const vData = visions[currentVision];
+                    
+                    scene.background.set(vData.bgColor);
+                    
+                    // Reset Camera
+                    camera.position.set(0, 0, 0.1);
+                    controls.target.set(0, 0, -0.1);
+                    controls.update();
+                    
+                    srSubtitle.textContent = vData.subtitle;
+                    srTitle.textContent = vData.title;
+                    srDesc.textContent = vData.desc;
+                    switchVisionBtn.textContent = vData.btnText;
+                    fadeOverlay.style.backgroundColor = vData.bgColor; 
+                    
+                    loadNode(currentVision, 0, true); // load node 0 of new vision
+                    
+                    setTimeout(() => {
+                        document.getElementById('showroom-ui-top').style.opacity = '1';
+                        switchVisionBtn.style.opacity = '1';
+                        fadeOverlay.style.opacity = '0';
+                        isTransitioning = false;
+                    }, 500);
+
+                }, 700);
+            });
+
+            function openShowroom() {
+                showroomModal.classList.remove('hidden');
+                setTimeout(() => {
+                    showroomModal.classList.remove('opacity-0');
+                    document.body.classList.add('modal-open');
+                    initShowroom();
+                }, 10);
+            }
+
+            function closeShowroom() {
+                showroomModal.classList.add('opacity-0');
+                hideTooltip();
+                setTimeout(() => {
+                    showroomModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                }, 700);
+            }
+
+            openShowroomBtn.addEventListener('click', openShowroom);
+            closeShowroomBtn.addEventListener('click', closeShowroom);
+
+        });
     </script>
 </body>
 </html>
