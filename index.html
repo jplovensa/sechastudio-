@@ -100,7 +100,15 @@
             overflow: hidden;
         }
         
-        /* Custom scrollbar for modal */
+        /* Custom scrollbar for horizontal scrolling tables & modals */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         #journey-modal::-webkit-scrollbar {
             width: 6px;
         }
@@ -151,23 +159,23 @@
     </div>
 
     <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-8 border-b border-transparent">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6 md:py-8 border-b border-transparent">
         <div class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center mix-blend-difference text-white">
-            <h1 class="text-xs tracking-[0.2em] uppercase font-medium">SECHA Studio+</h1>
-            <div class="hidden md:flex space-x-12 text-[10px] tracking-[0.2em] uppercase">
+            <h1 class="text-[10px] md:text-xs tracking-[0.2em] uppercase font-medium">SECHA Studio+</h1>
+            <div class="hidden lg:flex space-x-12 text-[10px] tracking-[0.2em] uppercase">
                 <a href="#purpose" class="hover:opacity-70 transition-opacity">Our Purpose</a>
                 <a href="#designers" class="hover:opacity-70 transition-opacity">Designers</a>
                 <a href="#process" class="hover:opacity-70 transition-opacity">Process</a>
                 <a href="#investment" class="hover:opacity-70 transition-opacity">Packages</a>
             </div>
-            <button class="open-journey-trigger text-[10px] tracking-[0.2em] uppercase border-b border-white/50 pb-1 hover:border-white transition-all">
+            <button class="open-journey-trigger text-[9px] md:text-[10px] tracking-[0.2em] uppercase border-b border-white/50 pb-1 hover:border-white transition-all">
                 Let's Talk
             </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative h-screen w-full flex flex-col justify-end pb-32 px-6 md:px-12 overflow-hidden bg-sand-900">
+    <header class="relative h-[90vh] md:h-screen w-full flex flex-col justify-end pb-24 md:pb-32 px-6 md:px-12 overflow-hidden bg-sand-900">
         <!-- Image with Loading State -->
         <div class="absolute inset-0 z-0 overflow-hidden bg-stone-800 animate-pulse" id="hero-img-wrapper">
             <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2400" 
@@ -179,16 +187,16 @@
         </div>
         
         <div class="relative z-10 w-full max-w-7xl mx-auto">
-            <p class="fade-in-section text-[11px] tracking-[0.3em] uppercase text-white/70 mb-6 font-light">
+            <p class="fade-in-section text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-white/70 mb-4 md:mb-6 font-light">
                 Interior Architecture & Design
             </p>
-            <h2 class="fade-in-section text-5xl md:text-7xl lg:text-[7rem] leading-[1.05] font-light text-white tracking-tighter" style="transition-delay: 200ms;">
+            <h2 class="fade-in-section text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-[1.1] md:leading-[1.05] font-light text-white tracking-tighter" style="transition-delay: 200ms;">
                 We believe your <br class="hidden md:block">
                 <span class="font-light text-sand-200 lg:pl-24">space</span> should <br class="hidden md:block">
                 tell your story.
             </h2>
-            <div class="fade-in-section mt-10 flex gap-6" style="transition-delay: 300ms;">
-                <button id="open-showroom-btn" class="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-sand-900 transition-colors">
+            <div class="fade-in-section mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6" style="transition-delay: 300ms;">
+                <button id="open-showroom-btn" class="w-full sm:w-auto px-6 md:px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-sand-900 transition-colors">
                     Enter 3D VR Showroom
                 </button>
             </div>
@@ -196,12 +204,12 @@
     </header>
 
     <!-- The Reason Why We Exist (Manifesto) -->
-    <section id="purpose" class="py-32 md:py-48 bg-sand-50">
+    <section id="purpose" class="py-24 md:py-48 bg-sand-50">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <div class="fade-in-section mb-12">
-                <span class="text-[10px] tracking-[0.2em] uppercase text-stone-400 font-medium">Why We Exist</span>
+            <div class="fade-in-section mb-8 md:mb-12">
+                <span class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-400 font-medium">Why We Exist</span>
             </div>
-            <h3 class="fade-in-section text-2xl md:text-4xl leading-relaxed text-stone-800 font-light tracking-tight" style="transition-delay: 100ms;">
+            <h3 class="fade-in-section text-xl sm:text-2xl md:text-4xl leading-relaxed text-stone-800 font-light tracking-tight" style="transition-delay: 100ms;">
                 "Design shouldn't be intimidating.<br class="hidden md:block"> 
                 We exist to bridge the gap between your dream <br class="hidden md:block">
                 space and reality. We don't just decorate rooms; <br class="hidden md:block">
@@ -213,21 +221,21 @@
 
     <!-- The Soul Experience (With Modal Trigger) -->
     <section id="experience" class="py-24 md:py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-16 md:gap-24">
-            <div class="w-full md:w-1/2 fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+            <div class="w-full lg:w-1/2 fade-in-section order-2 lg:order-1">
                 <!-- Image Wrapper with Pulse Loading -->
-                <div class="aspect-square md:aspect-[4/5] overflow-hidden bg-stone-200 animate-pulse relative">
+                <div class="aspect-[4/3] sm:aspect-square md:aspect-[4/5] overflow-hidden bg-stone-200 animate-pulse relative">
                     <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200" 
                          alt="Warm Japandi Interior Detail" 
                          class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000">
                 </div>
             </div>
-            <div class="w-full md:w-1/2 fade-in-section" style="transition-delay: 200ms;">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-stone-400 font-medium block mb-6">Designing By Knowing You</span>
-                <h3 class="text-4xl md:text-5xl leading-tight text-stone-900 mb-8 font-light tracking-tight">
+            <div class="w-full lg:w-1/2 fade-in-section order-1 lg:order-2" style="transition-delay: 200ms;">
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-stone-400 font-medium block mb-4 md:mb-6">Designing By Knowing You</span>
+                <h3 class="text-3xl sm:text-4xl md:text-5xl leading-tight text-stone-900 mb-6 md:mb-8 font-light tracking-tight">
                     A space that speaks your truth.
                 </h3>
-                <div class="space-y-6 text-sm text-stone-600 font-light leading-relaxed mb-10">
+                <div class="space-y-4 md:space-y-6 text-sm text-stone-600 font-light leading-relaxed mb-8 md:mb-10">
                     <p>
                         True luxury isn't about expensive furniture—it’s about resonance. Before we draw a single line, we take the time to understand your rhythms, your quiet moments, and the memories you want to cultivate. 
                     </p>
@@ -235,7 +243,7 @@
                         Your design will tell your story. We look deep into what your soul needs in the place you live in. Whether it's a sunlit corner for morning reflection or a fluid space for gathering loved ones, we ensure your sanctuary is a physical manifestation of your inner world.
                     </p>
                 </div>
-                <button class="open-journey-trigger px-8 py-4 bg-sand-900 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-700 transition-colors">
+                <button class="open-journey-trigger w-full sm:w-auto px-6 md:px-8 py-4 bg-sand-900 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-700 transition-colors">
                     Find Your Space Archetype
                 </button>
             </div>
@@ -245,20 +253,20 @@
     <!-- The Designers -->
     <section id="designers" class="py-24 md:py-32 bg-sand-100">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="fade-in-section border-b border-stone-300 pb-6 mb-24">
-                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">01. The Designers</h2>
+            <div class="fade-in-section border-b border-stone-300 pb-4 md:pb-6 mb-16 md:mb-24">
+                <h2 class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">01. The Designers</h2>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32">
                 <!-- Daffa -->
                 <div class="fade-in-section group">
-                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-10 animate-pulse relative">
+                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-6 md:mb-10 animate-pulse relative">
                         <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200" 
                              alt="Modern Elegance" 
                              class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
                     </div>
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4 font-medium">Daffa • The Architect of Form</p>
-                    <h3 class="text-3xl mb-4 text-stone-900 font-light tracking-tight">Modern Elegance.</h3>
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-2 md:mb-4 font-medium">Daffa • The Architect of Form</p>
+                    <h3 class="text-2xl md:text-3xl mb-4 text-stone-900 font-light tracking-tight">Modern Elegance.</h3>
                     <p class="text-sm font-light leading-relaxed text-stone-600">
                         For those who love clean lines, clutter-free spaces, and a touch of everyday luxury. Daffa focuses on making your space feel expansive, calm, and effortlessly polished. By keeping the foundational elements pure, the room becomes a serene backdrop to your life.
                     </p>
@@ -266,13 +274,13 @@
 
                 <!-- Audina -->
                 <div class="fade-in-section group lg:mt-32" style="transition-delay: 200ms;">
-                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-10 animate-pulse relative">
+                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-6 md:mb-10 animate-pulse relative">
                         <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=1200" 
                              alt="Cozy and Functional" 
                              class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
                     </div>
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4 font-medium">Audina • The Soul of Space</p>
-                    <h3 class="text-3xl mb-4 text-stone-900 font-light tracking-tight">Cozy & Functional.</h3>
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-2 md:mb-4 font-medium">Audina • The Soul of Space</p>
+                    <h3 class="text-2xl md:text-3xl mb-4 text-stone-900 font-light tracking-tight">Cozy & Functional.</h3>
                     <p class="text-sm font-light leading-relaxed text-stone-600">
                         For those who want their home to feel like a warm hug. Audina blends Japandi warmth with practical, user-first design. She creates layouts that flow naturally with your daily routine, using warm palettes and inviting textures that make a house truly feel like a home.
                     </p>
@@ -284,47 +292,47 @@
     <!-- The Process -->
     <section id="process" class="py-24 md:py-40 bg-sand-50">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="fade-in-section border-b border-stone-300 pb-6 mb-24">
-                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">02. How We Work Together</h2>
+            <div class="fade-in-section border-b border-stone-300 pb-4 md:pb-6 mb-16 md:mb-24">
+                <h2 class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">02. How We Work Together</h2>
             </div>
 
             <div class="max-w-3xl mx-auto">
-                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10">
-                    <span class="text-3xl text-stone-300 font-light tracking-tight">01</span>
+                <div class="fade-in-section flex flex-col md:flex-row gap-4 md:gap-16 border-b border-stone-200 pb-8 md:pb-10 mb-8 md:mb-10">
+                    <span class="text-2xl md:text-3xl text-stone-300 font-light tracking-tight">01</span>
                     <div>
-                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Getting to Know You</h4>
+                        <h4 class="text-xl md:text-2xl font-light text-stone-900 mb-2 md:mb-3 tracking-tight">Getting to Know You</h4>
                         <p class="text-sm text-stone-600 font-light leading-relaxed">We start with a conversation. We listen to your needs, understand how you live, and align our vision with your budget and space realities. No pressure, just planning.</p>
                     </div>
                 </div>
 
-                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 100ms;">
-                    <span class="text-3xl text-stone-300 font-light tracking-tight">02</span>
+                <div class="fade-in-section flex flex-col md:flex-row gap-4 md:gap-16 border-b border-stone-200 pb-8 md:pb-10 mb-8 md:mb-10" style="transition-delay: 100ms;">
+                    <span class="text-2xl md:text-3xl text-stone-300 font-light tracking-tight">02</span>
                     <div>
-                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">The Vision</h4>
+                        <h4 class="text-xl md:text-2xl font-light text-stone-900 mb-2 md:mb-3 tracking-tight">The Vision</h4>
                         <p class="text-sm text-stone-600 font-light leading-relaxed">Your ideas turn into a visual plan. We create bespoke moodboards and clear 2D layouts so you can see exactly how the space will be utilized.</p>
                     </div>
                 </div>
 
-                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 200ms;">
-                    <span class="text-3xl text-stone-300 font-light tracking-tight">03</span>
+                <div class="fade-in-section flex flex-col md:flex-row gap-4 md:gap-16 border-b border-stone-200 pb-8 md:pb-10 mb-8 md:mb-10" style="transition-delay: 200ms;">
+                    <span class="text-2xl md:text-3xl text-stone-300 font-light tracking-tight">03</span>
                     <div>
-                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Bringing It to Life</h4>
+                        <h4 class="text-xl md:text-2xl font-light text-stone-900 mb-2 md:mb-3 tracking-tight">Bringing It to Life</h4>
                         <p class="text-sm text-stone-600 font-light leading-relaxed">No more guessing. We provide high-quality 3D renders that show you exactly what your finished room will look like before you spend a dime on furniture or construction.</p>
                     </div>
                 </div>
 
-                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 border-b border-stone-200 pb-10 mb-10" style="transition-delay: 300ms;">
-                    <span class="text-3xl text-stone-300 font-light tracking-tight">04</span>
+                <div class="fade-in-section flex flex-col md:flex-row gap-4 md:gap-16 border-b border-stone-200 pb-8 md:pb-10 mb-8 md:mb-10" style="transition-delay: 300ms;">
+                    <span class="text-2xl md:text-3xl text-stone-300 font-light tracking-tight">04</span>
                     <div>
-                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">The Blueprint</h4>
+                        <h4 class="text-xl md:text-2xl font-light text-stone-900 mb-2 md:mb-3 tracking-tight">The Blueprint</h4>
                         <p class="text-sm text-stone-600 font-light leading-relaxed">We handle the technical details. You receive detailed engineering drawings (DED) so that contractors know exactly how to build the design flawlessly.</p>
                     </div>
                 </div>
 
-                <div class="fade-in-section flex flex-col md:flex-row gap-6 md:gap-16 pb-10" style="transition-delay: 400ms;">
-                    <span class="text-3xl text-stone-300 font-light tracking-tight">05</span>
+                <div class="fade-in-section flex flex-col md:flex-row gap-4 md:gap-16 pb-8 md:pb-10" style="transition-delay: 400ms;">
+                    <span class="text-2xl md:text-3xl text-stone-300 font-light tracking-tight">05</span>
                     <div>
-                        <h4 class="text-2xl font-light text-stone-900 mb-3 tracking-tight">Making It Happen</h4>
+                        <h4 class="text-xl md:text-2xl font-light text-stone-900 mb-2 md:mb-3 tracking-tight">Making It Happen</h4>
                         <p class="text-sm text-stone-600 font-light leading-relaxed">The final handover. You can take our plans to your own builder, or transition seamlessly into our bespoke furniture production to let us finish the job.</p>
                     </div>
                 </div>
@@ -335,39 +343,39 @@
     <!-- Packages & Pricing -->
     <section id="investment" class="py-24 md:py-40 bg-white border-t border-stone-200">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="fade-in-section border-b border-stone-200 pb-6 mb-20 flex justify-between items-end">
-                <h2 class="text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">03. The Investment</h2>
-                <span class="text-[10px] tracking-[0.2em] uppercase text-stone-400">Clear & Honest</span>
+            <div class="fade-in-section border-b border-stone-200 pb-4 md:pb-6 mb-16 md:mb-20 flex flex-col md:flex-row md:justify-between md:items-end gap-2">
+                <h2 class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-stone-500 font-medium">03. The Investment</h2>
+                <span class="text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-stone-400">Clear & Honest</span>
             </div>
 
-            <div class="fade-in-section mb-16">
-                <h3 class="text-3xl md:text-4xl mb-4 text-stone-900 font-light tracking-tight">Curated Design Tiers.</h3>
+            <div class="fade-in-section mb-12 md:mb-16">
+                <h3 class="text-3xl md:text-4xl mb-3 md:mb-4 text-stone-900 font-light tracking-tight">Curated Design Tiers.</h3>
                 <p class="text-stone-500 font-light text-sm">Select the package depth that fits your project's ambition.</p>
             </div>
 
             <!-- The 3 Tiers -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
                 
                 <!-- Lite Package -->
-                <div class="fade-in-section flex flex-col p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 100ms;">
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Essential Foundations</p>
-                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Lite Tier</h4>
-                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 1,000,000</p>
+                <div class="fade-in-section flex flex-col p-8 md:p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 100ms;">
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Essential Foundations</p>
+                    <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Lite Tier</h4>
+                    <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 1,000,000</p>
                     
-                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                    <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
                     </ul>
                 </div>
 
                 <!-- Pro Package (Highlighted) -->
-                <div class="fade-in-section flex flex-col p-10 bg-sand-50 border border-stone-200 relative" style="transition-delay: 200ms;">
-                    <div class="absolute top-0 right-0 bg-stone-900 text-white px-3 py-1.5 text-[9px] uppercase tracking-widest font-medium">Most Popular</div>
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Complete Visuals</p>
-                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Pro Tier</h4>
-                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 2,000,000</p>
+                <div class="fade-in-section flex flex-col p-8 md:p-10 bg-sand-50 border border-stone-200 relative shadow-sm" style="transition-delay: 200ms;">
+                    <div class="absolute top-0 right-0 bg-stone-900 text-white px-3 py-1.5 text-[8px] md:text-[9px] uppercase tracking-widest font-medium">Most Popular</div>
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Complete Visuals</p>
+                    <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Pro Tier</h4>
+                    <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 2,000,000</p>
                     
-                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                    <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Color Palette & Materials</li>
@@ -377,12 +385,12 @@
                 </div>
 
                 <!-- Premium Package -->
-                <div class="fade-in-section flex flex-col p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 300ms;">
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Full Service Execution</p>
-                    <h4 class="text-2xl mb-2 text-stone-900 font-light tracking-tight">The Premium Tier</h4>
-                    <p class="text-xs text-stone-500 mb-8 font-light">From IDR 2,600,000</p>
+                <div class="fade-in-section flex flex-col p-8 md:p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 300ms;">
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Full Service Execution</p>
+                    <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Premium Tier</h4>
+                    <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 2,600,000</p>
                     
-                    <ul class="space-y-4 text-sm font-light text-stone-600 flex-grow mb-10">
+                    <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Color Palette & Materials</li>
@@ -395,56 +403,56 @@
             </div>
 
             <!-- Pricing Sizing Matrix & Accordions -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 fade-in-section" style="transition-delay: 400ms;">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 fade-in-section" style="transition-delay: 400ms;">
                 
                 <!-- Sizing Guide -->
-                <div>
-                    <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium text-stone-900 mb-6">Area Pricing Matrix</h5>
-                    <div class="w-full overflow-x-auto">
-                        <table class="w-full text-left min-w-[400px]">
-                            <thead>
-                                <tr class="border-b border-stone-900 text-[10px] tracking-[0.2em] uppercase font-medium text-stone-500">
-                                    <th class="py-3 font-medium">Room Scale</th>
-                                    <th class="py-3 font-medium">Lite</th>
-                                    <th class="py-3 font-medium">Pro</th>
-                                    <th class="py-3 font-medium text-stone-900">Premium</th>
+                <div class="w-full max-w-full overflow-hidden">
+                    <h5 class="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium text-stone-900 mb-4 md:mb-6">Area Pricing Matrix</h5>
+                    <div class="w-full overflow-x-auto no-scrollbar border border-stone-200 rounded-sm">
+                        <table class="w-full text-left min-w-[500px] bg-white">
+                            <thead class="bg-sand-50">
+                                <tr class="border-b border-stone-300 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium text-stone-500">
+                                    <th class="px-4 py-4 font-medium">Room Scale</th>
+                                    <th class="px-4 py-4 font-medium">Lite</th>
+                                    <th class="px-4 py-4 font-medium">Pro</th>
+                                    <th class="px-4 py-4 font-medium text-stone-900">Premium</th>
                                 </tr>
                             </thead>
                             <tbody class="text-xs font-light">
-                                <tr class="border-b border-stone-200">
-                                    <td class="py-4 font-medium text-stone-800">Small (≤ 10m²)</td>
-                                    <td class="py-4 text-stone-500">1M</td>
-                                    <td class="py-4 text-stone-500">2M</td>
-                                    <td class="py-4 font-medium text-stone-900">2.6M</td>
+                                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                                    <td class="px-4 py-5 font-medium text-stone-800">Small (≤ 10m²)</td>
+                                    <td class="px-4 py-5 text-stone-500">1M</td>
+                                    <td class="px-4 py-5 text-stone-500">2M</td>
+                                    <td class="px-4 py-5 font-medium text-stone-900">2.6M</td>
                                 </tr>
-                                <tr class="border-b border-stone-200">
-                                    <td class="py-4 font-medium text-stone-800">Medium (11-18m²)</td>
-                                    <td class="py-4 text-stone-500">1.8M</td>
-                                    <td class="py-4 text-stone-500">3.6M</td>
-                                    <td class="py-4 font-medium text-stone-900">4.7M</td>
+                                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                                    <td class="px-4 py-5 font-medium text-stone-800">Medium (11-18m²)</td>
+                                    <td class="px-4 py-5 text-stone-500">1.8M</td>
+                                    <td class="px-4 py-5 text-stone-500">3.6M</td>
+                                    <td class="px-4 py-5 font-medium text-stone-900">4.7M</td>
                                 </tr>
-                                <tr class="border-b border-stone-200">
-                                    <td class="py-4 font-medium text-stone-800">Large (19-30m²)</td>
-                                    <td class="py-4 text-stone-500">3M</td>
-                                    <td class="py-4 text-stone-500">6M</td>
-                                    <td class="py-4 font-medium text-stone-900">7.8M</td>
+                                <tr class="hover:bg-stone-50 transition-colors">
+                                    <td class="px-4 py-5 font-medium text-stone-800">Large (19-30m²)</td>
+                                    <td class="px-4 py-5 text-stone-500">3M</td>
+                                    <td class="px-4 py-5 text-stone-500">6M</td>
+                                    <td class="px-4 py-5 font-medium text-stone-900">7.8M</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <p class="text-[9px] tracking-[0.1em] text-stone-400 mt-4 uppercase">* Spaces > 30m² are calculated at IDR 175,000 / m².</p>
+                    <p class="text-[8px] md:text-[9px] tracking-[0.1em] text-stone-400 mt-4 uppercase">* Spaces > 30m² are calculated at IDR 175,000 / m².</p>
                 </div>
 
                 <!-- Accordions -->
                 <div>
-                    <div class="accordion-item border-t border-stone-300 py-5">
+                    <div class="accordion-item border-t border-stone-300 py-4 md:py-5">
                         <button class="w-full flex justify-between items-center text-left text-stone-900 hover:text-stone-600 transition-colors focus:outline-none">
-                            <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium">Available Add-ons</h5>
+                            <h5 class="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium">Available Add-ons</h5>
                             <svg class="icon-plus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             <svg class="icon-minus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                         </button>
                         <div class="accordion-content">
-                            <ul class="space-y-4 text-sm font-light text-stone-600 mt-6 pb-2">
+                            <ul class="space-y-3 md:space-y-4 text-xs md:text-sm font-light text-stone-600 mt-4 md:mt-6 pb-2">
                                 <li class="flex justify-between border-b border-stone-100 pb-2"><span>Extra 3D Render View</span> <span class="text-stone-900">IDR 80,000</span></li>
                                 <li class="flex justify-between border-b border-stone-100 pb-2"><span>Additional Site Visit</span> <span class="text-stone-900">IDR 1,500,000</span></li>
                                 <li class="flex justify-between border-b border-stone-100 pb-2"><span>Bill of Quantities (BOQ)</span> <span class="text-stone-900">IDR 1,000,000</span></li>
@@ -453,14 +461,14 @@
                         </div>
                     </div>
 
-                    <div class="accordion-item border-t border-stone-300 py-5">
+                    <div class="accordion-item border-t border-stone-300 py-4 md:py-5">
                         <button class="w-full flex justify-between items-center text-left text-stone-900 hover:text-stone-600 transition-colors focus:outline-none">
-                            <h5 class="text-[11px] tracking-[0.2em] uppercase font-medium">Terms & Conditions</h5>
+                            <h5 class="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium">Terms & Conditions</h5>
                             <svg class="icon-plus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             <svg class="icon-minus w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                         </button>
                         <div class="accordion-content">
-                            <ul class="space-y-3 text-sm font-light leading-relaxed text-stone-600 mt-6 pb-2">
+                            <ul class="space-y-2 md:space-y-3 text-xs md:text-sm font-light leading-relaxed text-stone-600 mt-4 md:mt-6 pb-2">
                                 <li class="flex gap-3"><span class="text-stone-300">•</span> We include 2 Major Revisions (during 3D phase) and 1 Minor Revision (technical phase).</li>
                                 <li class="flex gap-3"><span class="text-stone-300">•</span> Files are delivered in PDF/JPG. Raw SketchUp files are not provided.</li>
                                 <li class="flex gap-3"><span class="text-stone-300">•</span> Work begins the next business day after the down payment is received.</li>
@@ -475,19 +483,19 @@
     </section>
 
     <!-- Footer CTA -->
-    <section class="py-32 bg-sand-900 text-center">
-        <div class="max-w-3xl mx-auto px-6">
-            <h2 class="fade-in-section text-4xl md:text-5xl font-light mb-8 text-white tracking-tight">Let's create something beautiful together.</h2>
-            <p class="fade-in-section text-sand-200 font-light text-sm mb-12">Reach out to schedule your initial consultation.</p>
-            <button class="open-journey-trigger inline-block fade-in-section px-10 py-4 bg-transparent text-white border border-white/30 hover:bg-white hover:text-sand-900 text-[10px] tracking-[0.2em] uppercase transition-all duration-300">
+    <section class="py-24 md:py-32 bg-sand-900 text-center px-6">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="fade-in-section text-3xl sm:text-4xl md:text-5xl font-light mb-6 md:mb-8 text-white tracking-tight leading-tight">Let's create something beautiful together.</h2>
+            <p class="fade-in-section text-sand-200 font-light text-xs md:text-sm mb-10 md:mb-12">Reach out to schedule your initial consultation.</p>
+            <button class="open-journey-trigger w-full sm:w-auto inline-block fade-in-section px-8 md:px-10 py-4 bg-transparent text-white border border-white/30 hover:bg-white hover:text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase transition-all duration-300">
                 Start Your Project
             </button>
         </div>
     </section>
 
     <!-- Small Footer -->
-    <footer class="py-12 bg-sand-900 border-t border-white/10 text-center">
-        <div class="text-[9px] tracking-[0.3em] text-white/50 uppercase font-light">
+    <footer class="py-8 md:py-12 bg-sand-900 border-t border-white/10 text-center">
+        <div class="text-[8px] md:text-[9px] tracking-[0.3em] text-white/50 uppercase font-light">
             © 2026 SECHA Studio+ • Interior Architecture
         </div>
     </footer>
@@ -497,83 +505,83 @@
     <!-- ========================================== -->
     <div id="showroom-modal" class="fixed inset-0 z-[110] hidden bg-[#080808] flex items-center justify-center opacity-0 transition-opacity duration-700">
         <!-- Close Button -->
-        <button id="close-showroom" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-20 focus:outline-none">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="close-showroom" class="absolute top-4 right-4 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-30 p-2 focus:outline-none">
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
         <!-- Fade Overlay for Transitions -->
         <div id="showroom-fade-overlay" class="absolute inset-0 bg-[#080808] z-[15] pointer-events-none opacity-0 transition-opacity duration-700"></div>
 
         <!-- Cinematic UI Overlay -->
-        <div class="absolute top-8 left-8 md:top-12 md:left-12 text-white z-20 pointer-events-none transition-opacity duration-500" id="showroom-ui-top">
-            <span class="text-[9px] tracking-[0.4em] uppercase text-white/50 block mb-3" id="sr-subtitle">Vision 01</span>
-            <h3 class="text-3xl md:text-5xl font-light tracking-tight mb-4" id="sr-title">Sleek Architectural Luxury</h3>
-            <p class="text-xs font-light text-white/70 max-w-sm leading-relaxed" id="sr-desc">Curated by Daffa. Uncompromising geometry, sharp lines, and glossy textures that reflect a premium, absolute lifestyle.</p>
+        <div class="absolute top-6 left-6 md:top-12 md:left-12 text-white z-20 pointer-events-none transition-opacity duration-500 max-w-[70vw]" id="showroom-ui-top">
+            <span class="text-[8px] md:text-[9px] tracking-[0.4em] uppercase text-white/50 block mb-2 md:mb-3" id="sr-subtitle">Vision 01</span>
+            <h3 class="text-2xl sm:text-3xl md:text-5xl font-light tracking-tight mb-2 md:mb-4" id="sr-title">Sleek Architectural Luxury</h3>
+            <p class="text-[10px] md:text-xs font-light text-white/70 max-w-xs md:max-w-sm leading-relaxed" id="sr-desc">Curated by Daffa. Uncompromising geometry, sharp lines, and glossy textures that reflect a premium, absolute lifestyle.</p>
         </div>
 
-        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 z-20">
-            <p class="text-[9px] uppercase tracking-[0.3em] text-white/40 animate-pulse text-center">Click floor rings to walk • Drag to look around</p>
-            <button id="switch-vision-btn" class="px-8 py-4 bg-white text-[#0a0a0a] text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+        <div class="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 md:gap-6 z-20 w-[90%] md:w-auto">
+            <p class="text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-white/40 animate-pulse text-center">Tap floor rings to walk • Drag to look around</p>
+            <button id="switch-vision-btn" class="w-full md:w-auto px-6 md:px-8 py-4 bg-white text-[#0a0a0a] text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]">
                 Experience Audina's Vision
             </button>
         </div>
 
         <!-- Interactive Hotspot Tooltip -->
-        <div id="hotspot-tooltip" class="absolute hidden flex-col items-start bg-black/60 backdrop-blur-md border border-white/20 p-6 max-w-[250px] z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-[-20px] transition-opacity duration-300 opacity-0">
+        <div id="hotspot-tooltip" class="absolute hidden flex-col items-start bg-black/60 backdrop-blur-md border border-white/20 p-4 md:p-6 max-w-[200px] md:max-w-[250px] z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-[-20px] transition-opacity duration-300 opacity-0">
             <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black/60 border-b border-r border-white/20 transform rotate-45 backdrop-blur-md"></div>
-            <h4 id="hs-title" class="text-white text-[11px] font-medium tracking-widest mb-2 uppercase">Title</h4>
-            <p id="hs-desc" class="text-white/70 text-xs font-light leading-relaxed">Description goes here.</p>
+            <h4 id="hs-title" class="text-white text-[10px] md:text-[11px] font-medium tracking-widest mb-1 md:mb-2 uppercase">Title</h4>
+            <p id="hs-desc" class="text-white/70 text-[10px] md:text-xs font-light leading-relaxed">Description goes here.</p>
         </div>
 
-        <div id="3d-canvas-container" class="absolute inset-0 w-full h-full cursor-grab z-10"></div>
+        <div id="3d-canvas-container" class="absolute inset-0 w-full h-full cursor-grab z-10 touch-none"></div>
     </div>
 
     <!-- ========================================== -->
     <!-- WALKTHROUGH MODAL: "Matchmaking & Checkout"-->
     <!-- ========================================== -->
-    <div id="journey-modal" class="fixed inset-0 z-[100] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto">
+    <div id="journey-modal" class="fixed inset-0 z-[100] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto pt-10 pb-10">
         <!-- Close Button -->
-        <button id="close-modal" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-10 focus:outline-none">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="close-modal" class="fixed top-4 right-4 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-20 p-2 focus:outline-none">
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
         <!-- Container for steps -->
-        <div class="w-full max-w-3xl px-6 py-20 text-center relative mx-auto my-auto min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-2xl px-4 md:px-6 py-10 md:py-20 text-center relative mx-auto my-auto flex flex-col justify-center">
             
             <!-- Step 1: The Feeling -->
             <div class="modal-step active w-full" id="step-1">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 01: The Feeling</span>
-                <h2 class="text-3xl md:text-5xl font-light text-white mb-12 tracking-tight leading-tight">When you walk through your door, what does your soul need most?</h2>
-                <div class="flex flex-col gap-4 max-w-md mx-auto">
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-2">A Deep, Calming Breath</button>
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-2">An Embrace of Warmth</button>
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-2">A Surge of Inspiration</button>
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 01: The Feeling</span>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-12 tracking-tight leading-tight">When you walk through your door, what does your soul need most?</h2>
+                <div class="flex flex-col gap-3 md:gap-4 max-w-md mx-auto w-full">
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-2">A Deep, Calming Breath</button>
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-2">An Embrace of Warmth</button>
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-2">A Surge of Inspiration</button>
                 </div>
             </div>
 
             <!-- Step 2: The Rhythm -->
             <div class="modal-step w-full" id="step-2">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 02: The Rhythm</span>
-                <h2 class="text-3xl md:text-5xl font-light text-white mb-12 tracking-tight leading-tight">Your ideal morning in this space begins with...</h2>
-                <div class="flex flex-col gap-4 max-w-md mx-auto">
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-3">Quiet Stillness and Natural Light</button>
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-3">Connection and Gathering</button>
-                    <button class="step-btn w-full px-8 py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-3">Movement, Coffee, and Flow</button>
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 02: The Rhythm</span>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-12 tracking-tight leading-tight">Your ideal morning in this space begins with...</h2>
+                <div class="flex flex-col gap-3 md:gap-4 max-w-md mx-auto w-full">
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="A" data-next="step-3">Quiet Stillness & Natural Light</button>
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="B" data-next="step-3">Connection and Gathering</button>
+                    <button class="step-btn w-full px-6 md:px-8 py-4 md:py-5 border border-white/20 text-white hover:bg-white hover:text-sand-900 transition-all text-[10px] md:text-[11px] uppercase tracking-widest font-medium" data-type="C" data-next="step-3">Movement, Coffee, and Flow</button>
                 </div>
             </div>
 
             <!-- Step 3: Matchmaking Reveal -->
             <div class="modal-step w-full" id="step-3">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 03: The Match</span>
-                <h2 id="result-title" class="text-3xl md:text-5xl font-light text-white mb-8 tracking-tight leading-tight">Your vision aligns with...</h2>
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 03: The Match</span>
+                <h2 id="result-title" class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-6 md:mb-8 tracking-tight leading-tight">Your vision aligns with...</h2>
                 
-                <div class="flex flex-col md:flex-row items-center gap-8 bg-white/5 p-6 border border-white/10 max-w-2xl mx-auto mb-10 text-left">
-                    <img id="match-img" src="" alt="Matched Designer" class="w-32 h-40 object-cover bg-stone-800">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 md:gap-8 bg-white/5 p-6 border border-white/10 max-w-xl mx-auto mb-8 md:mb-10 text-center sm:text-left">
+                    <img id="match-img" src="" alt="Matched Designer" class="w-24 h-24 sm:w-32 sm:h-40 object-cover bg-stone-800 rounded-sm shrink-0">
                     <div>
-                        <h3 id="match-name" class="text-2xl text-white font-light tracking-tight mb-2"></h3>
-                        <p id="match-desc" class="text-sm text-white/70 font-light leading-relaxed mb-6"></p>
-                        <button id="select-designer-btn" class="step-btn px-6 py-3 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors" data-next="step-4">
-                            Collaborate with Designer
+                        <h3 id="match-name" class="text-xl md:text-2xl text-white font-light tracking-tight mb-2 md:mb-3"></h3>
+                        <p id="match-desc" class="text-xs md:text-sm text-white/70 font-light leading-relaxed mb-5 md:mb-6"></p>
+                        <button id="select-designer-btn" class="step-btn w-full sm:w-auto px-6 py-3 bg-white text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors" data-next="step-4">
+                            Collaborate
                         </button>
                     </div>
                 </div>
@@ -581,86 +589,86 @@
 
             <!-- Step 4: The Scope (Package Selection) -->
             <div class="modal-step w-full" id="step-4">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 04: The Scope</span>
-                <h2 class="text-3xl md:text-5xl font-light text-white mb-10 tracking-tight leading-tight">Define your space.</h2>
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 04: The Scope</span>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-10 tracking-tight leading-tight">Define your space.</h2>
                 
-                <p class="text-[11px] uppercase tracking-widest text-white/70 mb-4 font-medium">1. Select Room Size</p>
-                <div class="flex flex-wrap gap-4 justify-center mb-10">
-                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="small">Small (≤ 10m²)</button>
-                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="medium">Medium (11-18m²)</button>
-                    <button class="size-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="large">Large (19-30m²)</button>
+                <p class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/70 mb-3 md:mb-4 font-medium">1. Select Room Size</p>
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center mb-8 md:mb-10">
+                    <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="small">Small (≤ 10m²)</button>
+                    <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="medium">Medium (11-18m²)</button>
+                    <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="large">Large (19-30m²)</button>
                 </div>
 
-                <p class="text-[11px] uppercase tracking-widest text-white/70 mb-4 font-medium">2. Select Design Tier</p>
-                <div class="flex flex-wrap gap-4 justify-center mb-10">
-                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="lite">Lite</button>
-                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="pro">Pro</button>
-                    <button class="tier-btn px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="premium">Premium</button>
+                <p class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/70 mb-3 md:mb-4 font-medium">2. Select Design Tier</p>
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center mb-8 md:mb-10">
+                    <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="lite">Lite</button>
+                    <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="pro">Pro</button>
+                    <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="premium">Premium</button>
                 </div>
 
-                <div class="text-2xl font-light text-white mb-8 border-t border-white/10 pt-8 max-w-md mx-auto">
-                    Design Investment: <br class="md:hidden"><span id="calc-price" class="font-medium text-sand-200 mt-2 block md:inline md:mt-0">Select Scope to Calculate</span>
+                <div class="text-xl md:text-2xl font-light text-white mb-6 md:mb-8 border-t border-white/10 pt-6 md:pt-8 max-w-sm mx-auto">
+                    Design Investment: <br class="sm:hidden"><span id="calc-price" class="font-medium text-sand-200 mt-1 block sm:inline sm:mt-0">Select Scope</span>
                 </div>
                 
-                <button id="proceed-checkout-btn" class="step-btn px-10 py-4 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" data-next="step-5" disabled>
+                <button id="proceed-checkout-btn" class="step-btn w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" data-next="step-5" disabled>
                     Proceed to Checkout
                 </button>
             </div>
 
             <!-- Step 5: Dummy Checkout -->
             <div class="modal-step w-full" id="step-5">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-6 font-medium">Phase 05: Secure Allocation</span>
-                <h2 class="text-3xl md:text-5xl font-light text-white mb-10 tracking-tight leading-tight">Finalize your commitment.</h2>
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 05: Secure Allocation</span>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-10 tracking-tight leading-tight">Finalize your commitment.</h2>
                 
                 <div class="max-w-md mx-auto text-left space-y-4">
-                    <div class="p-8 bg-white text-stone-900 shadow-xl">
-                        <div class="flex justify-between items-end border-b border-stone-200 pb-4 mb-6">
+                    <div class="p-6 md:p-8 bg-white text-stone-900 shadow-xl">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-end border-b border-stone-200 pb-4 mb-6 gap-2">
                             <div>
-                                <span class="font-medium text-sm block mb-1">Design Retainer</span>
-                                <span class="text-xs text-stone-500 font-light block" id="summary-designer">Designer & Package</span>
+                                <span class="font-medium text-xs md:text-sm block mb-1">Design Retainer</span>
+                                <span class="text-[10px] md:text-xs text-stone-500 font-light block" id="summary-designer">Designer & Package</span>
                             </div>
-                            <span class="font-medium text-lg tracking-tight" id="summary-price">IDR 0</span>
+                            <span class="font-medium text-base md:text-lg tracking-tight" id="summary-price">IDR 0</span>
                         </div>
                         
                         <!-- Dummy Form -->
                         <div class="mb-4">
-                            <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Cardholder Name</label>
-                            <input type="text" placeholder="John Doe" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Cardholder Name</label>
+                            <input type="text" placeholder="John Doe" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
                         </div>
-                        <div class="mb-6">
-                            <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Card Number</label>
-                            <input type="text" placeholder="0000 0000 0000 0000" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        <div class="mb-5 md:mb-6">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Card Number</label>
+                            <input type="text" placeholder="0000 0000 0000 0000" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
                         </div>
-                        <div class="flex gap-6 mb-10">
+                        <div class="flex gap-4 md:gap-6 mb-8 md:mb-10">
                             <div class="w-1/2">
-                                <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Expiry Date</label>
-                                <input type="text" placeholder="MM/YY" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                                <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
                             </div>
                             <div class="w-1/2">
-                                <label class="text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">CVC</label>
-                                <input type="text" placeholder="123" class="w-full border-b border-stone-300 py-2 text-sm focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                                <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">CVC</label>
+                                <input type="text" placeholder="123" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
                             </div>
                         </div>
                         
-                        <button id="pay-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors flex justify-center items-center">
+                        <button id="pay-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors flex justify-center items-center">
                             <span id="pay-btn-text">Authorize Payment</span>
                             <div id="pay-spinner" class="hidden ml-3 w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                         </button>
                     </div>
-                    <p class="text-[9px] text-white/50 text-center uppercase tracking-widest mt-4">Secure encrypted connection</p>
+                    <p class="text-[8px] md:text-[9px] text-white/50 text-center uppercase tracking-widest mt-4">Secure encrypted connection</p>
                 </div>
             </div>
 
             <!-- Step 6: Success -->
             <div class="modal-step w-full" id="step-6">
-                <div class="w-24 h-24 mx-auto rounded-full border border-white/20 flex items-center justify-center mb-10 bg-white/5">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                <div class="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full border border-white/20 flex items-center justify-center mb-8 md:mb-10 bg-white/5">
+                    <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h2 class="text-3xl md:text-5xl font-light text-white mb-6 tracking-tight leading-tight">Welcome to SECHA Studio+.</h2>
-                <p class="text-white/70 font-light text-sm leading-relaxed mb-12 max-w-md mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-4 md:mb-6 tracking-tight leading-tight">Welcome to SECHA Studio+.</h2>
+                <p class="text-white/70 font-light text-xs md:text-sm leading-relaxed mb-10 md:mb-12 max-w-md mx-auto">
                     Your payment has been successfully processed. <span id="success-designer" class="font-medium text-white"></span>'s team will contact you within 24 hours to begin mapping your architectural narrative.
                 </p>
-                <button id="close-success-btn" class="px-10 py-4 bg-white text-sand-900 text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors">
+                <button id="close-success-btn" class="w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors">
                     Return to Experience
                 </button>
             </div>
@@ -707,7 +715,7 @@
             // Intersection Observer for Fade-ins
             const observerOptions = {
                 root: null,
-                rootMargin: '0px 0px -10% 0px',
+                rootMargin: '0px 0px -5% 0px',
                 threshold: 0.1
             };
 
@@ -821,7 +829,6 @@
             };
 
             function openJourneyModal() {
-                // Reset states
                 userScores = { A: 0, B: 0, C: 0 };
                 firstChoice = null;
                 matchedDesigner = null;
@@ -834,7 +841,6 @@
                 modal.classList.remove('opacity-0');
                 document.body.classList.add('modal-open');
                 
-                // Scroll modal to top
                 modal.scrollTop = 0;
             }
 
@@ -848,7 +854,6 @@
                         else s.classList.remove('active');
                     });
                     
-                    // Reset pay button
                     payBtn.disabled = false;
                     payBtnText.textContent = "Authorize Payment";
                     paySpinner.classList.add('hidden');
@@ -859,7 +864,6 @@
             function calculateAndShowMatch() {
                 let dominantTrait = 'A';
                 
-                // Weighting logic: Step 1 breaks ties
                 let scoreA = userScores.A + (firstChoice === 'A' ? 0.1 : 0);
                 let scoreB = userScores.B + (firstChoice === 'B' ? 0.1 : 0);
                 let scoreC = userScores.C + (firstChoice === 'C' ? 0.1 : 0);
@@ -867,7 +871,6 @@
                 if (scoreB > scoreA && scoreB >= scoreC) dominantTrait = 'B';
                 if (scoreC > scoreA && scoreC > scoreB) dominantTrait = 'C';
 
-                // Assign Designer (A/C -> Daffa, B -> Audina)
                 if (dominantTrait === 'B') {
                     matchedDesigner = 'audina';
                 } else {
@@ -882,7 +885,6 @@
             }
             
             function updateScopeSelectionUI() {
-                // Size buttons
                 sizeBtns.forEach(btn => {
                     if (btn.getAttribute('data-size') === selectedSize) {
                         btn.classList.add('bg-white', 'text-sand-900');
@@ -893,7 +895,6 @@
                     }
                 });
                 
-                // Tier buttons
                 tierBtns.forEach(btn => {
                     if (btn.getAttribute('data-tier') === selectedTier) {
                         btn.classList.add('bg-white', 'text-sand-900');
@@ -904,7 +905,6 @@
                     }
                 });
                 
-                // Update Price & Proceed Button
                 if (selectedSize && selectedTier) {
                     const price = pricingData[selectedSize][selectedTier].val;
                     calcPriceEl.textContent = price;
@@ -912,7 +912,6 @@
                     calcPriceEl.classList.add('text-white');
                     proceedBtn.disabled = false;
                     
-                    // Update Checkout Summary
                     const designerFirstName = designersData[matchedDesigner].name.split(' ')[0];
                     const tierName = selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1);
                     summaryDesigner.textContent = `${designerFirstName} • ${tierName} Tier (${selectedSize})`;
@@ -920,7 +919,7 @@
                     successDesigner.textContent = designerFirstName;
                     
                 } else {
-                    calcPriceEl.textContent = "Select Size & Tier";
+                    calcPriceEl.textContent = "Select Scope";
                     calcPriceEl.classList.add('text-sand-200');
                     calcPriceEl.classList.remove('text-white');
                     proceedBtn.disabled = true;
@@ -931,14 +930,12 @@
             closeBtn.addEventListener('click', closeJourneyModal);
             closeSuccessBtn.addEventListener('click', closeJourneyModal);
 
-            // Step Navigation Logic
             stepBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const currentStep = e.target.closest('.modal-step');
                     const nextStepId = e.target.getAttribute('data-next');
                     const nextStep = document.getElementById(nextStepId);
                     
-                    // Track choices for matchmaking
                     if (currentStep.id === 'step-1' || currentStep.id === 'step-2') {
                         const type = e.target.getAttribute('data-type');
                         if (type) {
@@ -947,7 +944,6 @@
                         }
                     }
 
-                    // Fade transition
                     currentStep.style.opacity = '0';
                     currentStep.style.transform = 'translateY(-20px)';
                     
@@ -960,7 +956,6 @@
                             calculateAndShowMatch();
                         }
                         
-                        // Scroll modal to top on step change
                         modal.scrollTop = 0;
 
                         if(nextStep) {
@@ -970,7 +965,6 @@
                 });
             });
             
-            // Scope Selection Event Listeners
             sizeBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     selectedSize = e.target.getAttribute('data-size');
@@ -985,14 +979,11 @@
                 });
             });
             
-            // Dummy Payment Processing
             payBtn.addEventListener('click', () => {
-                // UI state: loading
                 payBtn.disabled = true;
                 payBtnText.textContent = "Processing...";
                 paySpinner.classList.remove('hidden');
                 
-                // Simulate network delay
                 setTimeout(() => {
                     const currentStep = document.getElementById('step-5');
                     const nextStep = document.getElementById('step-6');
@@ -1021,7 +1012,6 @@
             const switchVisionBtn = document.getElementById('switch-vision-btn');
             const fadeOverlay = document.getElementById('showroom-fade-overlay');
             
-            // UI Overlay Elements
             const srSubtitle = document.getElementById('sr-subtitle');
             const srTitle = document.getElementById('sr-title');
             const srDesc = document.getElementById('sr-desc');
@@ -1042,11 +1032,12 @@
             let targetCamPos = new THREE.Vector3();
             let clock = new THREE.Clock();
             
-            // Store active items to animate them
             let activeHotspots = [];
             let activeTeleports = [];
 
-            // Vision Nodes Data (Matterport-style VR mapping)
+            // Universal pointer positions for touch handling
+            let pointerDownPos = { x: 0, y: 0 };
+
             const visions = [
                 {
                     subtitle: "Vision 01",
@@ -1125,7 +1116,7 @@
                 mesh.add(ring);
                 
                 mesh.position.copy(position);
-                mesh.lookAt(0, 0, 0); // Always face the camera at the center
+                mesh.lookAt(0, 0, 0); 
                 mesh.userData = { type: 'info', title, desc, ring };
                 return mesh;
             }
@@ -1138,21 +1129,18 @@
                     roomPanoMaterial.map = texture;
                     roomPanoMaterial.needsUpdate = true;
                     
-                    // Clear existing interactions
                     while(interactiveGroup.children.length > 0){ 
                         interactiveGroup.remove(interactiveGroup.children[0]); 
                     }
                     activeHotspots = [];
                     activeTeleports = [];
 
-                    // Rebuild Teleports
                     nodeData.teleports.forEach(t => {
                         const tp = createTeleport(t.pos, t.targetIndex);
                         interactiveGroup.add(tp);
                         activeTeleports.push(tp);
                     });
 
-                    // Rebuild Hotspots
                     nodeData.hotspots.forEach(h => {
                         const hs = createHotspot(h.pos, h.title, h.desc);
                         interactiveGroup.add(hs);
@@ -1175,7 +1163,7 @@
 
                 const aspect = container.clientWidth / container.clientHeight;
                 camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-                camera.position.set(0, 0, 0.1); // Stand in center
+                camera.position.set(0, 0, 0.1);
 
                 renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
                 renderer.setSize(container.clientWidth, container.clientHeight);
@@ -1187,15 +1175,14 @@
                 controls.enablePan = false;
                 controls.enableDamping = true;
                 controls.dampingFactor = 0.05;
-                controls.minPolarAngle = Math.PI / 2 - 0.5; // Restrict looking too far up/down
+                controls.minPolarAngle = Math.PI / 2 - 0.5;
                 controls.maxPolarAngle = Math.PI / 2 + 0.5;
 
                 raycaster = new THREE.Raycaster();
                 mouse = new THREE.Vector2();
 
-                // 360 Cylinder Geometry mapped around the camera
                 const panoramaGeo = new THREE.CylinderGeometry(50, 50, 60, 64, 1, true);
-                panoramaGeo.scale(-1, 1, 1); // Flip normals
+                panoramaGeo.scale(-1, 1, 1); 
 
                 roomPanoMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1 });
                 const roomMesh = new THREE.Mesh(panoramaGeo, roomPanoMaterial);
@@ -1204,10 +1191,9 @@
                 interactiveGroup = new THREE.Group();
                 scene.add(interactiveGroup);
 
-                // Initial Load
                 loadNode(0, 0, true);
 
-                // Events
+                // Setup Universal Touch / Pointer Events for reliable mobile interactions
                 window.addEventListener('resize', () => {
                     if(!showroomModal.classList.contains('hidden')) {
                         camera.aspect = container.clientWidth / container.clientHeight;
@@ -1216,15 +1202,28 @@
                     }
                 });
 
-                container.addEventListener('mousemove', (e) => {
+                container.addEventListener('pointermove', (e) => {
                     const rect = container.getBoundingClientRect();
                     mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
                     mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
                 });
 
-                container.addEventListener('click', (e) => {
+                container.addEventListener('pointerdown', (e) => {
+                    pointerDownPos.x = e.clientX;
+                    pointerDownPos.y = e.clientY;
+                });
+
+                container.addEventListener('pointerup', (e) => {
                     if (isTransitioning || isWalking) return;
                     
+                    // Distinguish Tap from Drag (threshold of 10px)
+                    const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+                    if (dist > 10) return; 
+
+                    const rect = container.getBoundingClientRect();
+                    mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+                    mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+
                     raycaster.setFromCamera(mouse, camera);
                     const allInteractables = [...activeHotspots, ...activeTeleports];
                     const intersects = raycaster.intersectObjects(allInteractables);
@@ -1236,15 +1235,12 @@
                             isWalking = true;
                             hideTooltip();
                             
-                            // 1. Move camera slightly towards the teleport node to simulate stepping forward
                             targetCamPos = hit.position.clone().normalize().multiplyScalar(15); 
                             
-                            // 2. Crossfade to black shortly after movement starts
                             setTimeout(() => {
                                 fadeOverlay.style.opacity = '1';
                                 isTransitioning = true;
                                 
-                                // 3. Snap back, swap texture, and fade in
                                 setTimeout(() => {
                                     isWalking = false;
                                     camera.position.set(0, 0, 0.1);
@@ -1266,21 +1262,18 @@
                     requestAnimationFrame(animate);
                     const time = clock.getElapsedTime();
 
-                    // Teleport Walk Animation
                     if (isWalking) {
                         camera.position.lerp(targetCamPos, 0.05);
                     }
 
                     controls.update();
 
-                    // Animate Hotspots & Handle Hover State
                     if (!isTransitioning && !isWalking) {
                         raycaster.setFromCamera(mouse, camera);
                         const allInteractables = [...activeHotspots, ...activeTeleports];
                         const intersects = raycaster.intersectObjects(allInteractables);
                         let hovered = false;
                         
-                        // Animations
                         activeHotspots.forEach(hs => {
                             hs.userData.ring.scale.setScalar(1 + Math.sin(time * 4) * 0.1);
                             hs.scale.setScalar(1); 
@@ -1322,7 +1315,6 @@
                 setTimeout(() => tooltip.classList.add('hidden'), 300);
             }
 
-            // Vision Switching Logic
             switchVisionBtn.addEventListener('click', () => {
                 if(isTransitioning || isWalking) return;
                 isTransitioning = true;
@@ -1338,7 +1330,6 @@
                     
                     scene.background.set(vData.bgColor);
                     
-                    // Reset Camera
                     camera.position.set(0, 0, 0.1);
                     controls.target.set(0, 0, -0.1);
                     controls.update();
@@ -1349,7 +1340,7 @@
                     switchVisionBtn.textContent = vData.btnText;
                     fadeOverlay.style.backgroundColor = vData.bgColor; 
                     
-                    loadNode(currentVision, 0, true); // load node 0 of new vision
+                    loadNode(currentVision, 0, true); 
                     
                     setTimeout(() => {
                         document.getElementById('showroom-ui-top').style.opacity = '1';
