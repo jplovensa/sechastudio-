@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Three.js for 3D Showroom VR Walkthrough -->
+    <!-- Three.js for 3D Showroom VR Walkthrough & Isometric Shop -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
@@ -109,14 +109,25 @@
             scrollbar-width: none;
         }
 
-        #journey-modal::-webkit-scrollbar {
+        .custom-scroll::-webkit-scrollbar {
             width: 6px;
         }
-        #journey-modal::-webkit-scrollbar-track {
+        .custom-scroll::-webkit-scrollbar-track {
             background: transparent;
         }
-        #journey-modal::-webkit-scrollbar-thumb {
+        .custom-scroll::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .custom-scroll-dark::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll-dark::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll-dark::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
 
@@ -165,7 +176,7 @@
             <div class="hidden lg:flex space-x-12 text-[10px] tracking-[0.2em] uppercase">
                 <a href="#purpose" class="hover:opacity-70 transition-opacity">Our Purpose</a>
                 <a href="#designers" class="hover:opacity-70 transition-opacity">Designers</a>
-                <a href="#process" class="hover:opacity-70 transition-opacity">Process</a>
+                <a href="#moodboards" class="hover:opacity-70 transition-opacity">Moodboards</a>
                 <a href="#investment" class="hover:opacity-70 transition-opacity">Packages</a>
             </div>
             <button class="open-journey-trigger text-[9px] md:text-[10px] tracking-[0.2em] uppercase border-b border-white/50 pb-1 hover:border-white transition-all">
@@ -186,19 +197,21 @@
             <div class="absolute inset-0 bg-[#3A3530]/20 mix-blend-multiply"></div>
         </div>
         
-        <div class="relative z-10 w-full max-w-7xl mx-auto">
-            <p class="fade-in-section text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-white/70 mb-4 md:mb-6 font-light">
-                Interior Architecture & Design
-            </p>
-            <h2 class="fade-in-section text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-[1.1] md:leading-[1.05] font-light text-white tracking-tighter" style="transition-delay: 200ms;">
-                We believe your <br class="hidden md:block">
-                <span class="font-light text-sand-200 lg:pl-24">space</span> should <br class="hidden md:block">
-                tell your story.
-            </h2>
-            <div class="fade-in-section mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6" style="transition-delay: 300ms;">
-                <button id="open-showroom-btn" class="w-full sm:w-auto px-6 md:px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-sand-900 transition-colors">
-                    Enter 3D VR Showroom
-                </button>
+        <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start">
+            <div class="max-w-4xl text-left w-full">
+                <p class="fade-in-section text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-white/70 mb-4 md:mb-6 font-light">
+                    Interior Architecture & Design
+                </p>
+                <h2 class="fade-in-section text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-[1.1] md:leading-[1.05] font-light text-white tracking-tighter" style="transition-delay: 200ms;">
+                    We believe your <br class="hidden md:block">
+                    <span class="font-light text-sand-200">space</span> should <br class="hidden md:block">
+                    tell your story.
+                </h2>
+                <div class="fade-in-section mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-start" style="transition-delay: 300ms;">
+                    <button id="open-showroom-btn" class="w-full sm:w-auto px-6 md:px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-sand-900 transition-colors">
+                        Enter 3D VR Showroom
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -219,13 +232,12 @@
         </div>
     </section>
 
-    <!-- The Soul Experience (With Modal Trigger) -->
+    <!-- The Soul Experience -->
     <section id="experience" class="py-24 md:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
             <div class="w-full lg:w-1/2 fade-in-section order-2 lg:order-1">
-                <!-- Image Wrapper with Pulse Loading -->
                 <div class="aspect-[4/3] sm:aspect-square md:aspect-[4/5] overflow-hidden bg-stone-200 animate-pulse relative">
-                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200" 
+                    <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=1200" 
                          alt="Warm Japandi Interior Detail" 
                          class="lazy-image absolute inset-0 w-full h-full object-cover transition-transform duration-1000">
                 </div>
@@ -250,6 +262,124 @@
         </div>
     </section>
 
+    <!-- MOODBOARD PICK SECTION -->
+    <section id="moodboards" class="py-24 md:py-40 bg-sand-900 text-white">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="fade-in-section flex flex-col lg:flex-row justify-between lg:items-end mb-16 md:mb-24 gap-8">
+                <div>
+                    <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 font-medium block mb-4">Material Exploration</span>
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight mb-4">Curated Moodboards.</h3>
+                    <p class="text-white/70 font-light text-sm max-w-md leading-relaxed">Explore our foundational design palettes. Step into the interactive 3D environment to feel the textures and select the exact material finishes that speak to your soul.</p>
+                </div>
+            </div>
+
+            <!-- Moodboard Selection Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                <!-- The Architect -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="architect">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Architect</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Noir Brutalism</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Nomad -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="nomad" style="transition-delay: 100ms;">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Nomad</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Japandi Serenity</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Visionary -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="visionary" style="transition-delay: 200ms;">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Visionary</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Avant-Garde Chroma</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Purist -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="purist" style="transition-delay: 300ms;">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Purist</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Desert Monolith</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Aesthete -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="aesthete" style="transition-delay: 400ms;">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Aesthete</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Midnight Gallery</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Dreamer -->
+                <div class="fade-in-section group cursor-pointer shop-page-item flex flex-col" data-style="dreamer" style="transition-delay: 500ms;">
+                    <div class="aspect-[16/9] bg-stone-800 overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover mix-blend-luminosity opacity-80 transition-transform duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#080808]/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                            <div>
+                                <h4 class="text-2xl font-light text-white tracking-tight">The Dreamer</h4>
+                                <p class="text-[9px] tracking-[0.2em] uppercase text-white/50 mt-2">Luminous Glasshouse</p>
+                            </div>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- The Designers -->
     <section id="designers" class="py-24 md:py-32 bg-sand-100">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
@@ -258,7 +388,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32">
-                <!-- Daffa -->
                 <div class="fade-in-section group">
                     <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-6 md:mb-10 animate-pulse relative">
                         <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200" 
@@ -272,7 +401,6 @@
                     </p>
                 </div>
 
-                <!-- Audina -->
                 <div class="fade-in-section group lg:mt-32" style="transition-delay: 200ms;">
                     <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-6 md:mb-10 animate-pulse relative">
                         <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=1200" 
@@ -355,26 +483,22 @@
 
             <!-- The 3 Tiers -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
-                
-                <!-- Lite Package -->
                 <div class="fade-in-section flex flex-col p-8 md:p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 100ms;">
                     <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Essential Foundations</p>
                     <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Lite Tier</h4>
                     <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 1,000,000</p>
-                    
                     <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
                     </ul>
+                    <button class="tier-select-trigger mt-auto w-full py-4 border border-stone-300 text-stone-900 text-[9px] tracking-[0.2em] uppercase font-medium hover:bg-stone-900 hover:text-white transition-colors" data-tier="lite">Select Lite</button>
                 </div>
 
-                <!-- Pro Package (Highlighted) -->
                 <div class="fade-in-section flex flex-col p-8 md:p-10 bg-sand-50 border border-stone-200 relative shadow-sm" style="transition-delay: 200ms;">
                     <div class="absolute top-0 right-0 bg-stone-900 text-white px-3 py-1.5 text-[8px] md:text-[9px] uppercase tracking-widest font-medium">Most Popular</div>
                     <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Complete Visuals</p>
                     <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Pro Tier</h4>
                     <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 2,000,000</p>
-                    
                     <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
@@ -382,14 +506,13 @@
                         <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> High-Res 3D Renders</li>
                         <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Engineering Design (DED)</li>
                     </ul>
+                    <button class="tier-select-trigger mt-auto w-full py-4 bg-stone-900 text-white text-[9px] tracking-[0.2em] uppercase font-medium hover:bg-stone-700 transition-colors" data-tier="pro">Select Pro</button>
                 </div>
 
-                <!-- Premium Package -->
                 <div class="fade-in-section flex flex-col p-8 md:p-10 border border-stone-200 hover:border-stone-400 transition-colors" style="transition-delay: 300ms;">
                     <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-stone-500 mb-4">Full Service Execution</p>
                     <h4 class="text-xl md:text-2xl mb-2 text-stone-900 font-light tracking-tight">The Premium Tier</h4>
                     <p class="text-xs text-stone-500 mb-6 md:mb-8 font-light">From IDR 2,600,000</p>
-                    
                     <ul class="space-y-3 md:space-y-4 text-sm font-light text-stone-600 flex-grow mb-8 md:mb-10">
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> Concept & Moodboard</li>
                         <li class="flex items-start gap-3"><span class="text-stone-400 mt-0.5">✓</span> 2D Floorplan Layout</li>
@@ -399,13 +522,12 @@
                         <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Bill of Quantities (BOQ)</li>
                         <li class="flex items-start gap-3"><span class="text-stone-900 font-medium mt-0.5">✓</span> Curated Shopping List</li>
                     </ul>
+                    <button class="tier-select-trigger mt-auto w-full py-4 border border-stone-300 text-stone-900 text-[9px] tracking-[0.2em] uppercase font-medium hover:bg-stone-900 hover:text-white transition-colors" data-tier="premium">Select Premium</button>
                 </div>
             </div>
 
             <!-- Pricing Sizing Matrix & Accordions -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 fade-in-section" style="transition-delay: 400ms;">
-                
-                <!-- Sizing Guide -->
                 <div class="w-full max-w-full overflow-hidden">
                     <h5 class="text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium text-stone-900 mb-4 md:mb-6">Area Pricing Matrix</h5>
                     <div class="w-full overflow-x-auto no-scrollbar border border-stone-200 rounded-sm">
@@ -443,7 +565,6 @@
                     <p class="text-[8px] md:text-[9px] tracking-[0.1em] text-stone-400 mt-4 uppercase">* Spaces > 30m² are calculated at IDR 175,000 / m².</p>
                 </div>
 
-                <!-- Accordions -->
                 <div>
                     <div class="accordion-item border-t border-stone-300 py-4 md:py-5">
                         <button class="w-full flex justify-between items-center text-left text-stone-900 hover:text-stone-600 transition-colors focus:outline-none">
@@ -477,7 +598,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -504,15 +624,12 @@
     <!-- 3D SHOWROOM MODAL (VR WALKTHROUGH)         -->
     <!-- ========================================== -->
     <div id="showroom-modal" class="fixed inset-0 z-[110] hidden bg-[#080808] flex items-center justify-center opacity-0 transition-opacity duration-700">
-        <!-- Close Button -->
         <button id="close-showroom" class="absolute top-4 right-4 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-30 p-2 focus:outline-none">
             <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
-        <!-- Fade Overlay for Transitions -->
         <div id="showroom-fade-overlay" class="absolute inset-0 bg-[#080808] z-[15] pointer-events-none opacity-0 transition-opacity duration-700"></div>
 
-        <!-- Cinematic UI Overlay -->
         <div class="absolute top-6 left-6 md:top-12 md:left-12 text-white z-20 pointer-events-none transition-opacity duration-500 max-w-[70vw]" id="showroom-ui-top">
             <span class="text-[8px] md:text-[9px] tracking-[0.4em] uppercase text-white/50 block mb-2 md:mb-3" id="sr-subtitle">Vision 01</span>
             <h3 class="text-2xl sm:text-3xl md:text-5xl font-light tracking-tight mb-2 md:mb-4" id="sr-title">Sleek Architectural Luxury</h3>
@@ -526,7 +643,6 @@
             </button>
         </div>
 
-        <!-- Interactive Hotspot Tooltip -->
         <div id="hotspot-tooltip" class="absolute hidden flex-col items-start bg-black/60 backdrop-blur-md border border-white/20 p-4 md:p-6 max-w-[200px] md:max-w-[250px] z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-[-20px] transition-opacity duration-300 opacity-0">
             <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black/60 border-b border-r border-white/20 transform rotate-45 backdrop-blur-md"></div>
             <h4 id="hs-title" class="text-white text-[10px] md:text-[11px] font-medium tracking-widest mb-1 md:mb-2 uppercase">Title</h4>
@@ -539,16 +655,12 @@
     <!-- ========================================== -->
     <!-- WALKTHROUGH MODAL: "Matchmaking & Checkout"-->
     <!-- ========================================== -->
-    <div id="journey-modal" class="fixed inset-0 z-[100] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto pt-10 pb-10">
-        <!-- Close Button -->
+    <div id="journey-modal" class="fixed inset-0 z-[100] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto custom-scroll pt-10 pb-10">
         <button id="close-modal" class="fixed top-4 right-4 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-20 p-2 focus:outline-none">
             <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
-        <!-- Container for steps -->
-        <div class="w-full max-w-2xl px-4 md:px-6 py-10 md:py-20 text-center relative mx-auto my-auto flex flex-col justify-center">
-            
-            <!-- Step 1: The Feeling -->
+        <div class="w-full max-w-2xl px-4 md:px-6 py-10 md:py-20 text-center relative mx-auto my-auto flex flex-col justify-center min-h-[90vh]">
             <div class="modal-step active w-full" id="step-1">
                 <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 01: The Feeling</span>
                 <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-12 tracking-tight leading-tight">When you walk through your door, what does your soul need most?</h2>
@@ -559,7 +671,6 @@
                 </div>
             </div>
 
-            <!-- Step 2: The Rhythm -->
             <div class="modal-step w-full" id="step-2">
                 <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 02: The Rhythm</span>
                 <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-12 tracking-tight leading-tight">Your ideal morning in this space begins with...</h2>
@@ -570,11 +681,9 @@
                 </div>
             </div>
 
-            <!-- Step 3: Matchmaking Reveal -->
             <div class="modal-step w-full" id="step-3">
                 <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 03: The Match</span>
                 <h2 id="result-title" class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-6 md:mb-8 tracking-tight leading-tight">Your vision aligns with...</h2>
-                
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 md:gap-8 bg-white/5 p-6 border border-white/10 max-w-xl mx-auto mb-8 md:mb-10 text-center sm:text-left">
                     <img id="match-img" src="" alt="Matched Designer" class="w-24 h-24 sm:w-32 sm:h-40 object-cover bg-stone-800 rounded-sm shrink-0">
                     <div>
@@ -587,39 +696,32 @@
                 </div>
             </div>
 
-            <!-- Step 4: The Scope (Package Selection) -->
             <div class="modal-step w-full" id="step-4">
                 <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 04: The Scope</span>
                 <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-10 tracking-tight leading-tight">Define your space.</h2>
-                
                 <p class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/70 mb-3 md:mb-4 font-medium">1. Select Room Size</p>
                 <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center mb-8 md:mb-10">
                     <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="small">Small (≤ 10m²)</button>
                     <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="medium">Medium (11-18m²)</button>
                     <button class="size-btn w-full sm:w-auto px-5 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-size="large">Large (19-30m²)</button>
                 </div>
-
                 <p class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/70 mb-3 md:mb-4 font-medium">2. Select Design Tier</p>
                 <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center mb-8 md:mb-10">
                     <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="lite">Lite</button>
                     <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="pro">Pro</button>
                     <button class="tier-btn w-full sm:w-auto px-6 py-3 border border-white/20 text-white hover:bg-white/10 text-[10px] md:text-xs uppercase tracking-widest transition-colors focus:outline-none" data-tier="premium">Premium</button>
                 </div>
-
                 <div class="text-xl md:text-2xl font-light text-white mb-6 md:mb-8 border-t border-white/10 pt-6 md:pt-8 max-w-sm mx-auto">
                     Design Investment: <br class="sm:hidden"><span id="calc-price" class="font-medium text-sand-200 mt-1 block sm:inline sm:mt-0">Select Scope</span>
                 </div>
-                
                 <button id="proceed-checkout-btn" class="step-btn w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" data-next="step-5" disabled>
                     Proceed to Checkout
                 </button>
             </div>
 
-            <!-- Step 5: Dummy Checkout -->
             <div class="modal-step w-full" id="step-5">
                 <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Phase 05: Secure Allocation</span>
                 <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-10 tracking-tight leading-tight">Finalize your commitment.</h2>
-                
                 <div class="max-w-md mx-auto text-left space-y-4">
                     <div class="p-6 md:p-8 bg-white text-stone-900 shadow-xl">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-end border-b border-stone-200 pb-4 mb-6 gap-2">
@@ -629,8 +731,6 @@
                             </div>
                             <span class="font-medium text-base md:text-lg tracking-tight" id="summary-price">IDR 0</span>
                         </div>
-                        
-                        <!-- Dummy Form -->
                         <div class="mb-4">
                             <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Cardholder Name</label>
                             <input type="text" placeholder="John Doe" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
@@ -649,7 +749,6 @@
                                 <input type="text" placeholder="123" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
                             </div>
                         </div>
-                        
                         <button id="pay-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors flex justify-center items-center">
                             <span id="pay-btn-text">Authorize Payment</span>
                             <div id="pay-spinner" class="hidden ml-3 w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -659,7 +758,7 @@
                 </div>
             </div>
 
-            <!-- Step 6: Success -->
+            <!-- Step 6 -->
             <div class="modal-step w-full" id="step-6">
                 <div class="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full border border-white/20 flex items-center justify-center mb-8 md:mb-10 bg-white/5">
                     <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
@@ -672,6 +771,138 @@
                     Return to Experience
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MOODBOARD MODAL: Interactive Palette Pick  -->
+    <!-- ========================================== -->
+    <div id="shop-modal" class="fixed inset-0 z-[110] hidden bg-sand-50 flex flex-col md:flex-row opacity-0 transition-opacity duration-700">
+        <!-- Close Button -->
+        <button id="close-shop" class="absolute top-4 right-4 md:top-8 md:right-8 text-stone-400 hover:text-stone-900 transition-colors z-30 p-2 focus:outline-none">
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Left: 3D Isometric View -->
+        <div class="w-full md:w-2/3 h-[50vh] md:h-screen relative bg-stone-100 flex-shrink-0" id="shop-canvas-container">
+            <div class="absolute top-4 left-4 md:top-8 md:left-8 z-20 pointer-events-none">
+                <span class="text-[9px] tracking-[0.3em] uppercase text-stone-400 font-medium">Interactive Moodboard</span>
+                <p class="text-xs text-stone-500 mt-2 font-light hidden md:block">Click surfaces & textiles to view material details.</p>
+            </div>
+            <!-- Style Switcher overlay -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 md:bottom-8 z-20 flex gap-2 bg-white/80 backdrop-blur-sm p-1 border border-stone-200 shadow-sm max-w-[90%] overflow-x-auto no-scrollbar">
+                <button class="shop-style-btn active shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-900 bg-white shadow-sm transition-all" data-style="architect">The Architect</button>
+                <button class="shop-style-btn shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all" data-style="nomad">The Nomad</button>
+                <button class="shop-style-btn shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all" data-style="visionary">The Visionary</button>
+                <button class="shop-style-btn shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all" data-style="purist">The Purist</button>
+                <button class="shop-style-btn shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all" data-style="aesthete">The Aesthete</button>
+                <button class="shop-style-btn shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all" data-style="dreamer">The Dreamer</button>
+            </div>
+        </div>
+
+        <!-- Right: Palette UI -->
+        <div class="w-full md:w-1/3 h-[50vh] md:h-screen bg-white border-l border-stone-200 flex flex-col relative z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.02)]">
+            
+            <div class="p-6 md:p-10 border-b border-stone-100">
+                <h3 class="text-xl md:text-2xl font-light text-stone-900 tracking-tight">Material Details</h3>
+            </div>
+
+            <!-- Material View -->
+            <div id="shop-product-view" class="flex-grow overflow-y-auto p-6 md:p-10 custom-scroll-dark flex flex-col justify-center">
+                <div class="text-center opacity-50 transition-opacity duration-300" id="shop-empty-state">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                    <p class="text-xs font-light text-stone-500 uppercase tracking-widest">Select a surface in the room</p>
+                </div>
+
+                <div id="shop-active-product" class="hidden">
+                    <span class="text-[9px] uppercase tracking-[0.2em] text-stone-400 block mb-2" id="sp-category">Material</span>
+                    <h4 class="text-2xl md:text-3xl font-light text-stone-900 mb-2 tracking-tight" id="sp-name">Material Name</h4>
+                    <p class="text-sm text-stone-500 font-medium tracking-widest uppercase mb-8" id="sp-finish">Finish Type</p>
+                    
+                    <p class="text-sm text-stone-600 leading-relaxed font-light mb-8" id="sp-desc">
+                        Expertly crafted to reflect our studio's core aesthetic. This material anchors the room with defining presence.
+                    </p>
+
+                    <button id="add-to-cart-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors">
+                        Add to Palette
+                    </button>
+                </div>
+            </div>
+
+            <!-- Palette Summary Bottom Bar -->
+            <div class="p-6 md:p-8 bg-sand-50 border-t border-stone-200 mt-auto">
+                <div class="flex justify-between items-end mb-4">
+                    <span class="text-[10px] tracking-[0.2em] uppercase text-stone-500 font-medium">Saved Materials (<span id="cart-count">0</span>)</span>
+                </div>
+                <button id="checkout-cart-btn" class="w-full px-4 py-4 border border-stone-300 text-stone-900 text-[9px] uppercase tracking-widest font-medium hover:bg-stone-900 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Confirm Palette Selection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PALETTE CHECKOUT / BOOKING MODAL           -->
+    <!-- ========================================== -->
+    <div id="palette-checkout-modal" class="fixed inset-0 z-[120] hidden bg-sand-900/95 backdrop-blur-md flex items-center justify-center opacity-0 transition-opacity duration-500 overflow-y-auto custom-scroll pt-10 pb-10">
+        <!-- Close Button -->
+        <button id="close-palette-modal" class="fixed top-4 right-4 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-20 p-2 focus:outline-none">
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="w-full max-w-4xl px-4 md:px-6 py-10 md:py-20 text-center relative mx-auto my-auto flex flex-col justify-center min-h-[90vh]">
+            
+            <!-- Step 1: Summary & Booking Form -->
+            <div class="modal-step active w-full" id="palette-step-1">
+                <span class="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-white/50 block mb-4 md:mb-6 font-medium">Finalize Concept</span>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-white mb-8 md:mb-12 tracking-tight leading-tight">Secure your aesthetic.</h2>
+                
+                <div class="flex flex-col md:flex-row gap-6 md:gap-8 max-w-4xl mx-auto text-left">
+                    <!-- Left: Palette Summary -->
+                    <div class="w-full md:w-1/2 p-6 md:p-8 bg-white/5 border border-white/10 flex flex-col max-h-[60vh] md:max-h-[500px]">
+                        <h4 class="text-white font-light text-lg md:text-xl mb-6 tracking-tight">Your Selected Palette</h4>
+                        <div id="palette-summary-list" class="space-y-4 flex-grow overflow-y-auto custom-scroll pr-2">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Booking Form -->
+                    <div class="w-full md:w-1/2 p-6 md:p-8 bg-white text-stone-900 shadow-xl flex flex-col justify-center">
+                        <h4 class="font-light text-lg md:text-xl tracking-tight mb-6 border-b border-stone-200 pb-4">Consultation Details</h4>
+                        <div class="mb-4">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Full Name</label>
+                            <input type="text" placeholder="Jane Doe" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Email Address</label>
+                            <input type="email" placeholder="jane@example.com" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        </div>
+                        <div class="mb-8 md:mb-10">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-400 font-medium block mb-1">Phone Number</label>
+                            <input type="tel" placeholder="+62 812 3456 7890" class="w-full border-b border-stone-300 py-2 text-xs md:text-sm appearance-none rounded-none focus:outline-none focus:border-stone-900 bg-transparent transition-colors">
+                        </div>
+                        
+                        <button id="submit-palette-btn" class="w-full px-6 py-4 bg-sand-900 text-white text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-800 transition-colors flex justify-center items-center mt-auto">
+                            <span>Lock in Palette & Book</span>
+                            <div id="palette-spinner" class="hidden ml-3 w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Success State -->
+            <div class="modal-step w-full" id="palette-step-2">
+                <div class="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full border border-white/20 flex items-center justify-center mb-8 md:mb-10 bg-white/5">
+                    <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-4 md:mb-6 tracking-tight leading-tight">Palette Saved.</h2>
+                <p class="text-white/70 font-light text-xs md:text-sm leading-relaxed mb-10 md:mb-12 max-w-md mx-auto">
+                    Your material selections have been successfully logged. Our design curation team will reach out within 24 hours to schedule your space consultation.
+                </p>
+                <button id="close-palette-success-btn" class="w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-sand-900 text-[9px] md:text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-stone-200 transition-colors">
+                    Return to Experience
+                </button>
+            </div>
 
         </div>
     </div>
@@ -681,7 +912,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // ==========================================
-            // Preloader Logic
+            // PRELOADER & BASE UI LOGIC
             // ==========================================
             const preloader = document.getElementById('cinematic-preloader');
             const minLoadingTime = 3500;
@@ -694,13 +925,11 @@
                 setTimeout(() => {
                     preloader.classList.add('fade-out');
                     document.body.classList.remove('preloader-active');
-                    setTimeout(() => {
-                        preloader.remove();
-                    }, 1500); // Wait for transition
+                    setTimeout(() => preloader.remove(), 1500); 
                 }, remainingTime);
             });
 
-            // Navbar Scroll Effect
+            // Navbar
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
@@ -712,36 +941,26 @@
                 }
             });
 
-            // Intersection Observer for Fade-ins
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px 0px -5% 0px',
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
+            // Intersection Observer
+            const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
+                        obs.unobserve(entry.target);
                     }
                 });
-            }, observerOptions);
+            }, { root: null, rootMargin: '0px 0px -5% 0px', threshold: 0.1 });
 
-            document.querySelectorAll('.fade-in-section').forEach(section => {
-                observer.observe(section);
-            });
+            document.querySelectorAll('.fade-in-section').forEach(section => observer.observe(section));
 
-            // Image Loading Logic
-            const lazyImages = document.querySelectorAll('.lazy-image');
-            lazyImages.forEach(img => {
+            // Lazy Images
+            document.querySelectorAll('.lazy-image').forEach(img => {
                 const handleLoad = () => {
                     if(img.parentElement.classList.contains('animate-pulse')) {
                         img.parentElement.classList.remove('animate-pulse');
                     }
                     img.classList.remove('opacity-0');
                 };
-
                 const handleError = () => {
                     if(img.parentElement.classList.contains('animate-pulse')) {
                         img.parentElement.classList.remove('animate-pulse');
@@ -749,51 +968,38 @@
                     img.parentElement.classList.add('bg-stone-700'); 
                     img.style.display = 'none'; 
                 };
-
-                if (img.complete && img.naturalHeight !== 0) {
-                    handleLoad();
-                } else {
-                    img.addEventListener('load', handleLoad);
-                    img.addEventListener('error', handleError);
-                }
+                if (img.complete && img.naturalHeight !== 0) handleLoad();
+                else { img.addEventListener('load', handleLoad); img.addEventListener('error', handleError); }
             });
 
-            // Accordion Logic
-            const accordionItems = document.querySelectorAll('.accordion-item');
-            accordionItems.forEach(item => {
-                const button = item.querySelector('button');
-                button.addEventListener('click', () => {
+            // Accordions
+            document.querySelectorAll('.accordion-item').forEach(item => {
+                item.querySelector('button').addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
-                    
-                    accordionItems.forEach(acc => acc.classList.remove('active'));
-                    
-                    if (!isActive) {
-                        item.classList.add('active');
-                    }
+                    document.querySelectorAll('.accordion-item').forEach(acc => acc.classList.remove('active'));
+                    if (!isActive) item.classList.add('active');
                 });
             });
 
             // ==========================================
-            // Walkthrough Modal & Checkout Logic
+            // WALKTHROUGH & CHECKOUT MODAL LOGIC
             // ==========================================
-            const modal = document.getElementById('journey-modal');
-            const openBtns = document.querySelectorAll('.open-journey-trigger');
-            const closeBtn = document.getElementById('close-modal');
+            const journeyModal = document.getElementById('journey-modal');
+            const openJourneyBtns = document.querySelectorAll('.open-journey-trigger');
+            const closeJourneyBtn = document.getElementById('close-modal');
             const closeSuccessBtn = document.getElementById('close-success-btn');
             const stepBtns = document.querySelectorAll('.step-btn');
             const steps = document.querySelectorAll('.modal-step');
             
-            // Matchmaking elements
             const matchImg = document.getElementById('match-img');
             const matchName = document.getElementById('match-name');
             const matchDesc = document.getElementById('match-desc');
             const selectDesignerBtn = document.getElementById('select-designer-btn');
             
-            // Scope / Checkout elements
             const sizeBtns = document.querySelectorAll('.size-btn');
             const tierBtns = document.querySelectorAll('.tier-btn');
             const calcPriceEl = document.getElementById('calc-price');
-            const proceedBtn = document.getElementById('proceed-checkout-btn');
+            const proceedCheckoutBtn = document.getElementById('proceed-checkout-btn');
             const summaryDesigner = document.getElementById('summary-designer');
             const summaryPrice = document.getElementById('summary-price');
             const successDesigner = document.getElementById('success-designer');
@@ -801,14 +1007,12 @@
             const payBtnText = document.getElementById('pay-btn-text');
             const paySpinner = document.getElementById('pay-spinner');
 
-            // Data state
             let userScores = { A: 0, B: 0, C: 0 };
             let firstChoice = null;
-            let matchedDesigner = null; // 'Daffa' or 'Audina'
-            
+            let matchedDesigner = null; 
             let selectedSize = null;
             let selectedTier = null;
-            
+
             const pricingData = {
                 small: { lite: { val: 'IDR 1,000,000' }, pro: { val: 'IDR 2,000,000' }, premium: { val: 'IDR 2,600,000' } },
                 medium: { lite: { val: 'IDR 1,800,000' }, pro: { val: 'IDR 3,600,000' }, premium: { val: 'IDR 4,700,000' } },
@@ -836,34 +1040,30 @@
                 selectedTier = null;
                 updateScopeSelectionUI();
                 
-                modal.classList.remove('hidden');
-                void modal.offsetWidth; // Reflow
-                modal.classList.remove('opacity-0');
+                journeyModal.classList.remove('hidden');
+                void journeyModal.offsetWidth;
+                journeyModal.classList.remove('opacity-0');
                 document.body.classList.add('modal-open');
-                
-                modal.scrollTop = 0;
+                journeyModal.scrollTop = 0;
             }
 
             function closeJourneyModal() {
-                modal.classList.add('opacity-0');
+                journeyModal.classList.add('opacity-0');
                 setTimeout(() => {
-                    modal.classList.add('hidden');
+                    journeyModal.classList.add('hidden');
                     document.body.classList.remove('modal-open');
                     steps.forEach((s, i) => {
                         if (i === 0) s.classList.add('active');
                         else s.classList.remove('active');
                     });
-                    
                     payBtn.disabled = false;
                     payBtnText.textContent = "Authorize Payment";
                     paySpinner.classList.add('hidden');
-                    
                 }, 500); 
             }
 
             function calculateAndShowMatch() {
                 let dominantTrait = 'A';
-                
                 let scoreA = userScores.A + (firstChoice === 'A' ? 0.1 : 0);
                 let scoreB = userScores.B + (firstChoice === 'B' ? 0.1 : 0);
                 let scoreC = userScores.C + (firstChoice === 'C' ? 0.1 : 0);
@@ -871,11 +1071,7 @@
                 if (scoreB > scoreA && scoreB >= scoreC) dominantTrait = 'B';
                 if (scoreC > scoreA && scoreC > scoreB) dominantTrait = 'C';
 
-                if (dominantTrait === 'B') {
-                    matchedDesigner = 'audina';
-                } else {
-                    matchedDesigner = 'daffa';
-                }
+                matchedDesigner = (dominantTrait === 'B') ? 'audina' : 'daffa';
                 
                 const data = designersData[matchedDesigner];
                 matchImg.src = data.img;
@@ -883,7 +1079,7 @@
                 matchDesc.textContent = data.desc;
                 selectDesignerBtn.textContent = `Collaborate with ${data.name.split(' ')[0]}`;
             }
-            
+
             function updateScopeSelectionUI() {
                 sizeBtns.forEach(btn => {
                     if (btn.getAttribute('data-size') === selectedSize) {
@@ -910,25 +1106,50 @@
                     calcPriceEl.textContent = price;
                     calcPriceEl.classList.remove('text-sand-200');
                     calcPriceEl.classList.add('text-white');
-                    proceedBtn.disabled = false;
+                    proceedCheckoutBtn.disabled = false;
                     
                     const designerFirstName = designersData[matchedDesigner].name.split(' ')[0];
                     const tierName = selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1);
                     summaryDesigner.textContent = `${designerFirstName} • ${tierName} Tier (${selectedSize})`;
                     summaryPrice.textContent = price;
                     successDesigner.textContent = designerFirstName;
-                    
                 } else {
                     calcPriceEl.textContent = "Select Scope";
                     calcPriceEl.classList.add('text-sand-200');
                     calcPriceEl.classList.remove('text-white');
-                    proceedBtn.disabled = true;
+                    proceedCheckoutBtn.disabled = true;
                 }
             }
 
-            openBtns.forEach(btn => btn.addEventListener('click', openJourneyModal));
-            closeBtn.addEventListener('click', closeJourneyModal);
+            openJourneyBtns.forEach(btn => btn.addEventListener('click', openJourneyModal));
+            closeJourneyBtn.addEventListener('click', closeJourneyModal);
             closeSuccessBtn.addEventListener('click', closeJourneyModal);
+
+            // Direct Tier Checkout Triggers
+            const tierSelectTriggers = document.querySelectorAll('.tier-select-trigger');
+            tierSelectTriggers.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tier = e.target.getAttribute('data-tier');
+                    
+                    // Assign default designer if user skipped the matchmaking
+                    matchedDesigner = 'daffa'; 
+                    selectedSize = null;
+                    selectedTier = tier;
+                    
+                    updateScopeSelectionUI();
+                    
+                    journeyModal.classList.remove('hidden');
+                    void journeyModal.offsetWidth;
+                    journeyModal.classList.remove('opacity-0');
+                    document.body.classList.add('modal-open');
+                    journeyModal.scrollTop = 0;
+                    
+                    // Force navigation directly to Step 4 (Scope)
+                    const jSteps = journeyModal.querySelectorAll('.modal-step');
+                    jSteps.forEach(s => s.classList.remove('active'));
+                    document.getElementById('step-4').classList.add('active');
+                });
+            });
 
             stepBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -952,32 +1173,16 @@
                         currentStep.style.opacity = '';
                         currentStep.style.transform = '';
                         
-                        if(nextStepId === 'step-3') {
-                            calculateAndShowMatch();
-                        }
+                        if(nextStepId === 'step-3') calculateAndShowMatch();
                         
-                        modal.scrollTop = 0;
-
-                        if(nextStep) {
-                            nextStep.classList.add('active');
-                        }
+                        journeyModal.scrollTop = 0;
+                        if(nextStep) nextStep.classList.add('active');
                     }, 400); 
                 });
             });
             
-            sizeBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    selectedSize = e.target.getAttribute('data-size');
-                    updateScopeSelectionUI();
-                });
-            });
-            
-            tierBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    selectedTier = e.target.getAttribute('data-tier');
-                    updateScopeSelectionUI();
-                });
-            });
+            sizeBtns.forEach(btn => btn.addEventListener('click', (e) => { selectedSize = e.target.getAttribute('data-size'); updateScopeSelectionUI(); }));
+            tierBtns.forEach(btn => btn.addEventListener('click', (e) => { selectedTier = e.target.getAttribute('data-tier'); updateScopeSelectionUI(); }));
             
             payBtn.addEventListener('click', () => {
                 payBtn.disabled = true;
@@ -996,19 +1201,19 @@
                         currentStep.style.opacity = '';
                         currentStep.style.transform = '';
                         
-                        modal.scrollTop = 0;
+                        journeyModal.scrollTop = 0;
                         nextStep.classList.add('active');
                     }, 400);
                 }, 1500);
             });
 
             // ==========================================
-            // 3D Showroom Logic: VR Rendered Walkthrough
+            // 3D SHOWROOM LOGIC (VR Walkthrough)
             // ==========================================
-            const showroomModal = document.getElementById('showroom-modal');
-            const openShowroomBtn = document.getElementById('open-showroom-btn');
-            const closeShowroomBtn = document.getElementById('close-showroom');
-            const container = document.getElementById('3d-canvas-container');
+            const vShowroomModal = document.getElementById('showroom-modal');
+            const openVRShowroomBtn = document.getElementById('open-showroom-btn');
+            const closeVShowroomBtn = document.getElementById('close-showroom');
+            const vContainer = document.getElementById('3d-canvas-container');
             const switchVisionBtn = document.getElementById('switch-vision-btn');
             const fadeOverlay = document.getElementById('showroom-fade-overlay');
             
@@ -1019,26 +1224,24 @@
             const hsTitle = document.getElementById('hs-title');
             const hsDesc = document.getElementById('hs-desc');
             
-            let scene, camera, renderer, controls;
-            let showroomInitialized = false;
-            let currentVision = 0; // 0 = Daffa, 1 = Audina
+            let vScene, vCamera, vRenderer, vControls;
+            let vInitialized = false;
+            let currentVision = 0; 
             
             let roomPanoMaterial;
-            let interactiveGroup;
-            let raycaster, mouse;
+            let vInteractiveGroup;
+            let vRaycaster, vMouse;
+            let vPointerDownPos = { x: 0, y: 0 };
             
             let isWalking = false;
             let isTransitioning = false;
             let targetCamPos = new THREE.Vector3();
-            let clock = new THREE.Clock();
+            let vClock = new THREE.Clock();
             
             let activeHotspots = [];
             let activeTeleports = [];
 
-            // Universal pointer positions for touch handling
-            let pointerDownPos = { x: 0, y: 0 };
-
-            const visions = [
+            const vrVisions = [
                 {
                     subtitle: "Vision 01",
                     title: "Sleek Architectural Luxury",
@@ -1048,21 +1251,13 @@
                     nodes: [
                         {
                             image: "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&q=80&w=4000",
-                            teleports: [
-                                { pos: new THREE.Vector3(10, -15, -20), targetIndex: 1, label: "Explore Dining Area" }
-                            ],
-                            hotspots: [
-                                { pos: new THREE.Vector3(-20, 2, -30), title: "Uncompromising Geometry", desc: "Sharp lines and defined forms establish a powerful sense of order and serenity." }
-                            ]
+                            teleports: [{ pos: new THREE.Vector3(10, -15, -20), targetIndex: 1 }],
+                            hotspots: [{ pos: new THREE.Vector3(-20, 2, -30), title: "Uncompromising Geometry", desc: "Sharp lines and defined forms establish a powerful sense of order and serenity." }]
                         },
                         {
                             image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=4000",
-                            teleports: [
-                                { pos: new THREE.Vector3(-15, -15, 20), targetIndex: 0, label: "Return to Living Area" }
-                            ],
-                            hotspots: [
-                                { pos: new THREE.Vector3(25, -2, -20), title: "Bespoke Textures", desc: "Rich, contrasting materials elevate the spatial experience into absolute luxury." }
-                            ]
+                            teleports: [{ pos: new THREE.Vector3(-15, -15, 20), targetIndex: 0 }],
+                            hotspots: [{ pos: new THREE.Vector3(25, -2, -20), title: "Bespoke Textures", desc: "Rich, contrasting materials elevate the spatial experience into absolute luxury." }]
                         }
                     ]
                 },
@@ -1075,27 +1270,19 @@
                     nodes: [
                         {
                             image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=4000",
-                            teleports: [
-                                { pos: new THREE.Vector3(15, -15, -25), targetIndex: 1, label: "Explore Bedroom" }
-                            ],
-                            hotspots: [
-                                { pos: new THREE.Vector3(-25, 4, -35), title: "Japandi Warmth", desc: "Soft textures and grounded furniture invite human connection and relaxation." }
-                            ]
+                            teleports: [{ pos: new THREE.Vector3(15, -15, -25), targetIndex: 1 }],
+                            hotspots: [{ pos: new THREE.Vector3(-25, 4, -35), title: "Japandi Warmth", desc: "Soft textures and grounded furniture invite human connection and relaxation." }]
                         },
                         {
                             image: "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=4000",
-                            teleports: [
-                                { pos: new THREE.Vector3(-10, -15, 25), targetIndex: 0, label: "Return to Main Area" }
-                            ],
-                            hotspots: [
-                                { pos: new THREE.Vector3(20, -5, -20), title: "Natural Light & Flow", desc: "Illumination is treated as a material, defining organic movement through the sanctuary." }
-                            ]
+                            teleports: [{ pos: new THREE.Vector3(-10, -15, 25), targetIndex: 0 }],
+                            hotspots: [{ pos: new THREE.Vector3(20, -5, -20), title: "Natural Light & Flow", desc: "Illumination is treated as a material, defining organic movement through the sanctuary." }]
                         }
                     ]
                 }
             ];
 
-            function createTeleport(position, targetIndex) {
+            function createVTeleport(position, targetIndex) {
                 const ringGeo = new THREE.RingGeometry(2.5, 3.5, 32);
                 const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
                 const ring = new THREE.Mesh(ringGeo, ringMat);
@@ -1105,45 +1292,39 @@
                 return ring;
             }
 
-            function createHotspot(position, title, desc) {
+            function createVHotspot(position, title, desc) {
                 const geometry = new THREE.SphereGeometry(0.8, 32, 32);
                 const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 });
                 const mesh = new THREE.Mesh(geometry, material);
-                
                 const ringGeo = new THREE.RingGeometry(1.2, 1.4, 32);
                 const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
                 const ring = new THREE.Mesh(ringGeo, ringMat);
                 mesh.add(ring);
-                
                 mesh.position.copy(position);
                 mesh.lookAt(0, 0, 0); 
                 mesh.userData = { type: 'info', title, desc, ring };
                 return mesh;
             }
 
-            function loadNode(visionIndex, nodeIndex, bypassTransition = false) {
-                const visionData = visions[visionIndex];
-                const nodeData = visionData.nodes[nodeIndex];
-                
+            function loadVNode(visionIndex, nodeIndex, bypassTransition = false) {
+                const nodeData = vrVisions[visionIndex].nodes[nodeIndex];
                 new THREE.TextureLoader().load(nodeData.image, (texture) => {
                     roomPanoMaterial.map = texture;
                     roomPanoMaterial.needsUpdate = true;
                     
-                    while(interactiveGroup.children.length > 0){ 
-                        interactiveGroup.remove(interactiveGroup.children[0]); 
-                    }
+                    while(vInteractiveGroup.children.length > 0) vInteractiveGroup.remove(vInteractiveGroup.children[0]); 
                     activeHotspots = [];
                     activeTeleports = [];
 
                     nodeData.teleports.forEach(t => {
-                        const tp = createTeleport(t.pos, t.targetIndex);
-                        interactiveGroup.add(tp);
+                        const tp = createVTeleport(t.pos, t.targetIndex);
+                        vInteractiveGroup.add(tp);
                         activeTeleports.push(tp);
                     });
 
                     nodeData.hotspots.forEach(h => {
-                        const hs = createHotspot(h.pos, h.title, h.desc);
-                        interactiveGroup.add(hs);
+                        const hs = createVHotspot(h.pos, h.title, h.desc);
+                        vInteractiveGroup.add(hs);
                         activeHotspots.push(hs);
                     });
                     
@@ -1154,154 +1335,138 @@
                 });
             }
 
-            function initShowroom() {
-                if (showroomInitialized) return;
-                showroomInitialized = true;
+            function initVShowroom() {
+                if (vInitialized) return;
+                vInitialized = true;
 
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color(visions[0].bgColor);
+                vScene = new THREE.Scene();
+                vScene.background = new THREE.Color(vrVisions[0].bgColor);
 
-                const aspect = container.clientWidth / container.clientHeight;
-                camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-                camera.position.set(0, 0, 0.1);
+                const aspect = vContainer.clientWidth / vContainer.clientHeight;
+                vCamera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+                vCamera.position.set(0, 0, 0.1);
 
-                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-                renderer.setSize(container.clientWidth, container.clientHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
-                container.appendChild(renderer.domElement);
+                vRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+                vRenderer.setSize(vContainer.clientWidth, vContainer.clientHeight);
+                vRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+                vContainer.appendChild(vRenderer.domElement);
 
-                controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableZoom = false;
-                controls.enablePan = false;
-                controls.enableDamping = true;
-                controls.dampingFactor = 0.05;
-                controls.minPolarAngle = Math.PI / 2 - 0.5;
-                controls.maxPolarAngle = Math.PI / 2 + 0.5;
+                vControls = new THREE.OrbitControls(vCamera, vRenderer.domElement);
+                vControls.enableZoom = false;
+                vControls.enablePan = false;
+                vControls.enableDamping = true;
+                vControls.dampingFactor = 0.05;
+                vControls.minPolarAngle = Math.PI / 2 - 0.5;
+                vControls.maxPolarAngle = Math.PI / 2 + 0.5;
 
-                raycaster = new THREE.Raycaster();
-                mouse = new THREE.Vector2();
+                vRaycaster = new THREE.Raycaster();
+                vMouse = new THREE.Vector2();
 
                 const panoramaGeo = new THREE.CylinderGeometry(50, 50, 60, 64, 1, true);
                 panoramaGeo.scale(-1, 1, 1); 
 
                 roomPanoMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1 });
                 const roomMesh = new THREE.Mesh(panoramaGeo, roomPanoMaterial);
-                scene.add(roomMesh);
+                vScene.add(roomMesh);
 
-                interactiveGroup = new THREE.Group();
-                scene.add(interactiveGroup);
+                vInteractiveGroup = new THREE.Group();
+                vScene.add(vInteractiveGroup);
 
-                loadNode(0, 0, true);
+                loadVNode(0, 0, true);
 
-                // Setup Universal Touch / Pointer Events for reliable mobile interactions
                 window.addEventListener('resize', () => {
-                    if(!showroomModal.classList.contains('hidden')) {
-                        camera.aspect = container.clientWidth / container.clientHeight;
-                        camera.updateProjectionMatrix();
-                        renderer.setSize(container.clientWidth, container.clientHeight);
+                    if(!vShowroomModal.classList.contains('hidden')) {
+                        vCamera.aspect = vContainer.clientWidth / vContainer.clientHeight;
+                        vCamera.updateProjectionMatrix();
+                        vRenderer.setSize(vContainer.clientWidth, vContainer.clientHeight);
                     }
                 });
 
-                container.addEventListener('pointermove', (e) => {
-                    const rect = container.getBoundingClientRect();
-                    mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
-                    mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+                vContainer.addEventListener('pointermove', (e) => {
+                    const rect = vContainer.getBoundingClientRect();
+                    vMouse.x = ((e.clientX - rect.left) / vContainer.clientWidth) * 2 - 1;
+                    vMouse.y = -((e.clientY - rect.top) / vContainer.clientHeight) * 2 + 1;
                 });
 
-                container.addEventListener('pointerdown', (e) => {
-                    pointerDownPos.x = e.clientX;
-                    pointerDownPos.y = e.clientY;
+                vContainer.addEventListener('pointerdown', (e) => {
+                    vPointerDownPos.x = e.clientX;
+                    vPointerDownPos.y = e.clientY;
                 });
 
-                container.addEventListener('pointerup', (e) => {
+                vContainer.addEventListener('pointerup', (e) => {
                     if (isTransitioning || isWalking) return;
                     
-                    // Distinguish Tap from Drag (threshold of 10px)
-                    const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+                    const dist = Math.hypot(e.clientX - vPointerDownPos.x, e.clientY - vPointerDownPos.y);
                     if (dist > 10) return; 
 
-                    const rect = container.getBoundingClientRect();
-                    mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
-                    mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+                    const rect = vContainer.getBoundingClientRect();
+                    vMouse.x = ((e.clientX - rect.left) / vContainer.clientWidth) * 2 - 1;
+                    vMouse.y = -((e.clientY - rect.top) / vContainer.clientHeight) * 2 + 1;
 
-                    raycaster.setFromCamera(mouse, camera);
+                    vRaycaster.setFromCamera(vMouse, vCamera);
                     const allInteractables = [...activeHotspots, ...activeTeleports];
-                    const intersects = raycaster.intersectObjects(allInteractables);
+                    const intersects = vRaycaster.intersectObjects(allInteractables);
 
                     if (intersects.length > 0) {
                         const hit = intersects[0].object;
-                        
                         if (hit.userData.type === 'teleport') {
                             isWalking = true;
-                            hideTooltip();
-                            
+                            hideVTooltip();
                             targetCamPos = hit.position.clone().normalize().multiplyScalar(15); 
-                            
                             setTimeout(() => {
                                 fadeOverlay.style.opacity = '1';
                                 isTransitioning = true;
-                                
                                 setTimeout(() => {
                                     isWalking = false;
-                                    camera.position.set(0, 0, 0.1);
-                                    controls.target.set(0, 0, -0.1);
-                                    controls.update();
-                                    loadNode(currentVision, hit.userData.targetIndex);
+                                    vCamera.position.set(0, 0, 0.1);
+                                    vControls.target.set(0, 0, -0.1);
+                                    vControls.update();
+                                    loadVNode(currentVision, hit.userData.targetIndex);
                                 }, 700);
                             }, 400);
-
                         } else if (hit.userData.type === 'info') {
-                            showTooltip(e.clientX, e.clientY, hit.userData.title, hit.userData.desc);
+                            showVTooltip(e.clientX, e.clientY, hit.userData.title, hit.userData.desc);
                         }
                     } else {
-                        hideTooltip();
+                        hideVTooltip();
                     }
                 });
 
-                const animate = function () {
-                    requestAnimationFrame(animate);
-                    const time = clock.getElapsedTime();
+                const animateV = function () {
+                    requestAnimationFrame(animateV);
+                    const time = vClock.getElapsedTime();
 
-                    if (isWalking) {
-                        camera.position.lerp(targetCamPos, 0.05);
-                    }
+                    if (isWalking) vCamera.position.lerp(targetCamPos, 0.05);
 
-                    controls.update();
+                    vControls.update();
 
                     if (!isTransitioning && !isWalking) {
-                        raycaster.setFromCamera(mouse, camera);
+                        vRaycaster.setFromCamera(vMouse, vCamera);
                         const allInteractables = [...activeHotspots, ...activeTeleports];
-                        const intersects = raycaster.intersectObjects(allInteractables);
+                        const intersects = vRaycaster.intersectObjects(allInteractables);
                         let hovered = false;
                         
                         activeHotspots.forEach(hs => {
                             hs.userData.ring.scale.setScalar(1 + Math.sin(time * 4) * 0.1);
                             hs.scale.setScalar(1); 
                         });
-                        
-                        activeTeleports.forEach(tp => {
-                            tp.scale.setScalar(1 + Math.sin(time * 3) * 0.05);
-                        });
+                        activeTeleports.forEach(tp => tp.scale.setScalar(1 + Math.sin(time * 3) * 0.05));
 
                         if (intersects.length > 0) {
                             hovered = true;
                             const hit = intersects[0].object;
-                            if (hit.userData.type === 'info') {
-                                hit.scale.setScalar(1.2);
-                            } else if (hit.userData.type === 'teleport') {
-                                hit.scale.setScalar(1.2 + Math.sin(time * 4) * 0.05);
-                            }
+                            if (hit.userData.type === 'info') hit.scale.setScalar(1.2);
+                            else if (hit.userData.type === 'teleport') hit.scale.setScalar(1.2 + Math.sin(time * 4) * 0.05);
                         }
-                        
-                        container.style.cursor = hovered ? 'pointer' : 'grab';
+                        vContainer.style.cursor = hovered ? 'pointer' : 'grab';
                     }
 
-                    renderer.render(scene, camera);
+                    vRenderer.render(vScene, vCamera);
                 };
-                animate();
+                animateV();
             }
             
-            function showTooltip(x, y, title, desc) {
+            function showVTooltip(x, y, title, desc) {
                 hsTitle.textContent = title;
                 hsDesc.textContent = desc;
                 tooltip.style.left = `${x}px`;
@@ -1310,7 +1475,7 @@
                 setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
             }
 
-            function hideTooltip() {
+            function hideVTooltip() {
                 tooltip.classList.add('opacity-0');
                 setTimeout(() => tooltip.classList.add('hidden'), 300);
             }
@@ -1318,21 +1483,18 @@
             switchVisionBtn.addEventListener('click', () => {
                 if(isTransitioning || isWalking) return;
                 isTransitioning = true;
-                hideTooltip();
-                
+                hideVTooltip();
                 document.getElementById('showroom-ui-top').style.opacity = '0';
                 switchVisionBtn.style.opacity = '0';
                 fadeOverlay.style.opacity = '1';
                 
                 setTimeout(() => {
                     currentVision = currentVision === 0 ? 1 : 0;
-                    const vData = visions[currentVision];
-                    
-                    scene.background.set(vData.bgColor);
-                    
-                    camera.position.set(0, 0, 0.1);
-                    controls.target.set(0, 0, -0.1);
-                    controls.update();
+                    const vData = vrVisions[currentVision];
+                    vScene.background.set(vData.bgColor);
+                    vCamera.position.set(0, 0, 0.1);
+                    vControls.target.set(0, 0, -0.1);
+                    vControls.update();
                     
                     srSubtitle.textContent = vData.subtitle;
                     srTitle.textContent = vData.title;
@@ -1340,7 +1502,7 @@
                     switchVisionBtn.textContent = vData.btnText;
                     fadeOverlay.style.backgroundColor = vData.bgColor; 
                     
-                    loadNode(currentVision, 0, true); 
+                    loadVNode(currentVision, 0, true); 
                     
                     setTimeout(() => {
                         document.getElementById('showroom-ui-top').style.opacity = '1';
@@ -1352,26 +1514,525 @@
                 }, 700);
             });
 
-            function openShowroom() {
-                showroomModal.classList.remove('hidden');
-                setTimeout(() => {
-                    showroomModal.classList.remove('opacity-0');
-                    document.body.classList.add('modal-open');
-                    initShowroom();
-                }, 10);
+            if (openVRShowroomBtn) {
+                openVRShowroomBtn.addEventListener('click', () => {
+                    vShowroomModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        vShowroomModal.classList.remove('opacity-0');
+                        document.body.classList.add('modal-open');
+                        initVShowroom();
+                    }, 10);
+                });
             }
 
-            function closeShowroom() {
-                showroomModal.classList.add('opacity-0');
-                hideTooltip();
+            closeVShowroomBtn.addEventListener('click', () => {
+                vShowroomModal.classList.add('opacity-0');
+                hideVTooltip();
                 setTimeout(() => {
-                    showroomModal.classList.add('hidden');
+                    vShowroomModal.classList.add('hidden');
                     document.body.classList.remove('modal-open');
                 }, 700);
+            });
+
+
+            // ==========================================
+            // GLOBAL HELPERS
+            // ==========================================
+            let openShopModal;
+
+            // ==========================================
+            // MOODBOARD MODAL: Interactive Palette Pick
+            // ==========================================
+            const shopModal = document.getElementById('shop-modal');
+            const closeShopBtn = document.getElementById('close-shop');
+            const shopContainer = document.getElementById('shop-canvas-container');
+            const styleBtns = document.querySelectorAll('.shop-style-btn');
+            
+            // Palette UI Elements
+            const emptyState = document.getElementById('shop-empty-state');
+            const activeProductState = document.getElementById('shop-active-product');
+            const spCategory = document.getElementById('sp-category');
+            const spName = document.getElementById('sp-name');
+            const spFinish = document.getElementById('sp-finish');
+            const spDesc = document.getElementById('sp-desc');
+            let addToCartBtn = document.getElementById('add-to-cart-btn');
+            const cartCountEl = document.getElementById('cart-count');
+            const checkoutCartBtn = document.getElementById('checkout-cart-btn');
+
+            let sScene, sCamera, sRenderer, sControls;
+            let sInitialized = false;
+            let shopRaycaster, shopMouse;
+            let shopInteractables = [];
+            let currentShopStyle = 'architect';
+            let selectedProduct = null;
+            let cart = [];
+            let currentShopProductData = null;
+
+            // Moodboard Material Database
+            const moodboardData = {
+                architect: {
+                    floorColor: 0x111111,
+                    wallColor: 0x333333,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Matte Charcoal Concrete', finish: 'Finish: Matte / Porous', desc: 'A deep, light-absorbing finish that provides a dramatic, moody backdrop.', color: 0x333333 },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'Dark Smoked Oak', finish: 'Finish: Satin Woodgrain', desc: 'Wide-plank oak with a smoked finish, grounding the space with rich, deep tones.', color: 0x111111 },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Midnight Aniline Leather', finish: 'Finish: Smooth / Supple', desc: 'Premium top-grain leather offering a sleek, sophisticated tactile experience.', color: 0x222222 },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Brushed Gunmetal', finish: 'Finish: Brushed Metal', desc: 'Subtle metallic reflections that add sharp, structural definition to the room.', color: 0x444444 }
+                    }
+                },
+                nomad: {
+                    floorColor: 0xe8dcc8,
+                    wallColor: 0xf9f8f6,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Warm Limewash', finish: 'Finish: Suede / Chalky', desc: 'A breathable, organic wall treatment that subtly plays with natural light.', color: 0xf9f8f6 },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'White Ash Timber', finish: 'Finish: Matte / Natural', desc: 'Light, natural wood that brightens the space and brings the outdoors in.', color: 0xe8dcc8 },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Oatmeal Boucle', finish: 'Finish: Textured / Knobby', desc: 'Soft, looped yarn fabric that invites touch and provides incredible warmth.', color: 0xddceba },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Aged Brass', finish: 'Finish: Patina / Muted', desc: 'A living finish that adds a touch of quiet history and elegance.', color: 0x8c7b66 }
+                    }
+                },
+                visionary: {
+                    floorColor: 0x4a1e1e,
+                    wallColor: 0x1c2b36,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Midnight Blue Enamel', finish: 'Finish: Satin / Rich', desc: 'A bold, immersive color choice that creates a striking visual contrast.', color: 0x1c2b36 },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'Oxblood Poured Resin', finish: 'Finish: High Gloss', desc: 'Seamless, reflective flooring that anchors the room with avant-garde flair.', color: 0x4a1e1e },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Mustard Velvet', finish: 'Finish: Plush / Luminous', desc: 'Vibrant and tactile, providing a brilliant pop of color against dark surfaces.', color: 0xd4af37 },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Polished Chrome', finish: 'Finish: Mirror / Sharp', desc: 'Ultra-modern metallic accents that reflect the room’s bold palette.', color: 0xdddddd }
+                    }
+                },
+                purist: {
+                    floorColor: 0xc1aa97,
+                    wallColor: 0xd98a6c,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Terracotta Plaster', finish: 'Finish: Textured / Earthy', desc: 'Hand-troweled plaster echoing the natural warmth of sun-baked clay.', color: 0xd98a6c },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'Honed Travertine', finish: 'Finish: Porous / Stone', desc: 'Natural stone tiles that bring an ancient, grounded permanence to the space.', color: 0xc1aa97 },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Sunbleached Linen', finish: 'Finish: Soft / Woven', desc: 'Light, breathable fabric that harmonizes perfectly with arid, earth tones.', color: 0xebe5d9 },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Burnished Copper', finish: 'Finish: Warm / Oxidized', desc: 'Living metal that ages gracefully, enriching the earthy atmosphere.', color: 0xb87333 }
+                    }
+                },
+                aesthete: {
+                    floorColor: 0x2c2520,
+                    wallColor: 0x141414,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Gallery Black Paint', finish: 'Finish: Ultra-Matte', desc: 'A museum-quality dark finish designed to make art and lighting pop.', color: 0x141414 },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'Espresso Walnut', finish: 'Finish: Hand-Scraped', desc: 'Deeply stained, richly textured wood conveying traditional luxury.', color: 0x2c2520 },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Emerald Silk Blend', finish: 'Finish: Sheen / Refined', desc: 'A dark, jewel-toned fabric that plays beautifully with low ambient light.', color: 0x274a3f },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Brushed Brass', finish: 'Finish: Muted Gold', desc: 'Warm metallic highlights that glow subtly in cinematic lighting.', color: 0xb5a642 }
+                    }
+                },
+                dreamer: {
+                    floorColor: 0xf0f0f0,
+                    wallColor: 0xffffff,
+                    items: {
+                        wall: { id: 'wall', cat: 'Surface', name: 'Arctic White Flat', finish: 'Finish: Crisp / Clean', desc: 'Pure, unbroken white to maximize light reflection and airy openness.', color: 0xffffff },
+                        floor: { id: 'floor', cat: 'Flooring', name: 'White Microcement', finish: 'Finish: Seamless / Cloudy', desc: 'A continuous, light-bouncing foundation that blurs spatial boundaries.', color: 0xf0f0f0 },
+                        textile: { id: 'textile', cat: 'Upholstery', name: 'Silver Mohair', finish: 'Finish: Dense / Luminous', desc: 'A highly reflective, plush textile that shifts dynamically with the light.', color: 0xc0c0c0 },
+                        accent: { id: 'accent', cat: 'Hardware', name: 'Polished Steel', finish: 'Finish: High Reflectivity', desc: 'Ice-cold metal accents that disappear into the bright, ethereal environment.', color: 0xeeeeee }
+                    }
+                }
+            };
+
+            let meshFloor, meshWallL, meshWallR;
+            let meshSofaBase, meshSofaBack;
+            let meshTable;
+            let meshLampBase, meshLampHead;
+
+            function initShopRoom() {
+                if (sInitialized) return;
+                sInitialized = true;
+
+                sScene = new THREE.Scene();
+                sScene.background = new THREE.Color('#f5f5f4');
+
+                const aspect = shopContainer.clientWidth / shopContainer.clientHeight;
+                const d = 10;
+                sCamera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
+                sCamera.position.set(20, 20, 20);
+                sCamera.lookAt(sScene.position);
+
+                sRenderer = new THREE.WebGLRenderer({ antialias: true });
+                sRenderer.setSize(shopContainer.clientWidth, shopContainer.clientHeight);
+                sRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                sRenderer.shadowMap.enabled = true;
+                sRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                shopContainer.appendChild(sRenderer.domElement);
+
+                sControls = new THREE.OrbitControls(sCamera, sRenderer.domElement);
+                sControls.enableDamping = true;
+                sControls.dampingFactor = 0.05;
+                sControls.maxPolarAngle = Math.PI / 2 - 0.1; 
+                sControls.enableZoom = true;
+                sControls.minZoom = 0.5;
+                sControls.maxZoom = 2;
+
+                const sAmbient = new THREE.AmbientLight(0xffffff, 0.6);
+                sScene.add(sAmbient);
+
+                const sDirLight = new THREE.DirectionalLight(0xfff5e6, 0.8);
+                sDirLight.position.set(10, 20, 10);
+                sDirLight.castShadow = true;
+                sDirLight.shadow.camera.left = -15;
+                sDirLight.shadow.camera.right = 15;
+                sDirLight.shadow.camera.top = 15;
+                sDirLight.shadow.camera.bottom = -15;
+                sScene.add(sDirLight);
+
+                shopRaycaster = new THREE.Raycaster();
+                shopMouse = new THREE.Vector2();
+
+                const dStyle = moodboardData[currentShopStyle];
+                
+                meshFloor = new THREE.Mesh(new THREE.BoxGeometry(16, 0.5, 16), new THREE.MeshStandardMaterial({ color: dStyle.floorColor }));
+                meshFloor.position.y = -0.25;
+                meshFloor.receiveShadow = true;
+                meshFloor.userData = { id: 'floor' };
+                sScene.add(meshFloor);
+                shopInteractables.push(meshFloor);
+
+                meshWallL = new THREE.Mesh(new THREE.BoxGeometry(16, 8, 0.5), new THREE.MeshStandardMaterial({ color: dStyle.wallColor }));
+                meshWallL.position.set(0, 4, -8.25);
+                meshWallL.receiveShadow = true;
+                meshWallL.castShadow = true;
+                meshWallL.userData = { id: 'wall' };
+                sScene.add(meshWallL);
+                shopInteractables.push(meshWallL);
+
+                meshWallR = new THREE.Mesh(new THREE.BoxGeometry(0.5, 8, 16), new THREE.MeshStandardMaterial({ color: dStyle.wallColor }));
+                meshWallR.position.set(-8.25, 4, 0);
+                meshWallR.receiveShadow = true;
+                meshWallR.castShadow = true;
+                meshWallR.userData = { id: 'wall' };
+                sScene.add(meshWallR);
+                shopInteractables.push(meshWallR);
+
+                const sofaGroup = new THREE.Group();
+                meshSofaBase = new THREE.Mesh(new THREE.BoxGeometry(6, 1, 3), new THREE.MeshStandardMaterial({ color: dStyle.items.textile.color }));
+                meshSofaBase.position.y = 0.5;
+                meshSofaBase.castShadow = true;
+                meshSofaBase.userData = { id: 'textile' };
+                sofaGroup.add(meshSofaBase);
+                shopInteractables.push(meshSofaBase);
+                
+                meshSofaBack = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 1), new THREE.MeshStandardMaterial({ color: dStyle.items.textile.color }));
+                meshSofaBack.position.set(0, 1.75, -1);
+                meshSofaBack.castShadow = true;
+                meshSofaBack.userData = { id: 'textile' };
+                sofaGroup.add(meshSofaBack);
+                shopInteractables.push(meshSofaBack);
+                
+                sofaGroup.position.set(1, 0, -2);
+                sScene.add(sofaGroup);
+
+                const tableGroup = new THREE.Group();
+                meshTable = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.8, 32), new THREE.MeshStandardMaterial({ color: dStyle.items.accent.color }));
+                meshTable.position.y = 0.4;
+                meshTable.castShadow = true;
+                meshTable.userData = { id: 'accent' };
+                tableGroup.add(meshTable);
+                shopInteractables.push(meshTable);
+                
+                tableGroup.position.set(1, 0, 3);
+                sScene.add(tableGroup);
+
+                const lampGroup = new THREE.Group();
+                meshLampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 5, 16), new THREE.MeshStandardMaterial({ color: 0x555555 }));
+                meshLampBase.position.y = 2.5;
+                meshLampBase.castShadow = true;
+                meshLampBase.userData = { id: 'accent' };
+                lampGroup.add(meshLampBase);
+                shopInteractables.push(meshLampBase);
+
+                meshLampHead = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1, 16), new THREE.MeshStandardMaterial({ color: dStyle.items.accent.color }));
+                meshLampHead.position.y = 5.5;
+                meshLampHead.castShadow = true;
+                meshLampHead.userData = { id: 'accent' };
+                lampGroup.add(meshLampHead);
+                shopInteractables.push(meshLampHead);
+                
+                lampGroup.position.set(-5, 0, -5);
+                sScene.add(lampGroup);
+
+                window.addEventListener('resize', () => {
+                    if(!shopModal.classList.contains('hidden')) {
+                        const aspect = shopContainer.clientWidth / shopContainer.clientHeight;
+                        sCamera.left = -d * aspect;
+                        sCamera.right = d * aspect;
+                        sCamera.top = d;
+                        sCamera.bottom = -d;
+                        sCamera.updateProjectionMatrix();
+                        sRenderer.setSize(shopContainer.clientWidth, shopContainer.clientHeight);
+                    }
+                });
+
+                let sPointerDownPos = {x:0, y:0};
+                shopContainer.addEventListener('pointerdown', (e) => {
+                    sPointerDownPos = { x: e.clientX, y: e.clientY };
+                });
+
+                shopContainer.addEventListener('pointermove', (e) => {
+                    const rect = shopContainer.getBoundingClientRect();
+                    shopMouse.x = ((e.clientX - rect.left) / shopContainer.clientWidth) * 2 - 1;
+                    shopMouse.y = -((e.clientY - rect.top) / shopContainer.clientHeight) * 2 + 1;
+                });
+
+                shopContainer.addEventListener('pointerup', (e) => {
+                    const dist = Math.hypot(e.clientX - sPointerDownPos.x, e.clientY - sPointerDownPos.y);
+                    if(dist > 5) return; 
+
+                    shopRaycaster.setFromCamera(shopMouse, sCamera);
+                    const intersects = shopRaycaster.intersectObjects(shopInteractables);
+
+                    if (intersects.length > 0) {
+                        const hitMesh = intersects[0].object;
+                        const itemId = hitMesh.userData.id;
+                        selectShopItem(itemId);
+                    }
+                });
+
+                const animateS = function () {
+                    requestAnimationFrame(animateS);
+                    sControls.update();
+                    
+                    shopRaycaster.setFromCamera(shopMouse, sCamera);
+                    const intersects = shopRaycaster.intersectObjects(shopInteractables);
+                    
+                    // Reset emissive
+                    shopInteractables.forEach(m => {
+                        if(m.material && m.material.emissive) m.material.emissive.setHex(0x000000);
+                    });
+                    
+                    if (intersects.length > 0) {
+                        const hit = intersects[0].object;
+                        // Slightly highlight hovered material
+                        if(hit.material && hit.material.emissive) hit.material.emissive.setHex(0x1a1a1a);
+                        shopContainer.style.cursor = 'pointer';
+                    } else {
+                        shopContainer.style.cursor = 'grab';
+                    }
+
+                    sRenderer.render(sScene, sCamera);
+                };
+                animateS();
             }
 
-            openShowroomBtn.addEventListener('click', openShowroom);
-            closeShowroomBtn.addEventListener('click', closeShowroom);
+            function updateShopMaterials() {
+                const dStyle = moodboardData[currentShopStyle];
+                meshFloor.material.color.setHex(dStyle.floorColor);
+                meshWallL.material.color.setHex(dStyle.wallColor);
+                meshWallR.material.color.setHex(dStyle.wallColor);
+                
+                meshSofaBase.material.color.setHex(dStyle.items.textile.color);
+                meshSofaBack.material.color.setHex(dStyle.items.textile.color);
+                
+                meshTable.material.color.setHex(dStyle.items.accent.color);
+                meshLampHead.material.color.setHex(dStyle.items.accent.color);
+
+                if (selectedProduct) {
+                    selectShopItem(selectedProduct);
+                }
+            }
+
+            function selectShopItem(itemId) {
+                selectedProduct = itemId;
+                const productData = moodboardData[currentShopStyle].items[itemId];
+                currentShopProductData = productData;
+                
+                emptyState.classList.add('hidden');
+                activeProductState.classList.remove('hidden');
+                
+                spCategory.textContent = productData.cat;
+                spName.textContent = productData.name;
+                spFinish.textContent = productData.finish;
+                spDesc.textContent = productData.desc;
+                
+                const newBtn = addToCartBtn.cloneNode(true);
+                addToCartBtn.parentNode.replaceChild(newBtn, addToCartBtn);
+                addToCartBtn = newBtn; // Fix: Update reference
+                
+                addToCartBtn.addEventListener('click', () => {
+                    cart.push(productData);
+                    updateCartUI();
+                    
+                    addToCartBtn.textContent = "Added to Palette ✓";
+                    addToCartBtn.classList.replace('bg-sand-900', 'bg-stone-500');
+                    setTimeout(() => {
+                        addToCartBtn.textContent = "Add to Palette";
+                        addToCartBtn.classList.replace('bg-stone-500', 'bg-sand-900');
+                    }, 2000);
+                });
+            }
+
+            function updateCartUI() {
+                cartCountEl.textContent = cart.length;
+                
+                if(cart.length > 0) {
+                    checkoutCartBtn.disabled = false;
+                    checkoutCartBtn.classList.replace('border-stone-300', 'border-sand-900');
+                    checkoutCartBtn.classList.replace('text-stone-900', 'text-white');
+                    checkoutCartBtn.classList.replace('hover:bg-stone-900', 'hover:bg-stone-800');
+                    checkoutCartBtn.classList.add('bg-sand-900');
+                }
+            }
+
+            styleBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    styleBtns.forEach(b => {
+                        b.classList.remove('active', 'text-stone-900', 'bg-white', 'shadow-sm');
+                        b.classList.add('text-stone-500');
+                    });
+                    e.target.classList.add('active', 'text-stone-900', 'bg-white', 'shadow-sm');
+                    e.target.classList.remove('text-stone-500');
+                    
+                    currentShopStyle = e.target.getAttribute('data-style');
+                    updateShopMaterials();
+                });
+            });
+
+            // Expose openShopModal
+            openShopModal = (style = null) => {
+                shopModal.classList.remove('hidden');
+                setTimeout(() => {
+                    shopModal.classList.remove('opacity-0');
+                    document.body.classList.add('modal-open');
+                    initShopRoom();
+
+                    if (style) {
+                        styleBtns.forEach(b => {
+                            b.classList.remove('active', 'text-stone-900', 'bg-white', 'shadow-sm');
+                            b.classList.add('text-stone-500');
+                            if (b.getAttribute('data-style') === style) {
+                                b.classList.add('active', 'text-stone-900', 'bg-white', 'shadow-sm');
+                                b.classList.remove('text-stone-500');
+                            }
+                        });
+                        currentShopStyle = style;
+                        updateShopMaterials();
+                    }
+
+                }, 10);
+            };
+
+            closeShopBtn.addEventListener('click', () => {
+                shopModal.classList.add('opacity-0');
+                setTimeout(() => {
+                    shopModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                }, 700);
+            });
+            
+            // ==========================================
+            // PALETTE CHECKOUT TRANSITION LOGIC
+            // ==========================================
+            const paletteCheckoutModal = document.getElementById('palette-checkout-modal');
+            const paletteSummaryList = document.getElementById('palette-summary-list');
+            const submitPaletteBtn = document.getElementById('submit-palette-btn');
+            const closePaletteModalBtn = document.getElementById('close-palette-modal');
+            const closePaletteSuccessBtn = document.getElementById('close-palette-success-btn');
+            const paletteStep1 = document.getElementById('palette-step-1');
+            const paletteStep2 = document.getElementById('palette-step-2');
+            
+            checkoutCartBtn.addEventListener('click', () => {
+                checkoutCartBtn.textContent = "Compiling Palette...";
+                
+                setTimeout(() => {
+                    // Populate Summary List dynamically
+                    paletteSummaryList.innerHTML = '';
+                    cart.forEach(item => {
+                        paletteSummaryList.innerHTML += `
+                            <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
+                                <div>
+                                    <span class="text-[8px] md:text-[9px] uppercase tracking-widest text-white/40 block mb-1">${item.cat}</span>
+                                    <span class="text-xs md:text-sm font-medium text-white block">${item.name}</span>
+                                </div>
+                                <span class="text-[9px] md:text-[10px] text-white/60 bg-white/5 px-2 py-1 rounded-sm text-right max-w-[40%] leading-tight">${item.finish.replace('Finish: ', '')}</span>
+                            </div>
+                        `;
+                    });
+
+                    // Hide the Shop Modal
+                    shopModal.classList.add('opacity-0');
+                    
+                    setTimeout(() => {
+                        shopModal.classList.add('hidden');
+                        
+                        // Reset Palette Checkout Steps
+                        paletteStep1.classList.add('active');
+                        paletteStep2.classList.remove('active');
+                        submitPaletteBtn.disabled = false;
+                        submitPaletteBtn.querySelector('span').textContent = "Lock in Palette & Book";
+                        document.getElementById('palette-spinner').classList.add('hidden');
+
+                        // Show Palette Checkout Modal
+                        paletteCheckoutModal.classList.remove('hidden');
+                        setTimeout(() => {
+                            paletteCheckoutModal.classList.remove('opacity-0');
+                        }, 10);
+                        
+                        // Reset original cart button UI
+                        checkoutCartBtn.textContent = "Confirm Palette Selection";
+                    }, 500);
+                }, 800);
+            });
+
+            // Submit Palette Form Logic
+            submitPaletteBtn.addEventListener('click', () => {
+                submitPaletteBtn.disabled = true;
+                submitPaletteBtn.querySelector('span').textContent = "Processing...";
+                document.getElementById('palette-spinner').classList.remove('hidden');
+                
+                setTimeout(() => {
+                    paletteStep1.style.opacity = '0';
+                    paletteStep1.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        paletteStep1.classList.remove('active');
+                        paletteStep1.style.opacity = '';
+                        paletteStep1.style.transform = '';
+                        
+                        paletteCheckoutModal.scrollTop = 0;
+                        paletteStep2.classList.add('active');
+                    }, 400);
+                }, 1500);
+            });
+
+            // Close Palette Modal Logic
+            const closePaletteModalFunc = () => {
+                paletteCheckoutModal.classList.add('opacity-0');
+                setTimeout(() => {
+                    paletteCheckoutModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                    
+                    // Clear the cart on successful completion or dismissal
+                    cart = [];
+                    updateCartUI();
+                    checkoutCartBtn.disabled = true;
+                    checkoutCartBtn.classList.replace('bg-sand-900', 'border-stone-300');
+                    checkoutCartBtn.classList.replace('text-white', 'text-stone-900');
+                    checkoutCartBtn.classList.replace('hover:bg-stone-800', 'hover:bg-stone-900');
+                    checkoutCartBtn.classList.remove('bg-sand-900');
+                    
+                }, 500);
+            };
+
+            closePaletteModalBtn.addEventListener('click', closePaletteModalFunc);
+            closePaletteSuccessBtn.addEventListener('click', closePaletteModalFunc);
+
+            // ==========================================
+            // MAIN PAGE LOGIC: Moodboard Selection
+            // ==========================================
+            const openShopTriggers = document.querySelectorAll('.open-shop-trigger');
+            const shopPageItems = document.querySelectorAll('.shop-page-item');
+
+            openShopTriggers.forEach(btn => btn.addEventListener('click', () => {
+                if(openShopModal) openShopModal();
+            }));
+
+            shopPageItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const style = item.getAttribute('data-style');
+                    if(openShopModal) openShopModal(style);
+                });
+            });
 
         });
     </script>
