@@ -29,3 +29,7 @@ No unresolved P0/P1/P2 findings. P3 follow-up: supplied original portrait assets
 ### Collection, affiliation, film and direction cards
 
 Reviewed generated living/work/rest concept visuals and both supplied-logo reconstructions before integration. Reviewed browser screenshots of the catalogue, green affiliation panel, opening film and responsive designer modal. The EPS section retains its layered material study and build specification caveat, with an explicit SECHA → Greenshift → Fjäll Group path. Designer modals use the supplied portrait language, a readable material/style card and a direct connection into room try-on. Desktop/mobile browser checks cover actual film playback and keyboard-accessible modal journeys.
+
+### Editorial affiliation revision
+
+Reviewed both transparent logo assets and the three generated service presentation images before integration. The affiliation article uses a serif editorial accent, paper-green surface, direct transparent logo placement and a live motion study connecting the brand relationship to an illustrative EPS core/finish assembly. Checked responsive article and motion layout plus Lite concept/moodboard, Pro layout/3D, and Premium detailed-documentation imagery. Motion is pausable, stops outside the viewport and in hidden tabs, and becomes a static exploded view with reduced motion.

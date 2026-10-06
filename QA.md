@@ -33,3 +33,7 @@ Browser QA checks all three signature profile names and portrait assets, EPS sec
 - `npm run test:studio`: desktop 1440 px and mobile 390 px passed actual video playback/automatic completion, refresh replay, skip, Escape, reduced-motion bypass, blocked-media fallback, all three designer modals, focus containment/restoration, WCAG A/AA modal audit, palette transfer/focus, loaded affiliation logos, concept catalogue assets and horizontal-overflow checks.
 - Opening asset verified with ffprobe: H.264, 960×540, 4.000 seconds, no audio stream. Screenshots retained in ignored `qa-artifacts/`.
 - Live deployment is separate from a GitHub push. These checks run against the local static server; they do not verify an external hosting deployment or send a WhatsApp message.
+
+### Affiliation editorial and design-service imagery
+
+Build and all seven commerce tests passed. The desktop/mobile Studio suite passed transparency checks for both logo PNGs, WCAG A/AA checks on the complete editorial article, actual animated-layer transform changes, pause/resume, reduced-motion still view, and loaded service-specific images. The existing end-to-end shopping, room/ambiance, checkout/export and WhatsApp tests passed at desktop/mobile widths, including normal-motion layout checks at 360/768/1024 px. The pause assertion waits for the compositor to settle before comparing frames. Screenshots are saved in ignored `qa-artifacts/`.

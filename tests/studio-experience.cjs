@@ -62,14 +62,12 @@ let browser, server;
       assert.equal(await page.locator("#global-modal").isVisible(), true);
       assert.equal(await page.locator(".direction-swatches span").count(), 3);
       if (id === "daffa")
-        await page
-          .locator("#modal-content-wrapper")
-          .screenshot({
-            path: path.join(
-              __dirname,
-              `../qa-artifacts/${width}-designer-direction.png`,
-            ),
-          });
+        await page.locator("#modal-content-wrapper").screenshot({
+          path: path.join(
+            __dirname,
+            `../qa-artifacts/${width}-designer-direction.png`,
+          ),
+        });
       await page.keyboard.press("Shift+Tab");
       assert.equal(
         await page.evaluate(() =>
@@ -114,11 +112,86 @@ let browser, server;
         true,
       );
     }
-    await page
-      .locator("#modular-build")
-      .screenshot({
-        path: path.join(__dirname, `../qa-artifacts/${width}-affiliation.png`),
-      });
+    await page.locator("#modular-build").screenshot({
+      path: path.join(__dirname, `../qa-artifacts/${width}-affiliation.png`),
+    });
+    const motion = page.locator(".affiliation-motion");
+    await motion.scrollIntoViewIfNeeded();
+    assert.equal(
+      await motion.evaluate((el) => el.classList.contains("motion-paused")),
+      true,
+    );
+    assert.equal(
+      await page.locator(".material-motion-toggle").isVisible(),
+      false,
+    );
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.waitForFunction(
+      () =>
+        !document
+          .querySelector(".affiliation-motion")
+          .classList.contains("motion-paused"),
+    );
+    const layer = page.locator(".material-finish");
+    const before = await layer.evaluate((el) => getComputedStyle(el).transform);
+    await page.waitForTimeout(1600);
+    assert.notEqual(
+      await layer.evaluate((el) => getComputedStyle(el).transform),
+      before,
+      "Material layers animate",
+    );
+    await page.getByRole("button", { name: "Pause motion" }).click();
+    await page.waitForFunction(
+      () =>
+        getComputedStyle(document.querySelector(".material-finish"))
+          .animationPlayState === "paused",
+    );
+    await page.evaluate(
+      () =>
+        new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        ),
+    );
+    const stopped = await layer.evaluate(
+      (el) => getComputedStyle(el).transform,
+    );
+    await page.waitForTimeout(250);
+    assert.equal(
+      await layer.evaluate((el) => getComputedStyle(el).transform),
+      stopped,
+      "Pause freezes the material motion",
+    );
+    await page.getByRole("button", { name: "Play motion" }).click();
+    assert.equal(
+      await motion.evaluate((el) => el.classList.contains("motion-paused")),
+      false,
+    );
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const editorialAudit = await page.evaluate(async () =>
+      (
+        await axe.run(document.querySelector(".affiliation-panel"), {
+          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
+        })
+      ).violations.map((v) => ({
+        id: v.id,
+        targets: v.nodes.map((n) => n.target),
+      })),
+    );
+    assert.deepEqual(editorialAudit, [], "Editorial section accessibility");
+    assert.equal(
+      await page.locator(".affiliation-brands img").evaluateAll((images) =>
+        images.every((img) => {
+          const c = document.createElement("canvas");
+          c.width = img.naturalWidth;
+          c.height = img.naturalHeight;
+          const ctx = c.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
+        }),
+      ),
+      true,
+      "Both logos have genuinely transparent corners",
+    );
     assert.match(
       await page.locator(".affiliation-panel").textContent(),
       /Fjäll Group/,
@@ -131,14 +204,12 @@ let browser, server;
         ),
       true,
     );
-    await page
-      .locator("#shop")
-      .screenshot({
-        path: path.join(
-          __dirname,
-          `../qa-artifacts/${width}-modular-catalogue.png`,
-        ),
-      });
+    await page.locator("#shop").screenshot({
+      path: path.join(
+        __dirname,
+        `../qa-artifacts/${width}-modular-catalogue.png`,
+      ),
+    });
     assert.equal(
       await page
         .locator(".product-image img")
@@ -153,6 +224,26 @@ let browser, server;
             ),
         ),
       true,
+    );
+    await page.locator(".product-image img").nth(5).scrollIntoViewIfNeeded();
+    await page.waitForFunction(() =>
+      Array.from(document.querySelectorAll(".product-image img"))
+        .slice(3)
+        .every((i) => i.complete && i.naturalWidth > 0),
+    );
+    assert.equal(
+      await page
+        .locator(".product-image img")
+        .evaluateAll((images) =>
+          images.slice(3).every((i) => i.src.includes("-service.png")),
+        ),
+      true,
+      "Design services use deliverable-specific images",
+    );
+    await page.waitForFunction(() =>
+      document
+        .querySelector(".affiliation-motion")
+        .classList.contains("motion-paused"),
     );
     assert.equal(
       await page.evaluate(
@@ -175,7 +266,7 @@ let browser, server;
   );
   await failed.close();
   console.log(
-    "Studio QA passed: desktop/mobile playback, refresh replay, skip, Escape, reduced motion, failed media, all designer modals, keyboard focus, WCAG audit, palette transfer, affiliation logos and catalogue assets.",
+    "Studio QA passed: desktop/mobile playback, refresh replay, skip, Escape, reduced motion, failed media, all designer modals, keyboard focus, WCAG audit, palette transfer, transparent affiliation logos, editorial accessibility, material motion/pause/reduced-motion and deliverable-specific service assets.",
   );
 })()
   .catch((e) => {

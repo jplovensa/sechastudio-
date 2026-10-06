@@ -65,3 +65,9 @@ The EPS section displays the user-provided affiliation: SECHA is affiliated with
 Each signature designer opens an accessible modal with a design narrative, suggested style card, material direction and three-colour palette. These directions interpret the supplied profile narratives and are starting points for a customer brief. The modal CTA applies the corresponding Earth, Noir or Japandi direction to the existing ambiance preview and moves keyboard focus to its controls.
 
 Run `npm run test:studio` for desktop/mobile film and designer checks, alongside `npm test` and `npm run test:e2e` for commerce and room-preview regression coverage.
+
+### Affiliation editorial and service presentations
+
+The affiliation article now tells the relationship through SECHA’s design perspective and the EPS material approach. Both logo PNGs have genuine alpha transparency, with the white backdrops removed using Image Gen; they sit directly on the editorial paper surface. The live CSS motion study separates and assembles illustrative core/finish layers and traces SECHA → Greenshift → Fjäll Group. A visible pause/play control, reduced-motion still view, viewport observer and hidden-tab handling control the animation. It adds no video download and remains readable without JavaScript.
+
+Design / Lite, Pro and Premium use generated studio presentations showing, respectively, a concept/material moodboard, floor plan plus 3D presentation, and detailed drawings plus a scale model. These images illustrate the type of service deliverable; they are not completed project photographs or contractual drawing sets. Existing package inclusions and prices remain the catalogue source of truth.

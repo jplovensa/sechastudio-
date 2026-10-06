@@ -69,7 +69,7 @@
         "Curated material palette",
         "Digital design handover",
       ],
-      image: "assets/interior-living.jpg",
+      image: "assets/design-lite-service.png",
     },
     {
       id: "design-pro",
@@ -84,7 +84,7 @@
         "Room layout + 3D visualisation",
         "Designer review",
       ],
-      image: "assets/modular-work.jpg",
+      image: "assets/design-pro-service.png",
     },
     {
       id: "design-premium",
@@ -99,7 +99,7 @@
         "Detailed design drawings",
         "Build planning consultation",
       ],
-      image: "assets/modular-rest.jpg",
+      image: "assets/design-premium-service.png",
     },
   ];
   const money = (n) =>
