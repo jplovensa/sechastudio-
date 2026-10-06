@@ -20,7 +20,7 @@
         "Finish consultation + shop drawings",
         "Assembly scope confirmed after site survey",
       ],
-      image: "assets/interior-living.jpg",
+      image: "assets/modular-living-concept.png",
     },
     {
       id: "modular-work",
@@ -37,7 +37,7 @@
         "Cable management planning",
         "Site measurement before fabrication",
       ],
-      image: "assets/modular-work.jpg",
+      image: "assets/modular-work-concept.png",
     },
     {
       id: "modular-bedroom",
@@ -54,7 +54,7 @@
         "Material and colour coordination",
         "Final scope agreed with your designer",
       ],
-      image: "assets/modular-rest.jpg",
+      image: "assets/modular-rest-concept.png",
     },
     {
       id: "design-lite",

@@ -25,3 +25,7 @@ Corrected excessive highlights with colour-space conversion and tone mapping. Vi
 Desktop/mobile commerce E2E and automated WCAG checks cover the signature, EPS, ambiance, shop, room studio and checkout sections. Additional layout checks cover 360, 768 and 1024-pixel widths. No JavaScript errors or horizontal overflow were found. Vendor-failure fallback, cart persistence, checkout totals and the WhatsApp destination/message remain verified.
 
 No unresolved P0/P1/P2 findings. P3 follow-up: supplied original portrait assets can replace generated reconstructions for pixel-exact photographic fidelity. The room preview remains an illustrative design aid rather than a measured-room or fabrication model.
+
+### Collection, affiliation, film and direction cards
+
+Reviewed generated living/work/rest concept visuals and both supplied-logo reconstructions before integration. Reviewed browser screenshots of the catalogue, green affiliation panel, opening film and responsive designer modal. The EPS section retains its layered material study and build specification caveat, with an explicit SECHA → Greenshift → Fjäll Group path. Designer modals use the supplied portrait language, a readable material/style card and a direct connection into room try-on. Desktop/mobile browser checks cover actual film playback and keyboard-accessible modal journeys.

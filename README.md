@@ -55,3 +55,13 @@ The signature section uses Josephine (Founder & CEO), Daffa (Architect of Form) 
 The modular section explains the use of expanded polystyrene (EPS)-based interior panels. Its generated exploded-panel image is an illustrative material study, not a manufacturing drawing. Actual panel build-ups, finishes, supports and fixings need project-specific specifications; the site does not assert unprovided fire, structural, acoustic or environmental certifications.
 
 Ambiance try-on uses the same furnished-room renderer as the build studio. A draggable, keyboard-accessible slider compares the neutral daylight room with a chosen palette and lighting, with three room types and six style directions. The selected room, lighting and palette transfer to the studio without modifying the customer's bag.
+
+## Studio+ film, affiliation and design directions
+
+The opening film is a locally hosted, silent H.264 MP4 (four seconds, 960×540, approximately 108 KB). It plays on every full page load or refresh. Skip and Escape dismiss it, reduced-motion visitors bypass it, and errors, blocked autoplay or a 6.5-second timeout release the page. Background content is inert while the film is open. Site animations start after dismissal. Rebuild the film with `npm run render:intro`; this optional asset-generation command requires system Chromium and ffmpeg, in addition to npm dependencies. Ordinary development uses the committed MP4.
+
+The EPS section displays the user-provided affiliation: SECHA is affiliated with Fjäll Group through Greenshift. Brand images are generated reproductions of the supplied inline references; they are not original brand source files. The section does not invent certifications, ownership terms or environmental performance claims. The three new modular catalogue images are generated concept visualisations, not photographs of installed SECHA projects; their visible modules illustrate the listed room packages.
+
+Each signature designer opens an accessible modal with a design narrative, suggested style card, material direction and three-colour palette. These directions interpret the supplied profile narratives and are starting points for a customer brief. The modal CTA applies the corresponding Earth, Noir or Japandi direction to the existing ambiance preview and moves keyboard focus to its controls.
+
+Run `npm run test:studio` for desktop/mobile film and designer checks, alongside `npm test` and `npm run test:e2e` for commerce and room-preview regression coverage.

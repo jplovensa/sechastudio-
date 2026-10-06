@@ -1253,3 +1253,225 @@ body.modal-open {
     display: none;
   }
 }
+/* Studio film and signature direction cards */
+.studio-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #050505;
+  color: #f5f1e9;
+  display: grid;
+  place-items: center;
+}
+.studio-intro[hidden] {
+  display: none;
+}
+.studio-intro video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.intro-label {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  font: 11px monospace;
+  letter-spacing: 0.12em;
+}
+.intro-skip {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  padding: 14px 24px;
+  border: 1px solid #827e75;
+  background: #151513;
+  color: #fff;
+  font: 12px monospace;
+}
+.intro-open {
+  overflow: hidden;
+}
+.designer-direction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 18px 0;
+  margin-top: 20px;
+  border-top: 1px solid #777;
+  background: none;
+  color: #f4f1eb;
+  text-align: left;
+  font: 12px monospace;
+  letter-spacing: 0.06em;
+}
+.designer-direction:hover {
+  color: #d9c39f;
+}
+.designer-modal #modal-content-wrapper {
+  max-width: 1000px;
+}
+.direction-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 32px;
+}
+.direction-portrait {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+}
+.direction-copy h3 {
+  font-size: 26px;
+  line-height: 1.2;
+  color: #f4f1eb;
+  margin-bottom: 18px;
+}
+.direction-copy p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #c8c5bd;
+}
+.direction-copy ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 18px 0;
+  color: #dedbd3;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.direction-style {
+  padding: 20px;
+  background: #eee9df;
+  color: #171916;
+  margin: 24px 0;
+}
+.direction-style small {
+  font: 9px monospace;
+  letter-spacing: 0.06em;
+}
+.direction-style h4 {
+  font-size: 21px;
+  margin: 10px 0;
+}
+.direction-swatches {
+  display: flex;
+  height: 44px;
+  margin: 16px 0;
+}
+.direction-swatches span {
+  flex: 1;
+}
+.direction-style p {
+  color: #48483e;
+  font-size: 12px;
+}
+.direction-copy .direction-note {
+  font-size: 11px;
+  margin-top: 14px;
+}
+.direction-copy .secha-button {
+  width: 100%;
+}
+.affiliation-panel {
+  grid-column: 1/-1;
+  background: #dce7df;
+  border: 1px solid #b5cbbd;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 32px;
+}
+.affiliation-intro h3 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+.affiliation-intro h3 span {
+  color: #285447;
+}
+.affiliation-intro > p:last-child {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #3b5148;
+  margin-top: 20px;
+  max-width: 420px;
+}
+.affiliation-brands {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.affiliation-brands figure {
+  background: white;
+  padding: 18px 24px;
+}
+.affiliation-brands img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+}
+.affiliation-brands figcaption {
+  font: 10px monospace;
+  color: #3b5148;
+  margin-top: 10px;
+}
+.affiliation-link {
+  font: 9px monospace;
+  text-align: center;
+  letter-spacing: 0.14em;
+  color: #285447;
+}
+.affiliation-path {
+  grid-column: 1/-1;
+  padding-top: 24px;
+  border-top: 1px solid #9db9a8;
+  font: 11px monospace;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  color: #244c3f;
+}
+.affiliation-panel .eyebrow {
+  color: #285447;
+}
+@media (max-width: 700px) {
+  .direction-layout,
+  .affiliation-panel {
+    grid-template-columns: 1fr;
+  }
+  .direction-portrait {
+    max-height: 250px;
+    object-position: center 35%;
+    aspect-ratio: 4/3;
+  }
+  .affiliation-panel {
+    padding: 24px;
+    gap: 24px;
+  }
+  .affiliation-intro h3 {
+    font-size: 27px;
+  }
+  .affiliation-brands img {
+    height: 70px;
+  }
+  .affiliation-path {
+    font-size: 9px;
+    gap: 12px;
+  }
+  .intro-label {
+    left: 20px;
+    right: 20px;
+    font-size: 9px;
+  }
+  .intro-label span:last-child {
+    display: none;
+  }
+  .intro-skip {
+    right: 20px;
+    bottom: 24px;
+  }
+}

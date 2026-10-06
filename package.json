@@ -6,7 +6,9 @@
     "dev": "python3 -m http.server 8000 --bind 127.0.0.1",
     "build": "tailwindcss -i css/tailwind-input.css -o css/utilities.css --content 'index.html,js/*.js' --minify",
     "test": "node --test tests/commerce.test.cjs",
-    "test:e2e": "node tests/e2e.cjs"
+    "test:e2e": "node tests/e2e.cjs",
+    "test:studio": "node tests/studio-experience.cjs",
+    "render:intro": "node scripts/render-intro.cjs"
   },
   "devDependencies": {
     "axe-core": "4.10.3",

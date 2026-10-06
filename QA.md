@@ -25,3 +25,11 @@ Browser QA verifies local frontend behaviour, not production deployment, physica
 ## Signature / EPS / ambiance update
 
 Browser QA checks all three signature profile names and portrait assets, EPS section copy, room changes, real rendered lighting/comparison differences, slider endpoints, reset and transfer of the selected style/room/lighting into the studio. Screenshots include the designer profiles, EPS section and selected ambiance on desktop and mobile. Removed the old abstract corridor, simulated emissions readouts and diagnostic quiz from the try-on experience. See `design-qa.md` for visual comparison notes against the supplied profile references.
+
+### Studio+ refresh film and affiliation update
+
+- `npm test`: all seven commerce rules passed.
+- `npm run test:e2e`: desktop/mobile commerce, room configuration, ambiance rendering, checkout validation, request export and WhatsApp handoff passed; normal-motion layout checks at 360, 768 and 1024 px passed; missing vendor libraries retained functional commerce.
+- `npm run test:studio`: desktop 1440 px and mobile 390 px passed actual video playback/automatic completion, refresh replay, skip, Escape, reduced-motion bypass, blocked-media fallback, all three designer modals, focus containment/restoration, WCAG A/AA modal audit, palette transfer/focus, loaded affiliation logos, concept catalogue assets and horizontal-overflow checks.
+- Opening asset verified with ffprobe: H.264, 960×540, 4.000 seconds, no audio stream. Screenshots retained in ignored `qa-artifacts/`.
+- Live deployment is separate from a GitHub push. These checks run against the local static server; they do not verify an external hosting deployment or send a WhatsApp message.

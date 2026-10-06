@@ -121,7 +121,7 @@ function renderProducts(filter = "all") {
     .filter((p) => filter === "all" || p.category === filter)
     .map(
       (p) =>
-        `<article class="product-card"><div class="product-image"><img src="${p.image}" alt="${C.escape(p.category === "modular" ? "Interior inspiration for " + p.room : "SECHA design direction")}" loading="lazy"><span>${p.category === "modular" ? "Modular system" : "Design service"}</span></div><div class="product-info"><h3>${p.name}</h3><p>${p.description}</p><ul>${p.includes.map((t) => `<li>${t}</li>`).join("")}</ul><div class="product-price">${C.money(p.price)}<small>Starting estimate · ${p.lead}</small></div><div class="product-actions">${p.category === "modular" ? `<button class="secha-button secondary" onclick="previewProduct('${p.id}')">Try in studio <svg class="action-arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 13 13 3M3 3h10v10"/></svg></button>` : ""}<button class="secha-button" onclick="addProduct('${p.id}')">${p.category === "modular" ? "Add build to bag" : "Add design to bag"}</button></div></div></article>`,
+        `<article class="product-card"><div class="product-image"><img src="${p.image}" alt="${C.escape(p.category === "modular" ? "Concept visualisation of the SECHA modular " + p.room + " setup" : "SECHA design direction")}" loading="lazy"><span>${p.category === "modular" ? "Modular concept" : "Design service"}</span></div><div class="product-info"><h3>${p.name}</h3><p>${p.description}</p><ul>${p.includes.map((t) => `<li>${t}</li>`).join("")}</ul><div class="product-price">${C.money(p.price)}<small>Starting estimate · ${p.lead}</small></div><div class="product-actions">${p.category === "modular" ? `<button class="secha-button secondary" onclick="previewProduct('${p.id}')">Try in studio <svg class="action-arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M3 13 13 3M3 3h10v10"/></svg></button>` : ""}<button class="secha-button" onclick="addProduct('${p.id}')">${p.category === "modular" ? "Add build to bag" : "Add design to bag"}</button></div></div></article>`,
     )
     .join("");
 }
@@ -408,13 +408,16 @@ let modalOpener;
 function openModal(id) {
   const data = id.startsWith("specs-")
     ? getSpecsModalData(Number(id.split("-")[1]))
-    : MODAL_DATA[id];
+    : id.startsWith("designer-")
+      ? getDesignerModalData(id.slice(9))
+      : MODAL_DATA[id];
   if (!data) return;
   modalOpener = document.activeElement;
   document.getElementById("modal-subtitle").textContent = data.subtitle;
   document.getElementById("modal-title").innerHTML = data.title;
   document.getElementById("modal-body").innerHTML = data.body;
   const modal = document.getElementById("global-modal");
+  modal.classList.toggle("designer-modal", id.startsWith("designer-"));
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   document.getElementById("modal-backdrop").style.opacity = 1;

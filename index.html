@@ -95,6 +95,26 @@
     </style>
   </head>
   <body class="selection:bg-white selection:text-black">
+    <div
+      id="studio-intro"
+      class="studio-intro"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="SECHA Studio+ opening film"
+    >
+      <video
+        id="studio-intro-video"
+        muted
+        playsinline
+        preload="none"
+        aria-hidden="true"
+      ></video>
+      <div class="intro-label">
+        <span>SECHA / STUDIO+</span><span>PEOPLE MAKE SPACE.</span>
+      </div>
+      <button id="intro-skip" class="intro-skip">Skip film</button>
+    </div>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div
@@ -313,6 +333,12 @@
               space need to do for your life? She stays with the answer all the
               way to reality.
             </p>
+            <button
+              class="designer-direction"
+              onclick="openModal('designer-josephine')"
+            >
+              Explore design direction <span aria-hidden="true">↗</span>
+            </button>
             <footer class="designer-footer">
               <span>SECHA STUDIO+ / PEOPLE MAKE SPACE</span><span>01 / 03</span>
             </footer>
@@ -336,6 +362,12 @@
               noise, one decision at a time, until the room has space to
               breathe.
             </p>
+            <button
+              class="designer-direction"
+              onclick="openModal('designer-daffa')"
+            >
+              Explore design direction <span aria-hidden="true">↗</span>
+            </button>
             <footer class="designer-footer">
               <span>SECHA STUDIO+ / PEOPLE MAKE SPACE</span><span>02 / 03</span>
             </footer>
@@ -359,6 +391,12 @@
               settle, gather, and put your keys down. She makes a layout feel
               like it belongs to you.
             </p>
+            <button
+              class="designer-direction"
+              onclick="openModal('designer-audina')"
+            >
+              Explore design direction <span aria-hidden="true">↗</span>
+            </button>
             <footer class="designer-footer">
               <span>SECHA STUDIO+ / PEOPLE MAKE SPACE</span><span>03 / 03</span>
             </footer>
@@ -469,16 +507,17 @@
           Modular packages are starting estimates for the listed configuration,
           not binding offers. Site conditions, dimensions, installation,
           delivery and applicable taxes are confirmed in your final quote.
-          Photography illustrates a design direction; included modules are
-          listed on each card.
+          Images are concept visualisations of a design direction; included
+          modules are listed on each card.
         </p>
       </section>
       <section id="modular-build" class="commerce-section modular-section">
         <div class="modular-intro">
-          <p class="eyebrow">02 / Modular setup. Complete interior.</p>
-          <h2>Light at the core.<br />Made for your space.</h2>
+          <p class="eyebrow">02 / EPS interiors · Connected expertise</p>
+          <h2>Light at the core.<br />Stronger together.</h2>
           <p>
-            We use EPS-based materials in our modular interior setup. The
+            SECHA is affiliated with Fjäll Group through Greenshift. Together,
+            we use EPS-based materials in our modular interior approach. The
             expanded polystyrene core brings a lightweight foundation to
             selected interior panels, with surface finishes, supports and fixing
             details specified around your space.
@@ -510,6 +549,45 @@
             >
           </figcaption>
         </figure>
+        <div class="affiliation-panel">
+          <div class="affiliation-intro">
+            <p class="eyebrow">Our affiliation</p>
+            <h3>
+              SECHA × Greenshift<br /><span>Connected to Fjäll Group.</span>
+            </h3>
+            <p>
+              Our design perspective meets an EPS-based material approach. From
+              the lightweight core to the finish you live with, every interior
+              is specified around your project.
+            </p>
+          </div>
+          <div class="affiliation-brands">
+            <figure>
+              <img
+                src="assets/brands/greenshift.png"
+                alt="Greenshift"
+                width="1536"
+                height="512"
+                loading="lazy"
+              />
+              <figcaption>SECHA’s connection to Fjäll Group</figcaption>
+            </figure>
+            <span class="affiliation-link">THROUGH GREENSHIFT</span>
+            <figure>
+              <img
+                src="assets/brands/fjall-group.png"
+                alt="Fjäll Group"
+                width="2120"
+                height="742"
+                loading="lazy"
+              />
+              <figcaption>Affiliated group</figcaption>
+            </figure>
+          </div>
+          <p class="affiliation-path">
+            SECHA STUDIO+ <span>→</span> GREENSHIFT <span>→</span> FJÄLL GROUP
+          </p>
+        </div>
         <div class="build-steps">
           <article>
             <span>01</span>
@@ -1060,5 +1138,7 @@
     <script src="js/interior.js"></script>
     <script src="js/ambiance.js"></script>
     <script src="js/commerce.js"></script>
+    <script src="js/designers.js"></script>
+    <script src="js/intro.js"></script>
   </body>
 </html>

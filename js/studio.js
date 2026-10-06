@@ -476,13 +476,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (
-    window.gsap &&
-    window.ScrollTrigger &&
-    !matchMedia("(prefers-reduced-motion: reduce)").matches
-  )
-    initAnimations();
-  else document.body.classList.add("static-motion");
+  window.startStudioMotion = () => {
+    if (
+      window.gsap &&
+      window.ScrollTrigger &&
+      !matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      initAnimations();
+    else document.body.classList.add("static-motion");
+  };
+  if (window.initStudioIntro) window.initStudioIntro();
+  else window.startStudioMotion();
 });
 
 function initCursor() {}
