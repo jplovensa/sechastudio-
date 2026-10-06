@@ -8,7 +8,20 @@ let roomConfig = {
 };
 let refreshInterior = null;
 function initFinishingStudio() {
-  const container = document.getElementById("vignette-canvas");
+  const preview = createInteriorPreview(
+    document.getElementById("vignette-canvas"),
+    {
+      getConfig: () => roomConfig,
+      getMaterial: () => activeMaterial,
+    },
+  );
+  refreshInterior = preview.refresh;
+  updateVignetteMaterial = preview.setMaterial;
+}
+
+// One furnished-room renderer powers both the build studio and ambiance comparison.
+function createInteriorPreview(container, options) {
+  const initialMaterial = options.getMaterial();
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   const renderer = new THREE.WebGLRenderer({
@@ -19,6 +32,8 @@ function initFinishingStudio() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.9;
   container.replaceChildren(renderer.domElement);
   renderer.domElement.setAttribute(
     "aria-label",
@@ -35,12 +50,15 @@ function initFinishingStudio() {
   scene.add(daylight, sun, ambient);
   let room = null;
   const finish = new THREE.MeshStandardMaterial({
-    color: activeMaterial.color,
-    roughness: activeMaterial.roughness,
-    metalness: activeMaterial.metalness,
+    color: new THREE.Color(initialMaterial.color).convertSRGBToLinear(),
+    roughness: initialMaterial.roughness,
+    metalness: initialMaterial.metalness,
   });
   function material(color, roughness = 0.8) {
-    return new THREE.MeshStandardMaterial({ color, roughness });
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(color).convertSRGBToLinear(),
+      roughness,
+    });
   }
   function box(parent, w, h, d, x, y, z, mat) {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -50,6 +68,7 @@ function initFinishingStudio() {
     parent.add(mesh);
     return mesh;
   }
+  let referenceMaterials = [];
   function rebuild() {
     if (room) {
       const geometry = new Set(),
@@ -66,10 +85,13 @@ function initFinishingStudio() {
     }
     room = new THREE.Group();
     scene.add(room);
-    const { width: w, depth: d, modules, light } = roomConfig;
-    const wall = material(light === "day" ? 0xded8c9 : 0xc4b8a4);
-    const timber = material(0xbaa17a);
-    const linen = material(0xcfc8b8);
+    const config = options.getConfig();
+    const { width: w, depth: d, modules, light, palette = {} } = config;
+    const wall = material(
+      palette.wall ?? (light === "day" ? 0xded8c9 : 0xc4b8a4),
+    );
+    const timber = material(palette.floor ?? 0xbaa17a);
+    const linen = material(palette.fabric ?? 0xcfc8b8);
     const dark = material(0x33332f);
     const green = material(0x536549);
     scene.background = new THREE.Color(light === "day" ? 0xaaa79f : 0x24201d);
@@ -92,7 +114,15 @@ function initFinishingStudio() {
     box(room, 0.03, 1.75, d / 2, -w / 2, 0.7 + 0.875, d / 4, glass);
     for (const z of [0, d / 4, d / 2])
       box(room, 0.16, 1.9, 0.035, -w / 2, 1.62, z, dark);
-    box(room, w * 0.7, 0.025, d * 0.6, 0, 0.02, 0.15, material(0x918a7d));
+    const rug = material(palette.rug ?? 0x918a7d);
+    box(room, w * 0.7, 0.025, d * 0.6, 0, 0.02, 0.15, rug);
+    referenceMaterials = [
+      [wall, 0xded8c9],
+      [timber, 0xbaa17a],
+      [linen, 0xcfc8b8],
+      [rug, 0x918a7d],
+      [finish, 0xb9ad98],
+    ];
     // Modular cabinet wall: visible grid and finish applied only to joinery.
     const mw = Math.min(0.72, (w - 0.5) / modules);
     for (let i = 0; i < modules; i++) {
@@ -114,7 +144,7 @@ function initFinishingStudio() {
           material([0x8d6952, 0xd9cfba, 0x484b40][j]),
         );
     }
-    if (roomConfig.room === "living") {
+    if (config.room === "living") {
       box(room, 2, 0.33, 0.85, -0.25, 0.39, 0.55, linen);
       box(room, 2, 0.6, 0.18, -0.25, 0.8, 0.17, linen);
       for (const x of [-1.2, 0.7])
@@ -124,7 +154,7 @@ function initFinishingStudio() {
       box(room, 1.05, 0.075, 0.55, 0.3, 0.38, 1.45, finish);
       for (const x of [-0.1, 0.7])
         box(room, 0.055, 0.35, 0.45, x, 0.19, 1.45, dark);
-    } else if (roomConfig.room === "work") {
+    } else if (config.room === "work") {
       box(room, 1.7, 0.08, 0.7, 0.15, 0.78, 0.05, timber);
       for (const x of [-0.55, 0.85])
         box(room, 0.07, 0.75, 0.6, x, 0.38, 0.05, dark);
@@ -181,9 +211,8 @@ function initFinishingStudio() {
     room.add(pendant);
     box(room, 0.015, 0.4, 0.015, 0, 2.65, 0.3, dark);
   }
-  refreshInterior = rebuild;
-  updateVignetteMaterial = (m) => {
-    finish.color.setHex(m.color);
+  const setMaterial = (m) => {
+    finish.color.setHex(m.color).convertSRGBToLinear();
     finish.roughness = m.roughness;
     finish.metalness = m.metalness;
     finish.transparent = !!m.transparent;
@@ -209,13 +238,61 @@ function initFinishingStudio() {
   function animate() {
     requestAnimationFrame(animate);
     if (!shouldRender()) return;
-    const size = Math.max(roomConfig.width, roomConfig.depth);
+    const config = options.getConfig();
+    const size = Math.max(config.width, config.depth);
     const motion = matchMedia("(prefers-reduced-motion: reduce)").matches
       ? 0
       : pointer;
-    camera.position.set(size * 0.8 + motion, size * 0.7, size * 1.25);
+    const fit = Math.max(1, 1.25 / camera.aspect);
+    camera.position.set(
+      (size * 0.8 + motion) * fit,
+      size * 0.7 * fit,
+      size * 1.25 * fit,
+    );
     camera.lookAt(0, 1, 0);
+    renderer.setScissorTest(false);
     renderer.render(scene, camera);
+    if (options.getComparison && container.clientWidth > 0) {
+      const split = Math.max(0, Math.min(100, options.getComparison()));
+      const snapshot = referenceMaterials.map(([m]) => ({
+        material: m,
+        color: m.color.clone(),
+        transparent: m.transparent,
+        opacity: m.opacity,
+      }));
+      const lightSnapshot = [
+        daylight.intensity,
+        sun.intensity,
+        ambient.intensity,
+      ];
+      const background = scene.background.clone();
+      referenceMaterials.forEach(([m, c]) => {
+        m.color.setHex(c).convertSRGBToLinear();
+        m.transparent = false;
+        m.opacity = 1;
+      });
+      daylight.intensity = 0.9;
+      sun.intensity = 1.2;
+      ambient.intensity = 0.3;
+      scene.background.setHex(0xaaa79f);
+      renderer.setScissorTest(true);
+      renderer.setScissor(
+        0,
+        0,
+        Math.round((container.clientWidth * split) / 100),
+        container.clientHeight,
+      );
+      renderer.render(scene, camera);
+      snapshot.forEach((s) => {
+        s.material.color.copy(s.color);
+        s.material.transparent = s.transparent;
+        s.material.opacity = s.opacity;
+      });
+      [daylight.intensity, sun.intensity, ambient.intensity] = lightSnapshot;
+      scene.background.copy(background);
+      renderer.setScissorTest(false);
+    }
   }
   animate();
+  return { refresh: rebuild, setMaterial };
 }

@@ -26,7 +26,8 @@ Browser QA starts its own Python server on port 8001 and uses `/usr/bin/chromium
 - `index.html`: page sections and accessible controls.
 - `js/commerce-core.js`: catalogue, canonical prices, totals, item identity, safe cart restoration.
 - `js/commerce.js`: catalogue, bag, checkout validation and request export.
-- `js/interior.js`: furnished living room, home office and bedroom previews with room dimensions, storage modules, lighting and surface finishes.
+- `js/ambiance.js`: same-room neutral/styled comparison, six directions, day/evening lighting and transfer to the studio.
+- `js/interior.js`: shared furnished living room, home office and bedroom previews with room dimensions, storage modules, lighting and surface finishes.
 - `js/studio.js`: existing moodboard and style exploration scenes.
 - `vendor/`: pinned Three.js and GSAP distributions, served locally.
 - `assets/`: locally served inspiration photography with source notes.
@@ -46,3 +47,11 @@ Before accepting real orders:
 4. Publish approved delivery, cancellation, refund and privacy terms for the chosen transaction flow.
 
 Use the existing isolated checkout during cloud tasks; do not create Git worktrees unless explicitly requested.
+
+## Signature designers and EPS materials
+
+The signature section uses Josephine (Founder & CEO), Daffa (Architect of Form) and Audina (The Soul of Space), with the editorial copy from the supplied profile posters. Portrait assets are generated reconstructions of the supplied references, rather than original pixel crops. Original portrait files can replace `assets/designers/*.png` without changing the layout.
+
+The modular section explains the use of expanded polystyrene (EPS)-based interior panels. Its generated exploded-panel image is an illustrative material study, not a manufacturing drawing. Actual panel build-ups, finishes, supports and fixings need project-specific specifications; the site does not assert unprovided fire, structural, acoustic or environmental certifications.
+
+Ambiance try-on uses the same furnished-room renderer as the build studio. A draggable, keyboard-accessible slider compares the neutral daylight room with a chosen palette and lighting, with three room types and six style directions. The selected room, lighting and palette transfer to the studio without modifying the customer's bag.

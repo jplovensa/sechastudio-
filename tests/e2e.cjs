@@ -51,7 +51,15 @@ async function waitForServer() {
     const audit = await page.evaluate(async () =>
       (
         await axe.run(
-          { include: ["#shop", "#modular-build", "#finishing-studio"] },
+          {
+            include: [
+              "#designers",
+              "#shop",
+              "#modular-build",
+              "#finishing-studio",
+              "#style-walkway",
+            ],
+          },
           {
             runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
           },
@@ -70,23 +78,103 @@ async function waitForServer() {
     assert.deepEqual(brokenAnchors, [], "In-page navigation targets");
 
     await page.screenshot({ path: path.join(artifacts, `${name}-hero.png`) });
+    assert.deepEqual(
+      await page.locator(".designer-card h3").allTextContents(),
+      ["JOSEPHINE", "DAFFA", "AUDINA"],
+    );
+    assert.equal(await page.locator(".designer-card img").count(), 3);
+    await page
+      .locator("#designers")
+      .screenshot({ path: path.join(artifacts, `${name}-designers.png`) });
+    await page
+      .locator("#modular-build")
+      .screenshot({ path: path.join(artifacts, `${name}-eps.png`) });
+    assert.match(
+      await page.locator("#modular-build").textContent(),
+      /EPS-based materials/,
+    );
+    await page.locator("#style-walkway").scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    const roomBefore = await page
+      .locator("#walkway-canvas canvas")
+      .screenshot();
+    await page.locator('[data-ambiance-room="bedroom"]').click();
+    await page.waitForTimeout(300);
+    assert.notDeepEqual(
+      await page.locator("#walkway-canvas canvas").screenshot(),
+      roomBefore,
+      "Room geometry changes in preview",
+    );
+    await page.locator("#walkway-tryon-grid button").nth(3).click();
+    await page.waitForTimeout(300);
+    const daylightImage = await page
+      .locator("#walkway-canvas canvas")
+      .screenshot();
+    await page.locator('[data-ambiance-light="warm"]').click();
+    await page.waitForTimeout(300);
+    assert.notDeepEqual(
+      await page.locator("#walkway-canvas canvas").screenshot(),
+      daylightImage,
+      "Lighting changes in preview",
+    );
+    await page.locator("#ambiance-compare").fill("0");
+    await page.waitForTimeout(300);
+    const styledImage = await page
+      .locator("#walkway-canvas canvas")
+      .screenshot();
+    await page.locator("#ambiance-compare").fill("100");
+    await page.waitForTimeout(300);
+    assert.notDeepEqual(
+      await page.locator("#walkway-canvas canvas").screenshot(),
+      styledImage,
+      "Neutral/styled comparison changes the rendered room",
+    );
+    await page.locator("#ambiance-compare").fill("30");
+    assert.equal(
+      await page.locator("#comparison-value").textContent(),
+      "30% neutral / 70% styled",
+    );
+    assert.equal(
+      await page.locator("#ambiance-style-label").textContent(),
+      "Earth / evening",
+    );
+    await page.waitForTimeout(300);
+    await page
+      .locator("#style-walkway")
+      .screenshot({ path: path.join(artifacts, `${name}-ambiance.png`) });
+    await page
+      .getByRole("button", { name: "Use this look in room studio" })
+      .click();
+    assert.equal(await page.locator("#room-kind").inputValue(), "bedroom");
+    assert.equal(await page.locator("#room-light").inputValue(), "warm");
+    assert.equal(
+      await page.locator("#vignette-title").textContent(),
+      "Desert Monolith",
+    );
+    assert.equal(await page.evaluate(() => roomConfig.palette.wall), 0xc4a78f);
+    await page.locator("#ambiance-reset").click();
+    assert.equal(
+      await page.locator("#ambiance-style-label").textContent(),
+      "Japandi / daylight",
+    );
+    assert.equal(
+      await page.locator("#comparison-value").textContent(),
+      "50% neutral / 50% styled",
+    );
+    await page.locator("#archetype-tabs button").first().click();
+
     await page.locator('[data-filter="modular"]').click();
     assert.equal(await page.locator(".product-card").count(), 3);
     await page.locator('[data-filter="design"]').click();
     assert.equal(await page.locator(".product-card").count(), 3);
     await page.locator('[data-filter="all"]').click();
-    await page
-      .getByRole("button", { name: "Try in studio" })
-      .first()
-      .click();
+    await page.getByRole("button", { name: "Try in studio" }).first().click();
     await page.selectOption("#room-kind", "work");
     await page.selectOption("#room-light", "warm");
     await page.selectOption("#room-modules", "4");
     await page.locator("#room-width").fill("5");
     assert.equal(await page.locator("#room-width-value").textContent(), "5 m");
-    await page
-      .getByRole("button", { name: "Add room setup to bag" })
-      .click();
+    await page.getByRole("button", { name: "Add room setup to bag" }).click();
     await page.locator("#btn-add-cart").click();
     await page.locator("#material-list button").nth(1).click();
     await page.locator("#btn-add-cart").click();
@@ -183,7 +271,7 @@ async function waitForServer() {
       viewport: name,
       errors,
       cases:
-        "catalogue, room controls, configured build, distinct swatches, coupon, persistence, cart/checkout totals, form validation, request export, WhatsApp destination/message, no horizontal overflow",
+        "signature profiles, EPS material section, ambiance room/light/comparison rendering and studio transfer, catalogue, room controls, configured build, distinct swatches, coupon, persistence, cart/checkout totals, form validation, request export, WhatsApp destination/message, no horizontal overflow",
     });
     await context.close();
   }
@@ -198,7 +286,13 @@ async function waitForServer() {
     await page.waitForFunction(
       () => document.getElementById("navbar").style.opacity === "1",
     );
-    for (const section of ["#shop", "#modular-build", "#finishing-studio"]) {
+    for (const section of [
+      "#designers",
+      "#shop",
+      "#modular-build",
+      "#finishing-studio",
+      "#style-walkway",
+    ]) {
       await page.locator(section).scrollIntoViewIfNeeded();
       assert.equal(
         await page.evaluate(
@@ -226,6 +320,7 @@ async function waitForServer() {
   await page.getByRole("button", { name: "Add design to bag" }).first().click();
   assert.equal(await page.locator("#nav-cart-count").textContent(), "1");
   await page.locator("#walkway-tryon-grid button").nth(1).click();
+  assert.equal(await page.locator(".ambiance-fallback").isVisible(), true);
   await page.locator("#moodboard-nav button").nth(1).click();
   await page.locator("#btn-add-cart").click();
   assert.equal(await page.locator("#nav-cart-count").textContent(), "2");

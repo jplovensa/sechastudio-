@@ -8,3 +8,8 @@ Replace inspiration photography with approved SECHA product photography before p
 
 - `modular-work.jpg`: https://images.unsplash.com/photo-1497366811353-6870744d04b2
 - `modular-rest.jpg`: https://images.unsplash.com/photo-1611892440504-42a792e24d32
+
+## Generated SECHA assets
+
+- `designers/josephine.png`, `designers/daffa.png`, `designers/audina.png`: image-generated photographic reconstructions based on the three user-supplied SECHA profile references, preserving the half-monochrome / half-colour art direction. They are not exact source-image crops.
+- `eps-material-study.png`: generated EPS-core decorative-panel and finished-wall study. An illustration of the material concept, not a certified or approved panel section.
