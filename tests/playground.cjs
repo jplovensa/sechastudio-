@@ -257,6 +257,200 @@ async function floorScreen(page, x, z, y = 0) {
   assert.equal(project.quests.walk, true, "On-screen walk pad works on mobile");
   await page.close();
 
+  console.log(
+    "QA: scratch builds, commercial types and shared design directions",
+  );
+  const design = await browser.newPage({
+    viewport: { width: 1440, height: 1000 },
+    reducedMotion: "reduce",
+  });
+  design.on("pageerror", (e) => errors.push(e.message));
+  await design.goto(`${base}/playground.html`);
+  await design.evaluate(() => document.fonts.ready);
+  assert.equal(
+    await design.evaluate(() => document.fonts.check("12px Inter")),
+    true,
+    "Bundled Inter loads",
+  );
+  assert.match(
+    await design
+      .locator("h1")
+      .evaluate((el) => getComputedStyle(el).fontFamily),
+    /Inter/,
+  );
+  await design.locator('[data-start="blank"]').click();
+  assert.equal(
+    await design.locator(".placed-piece").count(),
+    0,
+    "Scratch starts with no furniture",
+  );
+  assert.equal(await design.locator("#budget-total").textContent(), "0");
+  await design.locator("#room-width").fill("5");
+  await design.locator("#room-depth").fill("4");
+  await design.locator("#room-size button").click();
+  assert.equal(await design.locator("#area-label").textContent(), "20 m²");
+  await design.locator('[data-kind="lamp"]').focus();
+  await design.keyboard.press("Enter");
+  await design.keyboard.press("Enter");
+  assert.equal(await design.locator(".placed-piece").count(), 1);
+  await design.locator("#room-width").fill("4");
+  await design.locator("#room-size button").click();
+  assert.equal(
+    (await saved(design)).dimensions.w,
+    5,
+    "Resize cannot cut through existing furniture",
+  );
+  await design.locator("#undo-action").click();
+  assert.equal(await design.locator(".placed-piece").count(), 0);
+  project = await saved(design);
+  assert.deepEqual(project.dimensions, { w: 5, d: 4 });
+  await design.reload();
+  assert.equal(
+    await design.locator('[data-start="blank"]').getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.equal(
+    await design.locator("#area-label").textContent(),
+    "20 m²",
+    "Custom scratch dimensions restore",
+  );
+  await design.locator("#moodboard-select").selectOption("architect");
+  const emptyBefore = await design.locator("#scene canvas").screenshot();
+  await design.locator("#finish-target").selectOption("floor");
+  assert.notDeepEqual(
+    await design.locator("#scene canvas").screenshot(),
+    emptyBefore,
+    "Finishing changes an empty room's flooring",
+  );
+  await design.locator("#finish-target").selectOption("walls");
+  project = await saved(design);
+  assert.equal(project.finishTarget, "walls");
+  await design.reload();
+  assert.equal(
+    await design.locator("#finish-target").inputValue(),
+    "walls",
+    "Finishing target restores",
+  );
+  await design.locator('[data-space="commercial"]').click();
+  for (const subtype of ["office", "cafe", "bar", "wellness", "salon"]) {
+    await design.locator("#commercial-type").selectOption(subtype);
+    assert.equal(
+      await design.locator(".placed-piece").count(),
+      0,
+      "Commercial subtype keeps scratch mode empty",
+    );
+  }
+  await design.locator('[data-start="furnished"]').click();
+  const expected = {
+    office: "desk",
+    cafe: "counter",
+    bar: "stool",
+    wellness: "treatment",
+    salon: "salon",
+  };
+  for (const subtype of Object.keys(expected)) {
+    await design.locator("#commercial-type").selectOption(subtype);
+    project = await saved(design);
+    assert.equal(project.commercialType, subtype);
+    assert.ok(
+      project.items.some((i) => i.kind === expected[subtype]),
+      `${subtype} has its own furniture`,
+    );
+  }
+  const layoutBefore = project.items;
+  let neutralImage = await design.locator("#scene canvas").screenshot();
+  for (const board of [
+    "architect",
+    "nomad",
+    "visionary",
+    "purist",
+    "aesthete",
+    "dreamer",
+  ]) {
+    await design.locator("#moodboard-select").selectOption(board);
+    assert.equal(
+      await design.evaluate(() => document.documentElement.dataset.moodboard),
+      board,
+    );
+    const finishIds = await design
+      .locator("#finishing-select option")
+      .evaluateAll((options) => options.map((o) => o.value));
+    assert.equal(finishIds.length, 3);
+    for (const finish of finishIds) {
+      await design.locator("#finishing-select").selectOption(finish);
+      project = await saved(design);
+      assert.equal(project.finishing, finish);
+      assert.equal(project.moodboard, board);
+    }
+    assert.deepEqual(
+      project.items,
+      layoutBefore,
+      "Styling keeps the furniture layout intact",
+    );
+    await audit(design);
+  }
+  assert.notDeepEqual(
+    await design.locator("#scene canvas").screenshot(),
+    neutralImage,
+    "Moodboard and finishing change rendered materials",
+  );
+  await design.locator("#ambiance-select").selectOption("purist");
+  await design.locator('[data-light="evening"]').click();
+  project = await saved(design);
+  assert.equal(project.ambiance, "purist");
+  assert.equal(project.night, true);
+  await audit(design);
+  await design.reload();
+  assert.equal(
+    await design.locator("#moodboard-select").inputValue(),
+    "dreamer",
+  );
+  assert.equal(await design.locator("#finishing-select").inputValue(), "d3");
+  assert.equal(await design.locator("#ambiance-select").inputValue(), "purist");
+  assert.equal(await design.locator("#commercial-type").inputValue(), "salon");
+  await design.screenshot({
+    path: path.join(root, "qa-artifacts/playground-salon.png"),
+  });
+  await design.setViewportSize({ width: 390, height: 844 });
+  await design.locator("#moodboard-select").selectOption("visionary");
+  await design.locator('[data-start="blank"]').click();
+  assert.equal(
+    await design.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+    true,
+  );
+  await audit(design);
+  await design.screenshot({
+    path: path.join(root, "qa-artifacts/playground-scratch-mobile.png"),
+    fullPage: true,
+  });
+  await design.close();
+
+  const legacy = await browser.newPage();
+  await legacy.goto(base);
+  await legacy.evaluate(() =>
+    localStorage.setItem(
+      "secha-playground-v1",
+      JSON.stringify({
+        type: "studio",
+        palette: "sage",
+        night: false,
+        items: [],
+        quests: {},
+      }),
+    ),
+  );
+  await legacy.goto(`${base}/playground.html`);
+  project = await saved(legacy);
+  assert.equal(project.palette, "sage");
+  assert.equal(
+    project.moodboard,
+    "nomad",
+    "Older saved projects migrate without losing styling",
+  );
+  await legacy.close();
+
   const fallback = await browser.newPage();
   await fallback.route("**/vendor/three.r128.min.js", (r) => r.abort());
   await fallback.goto(`${base}/playground.html`);
@@ -283,7 +477,7 @@ async function floorScreen(page, x, z, y = 0) {
   await malformed.close();
   assert.deepEqual(errors, [], "No runtime errors");
   console.log(
-    "Playground QA passed: three templates; pointer placement and dragging; collision rejection; keyboard placement; rotation, movement, deletion and undo; budget; palettes and lighting; save/reload; avatar walkthrough and mobile pad; quest completion; JSON export; responsive layout; WCAG checks; unavailable-WebGL and invalid-save fallbacks.",
+    "Playground QA passed: scratch dimensions; five commercial layouts; six shared moodboards and eighteen finishes; independent ambiance and lighting; Inter font; legacy-save migration; three space types; pointer placement and dragging; collision rejection; keyboard placement; rotation, movement, deletion and undo; budget; palettes and lighting; save/reload; avatar walkthrough and mobile pad; quest completion; JSON export; responsive layout; WCAG checks; unavailable-WebGL and invalid-save fallbacks.",
   );
 })()
   .catch((e) => {

@@ -2,6 +2,15 @@
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
+  const { MOODBOARDS, MATERIAL_PALETTES, AMBIANCE_PALETTES } =
+    window.SECHA_DESIGN_OPTIONS;
+  const boards = Object.fromEntries(
+    MOODBOARDS.map((board, index) => [
+      board.id,
+      { ...board, ambiance: AMBIANCE_PALETTES[index] },
+    ]),
+  );
+  const hex = (value) => `#${value.toString(16).padStart(6, "0")}`;
   const catalog = {
     sofa: {
       name: "Sunday sofa",
@@ -127,6 +136,101 @@
       ],
     },
   };
+  Object.assign(catalog, {
+    stool: {
+      name: "Counter stool",
+      category: "work",
+      price: 950000,
+      w: 0.5,
+      d: 0.5,
+      icon: "⊓",
+      color: "#ac8964",
+    },
+    treatment: {
+      name: "Treatment bed",
+      category: "work",
+      price: 5200000,
+      w: 0.85,
+      d: 2,
+      icon: "▤",
+      color: "#ded9c3",
+    },
+    salon: {
+      name: "Styling station",
+      category: "work",
+      price: 3800000,
+      w: 1.1,
+      d: 0.5,
+      icon: "▥",
+      color: "#ac8964",
+    },
+  });
+  const commercialTypes = {
+    office: {
+      name: "The everyday workspace",
+      label: "Office",
+      pieces: [
+        ["desk", -2.5, -2, 0],
+        ["desk", 0, -2, 0],
+        ["desk", 2.5, -2, 0],
+        ["chair", -2.5, -0.7, 0],
+        ["chair", 0, -0.7, 0],
+        ["chair", 2.5, -0.7, 0],
+        ["sofa", -2.5, 2, 0],
+        ["plant", 4, 2.5, 0],
+      ],
+    },
+    cafe: {
+      name: spaces.commercial.name,
+      label: "Café",
+      pieces: spaces.commercial.pieces,
+    },
+    bar: {
+      name: "After-hours gathering",
+      label: "Bar",
+      pieces: [
+        ["counter", -2.5, -2, 0],
+        ["counter", -0.3, -2, 0],
+        ["counter", 1.9, -2, 0],
+        ["stool", -3, -0.8, 0],
+        ["stool", -2, -0.8, 0],
+        ["stool", -0.8, -0.8, 0],
+        ["stool", 0.3, -0.8, 0],
+        ["stool", 1.4, -0.8, 0],
+        ["stool", 2.5, -0.8, 0],
+        ["sofa", 1.5, 2, 0],
+        ["plant", -4, 2.5, 0],
+      ],
+    },
+    wellness: {
+      name: "A moment to restore",
+      label: "Wellness",
+      pieces: [
+        ["treatment", -2, -0.7, 0],
+        ["treatment", 1, -0.7, 0],
+        ["counter", 2.5, -2.7, 0],
+        ["chair", -3, 2, 0],
+        ["plant", -4, -2.5, 0],
+        ["plant", 4, 2.5, 0],
+        ["lamp", -0.4, 2, 0],
+      ],
+    },
+    salon: {
+      name: "The beauty atelier",
+      label: "Salon",
+      pieces: [
+        ["salon", -3, -2.6, 0],
+        ["salon", 0, -2.6, 0],
+        ["salon", 3, -2.6, 0],
+        ["chair", -3, -1.3, 0],
+        ["chair", 0, -1.3, 0],
+        ["chair", 3, -1.3, 0],
+        ["sofa", -2, 2, 0],
+        ["counter", 2.5, 2, 0],
+        ["plant", 4, -0.2, 0],
+      ],
+    },
+  };
   const palettes = {
     natural: {
       name: "Warm natural",
@@ -160,11 +264,23 @@
   const storageKey = "secha-playground-v1";
   const money = (n) => new Intl.NumberFormat("id-ID").format(n);
   let nextId = 1;
-  const fresh = (type) => ({
+  const fresh = (type, startMode = "furnished", commercialType = "cafe") => ({
     type,
-    palette: "natural",
+    startMode,
+    commercialType,
+    dimensions: { w: spaces[type].w, d: spaces[type].d },
+    moodboard: "nomad",
+    finishing: "n1",
+    finishTarget: "joinery",
+    ambiance: "nomad",
+    palette: null,
     night: false,
-    items: spaces[type].pieces.map(([kind, x, z, r]) => ({
+    items: (startMode === "blank"
+      ? []
+      : type === "commercial"
+        ? commercialTypes[commercialType].pieces
+        : spaces[type].pieces
+    ).map(([kind, x, z, r]) => ({
       id: nextId++,
       kind,
       x,
@@ -211,6 +327,61 @@
   let renderPending = true,
     lastRender = 0;
   const avatarPosition = { x: 0, z: 2.55 };
+  function spaceConfig(data = state) {
+    const base = spaces[data.type];
+    return {
+      ...base,
+      ...(data.type === "commercial"
+        ? {
+            name: commercialTypes[data.commercialType].name,
+            label: `Commercial · ${commercialTypes[data.commercialType].label}`,
+          }
+        : {}),
+      ...(data.startMode === "blank" ? data.dimensions : {}),
+    };
+  }
+  function roomPalette() {
+    if (state.palette) return palettes[state.palette];
+    const p = boards[state.ambiance].ambiance;
+    return {
+      wall: hex(p.wall),
+      floor: hex(p.floor),
+      fabric: hex(p.fabric),
+      accent: p.swatches[2],
+      rug: hex(p.rug),
+    };
+  }
+  function selectedFinish() {
+    return MATERIAL_PALETTES[state.moodboard].find(
+      (f) => f.id === state.finishing,
+    );
+  }
+  function finishMaterial() {
+    const finish = selectedFinish();
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(finish.color).convertSRGBToLinear(),
+      roughness: finish.roughness,
+      metalness: finish.metalness,
+      transparent: finish.transparent ?? false,
+      opacity: finish.opacity ?? 1,
+    });
+  }
+  function applyTheme() {
+    const tones = {
+      architect: ["#343735", "#f4f4f0", "#e0e2da", "#c5c9bf"],
+      nomad: ["#243e33", "#faf9f5", "#e9ebdf", "#d6e6a2"],
+      visionary: ["#34335c", "#f8f7fc", "#e6e4f1", "#d4d0ef"],
+      purist: ["#633f31", "#fcf7f1", "#eddfcf", "#e3c0a0"],
+      aesthete: ["#44344d", "#f8f5f9", "#dfd7e4", "#d6c4de"],
+      dreamer: ["#344e57", "#f8fbfc", "#e5eff0", "#cbe5e8"],
+    }[state.moodboard];
+    const root = document.documentElement;
+    ["--ink", "--paper", "--scene-tone", "--accent"].forEach((name, i) =>
+      root.style.setProperty(name, tones[i]),
+    );
+    root.style.setProperty("--soft-tone", tones[2]);
+    root.dataset.moodboard = state.moodboard;
+  }
   function notify(text) {
     $("status").textContent = text;
     $("status").classList.remove("quiet");
@@ -240,7 +411,7 @@
     );
   }
   function fits(item, except = item.id) {
-    const s = spaces[state.type],
+    const s = spaceConfig(),
       b = { ...item, ...bounds(item) };
     if (
       Math.abs(b.x) + b.w / 2 > s.w / 2 - 0.12 ||
@@ -254,16 +425,44 @@
     );
   }
   function validState(data) {
+    if (!data || !Object.hasOwn(spaces, data.type)) return false;
+    // Migrate layouts saved before moodboards and scratch builds were available.
+    data.startMode ??= "furnished";
+    data.commercialType ??= "cafe";
+    data.dimensions ??= { w: spaces[data.type].w, d: spaces[data.type].d };
+    data.moodboard ??= "nomad";
+    data.finishing ??= "n1";
+    data.finishTarget ??= "joinery";
+    data.ambiance ??= "nomad";
+    if (
+      !["furnished", "blank"].includes(data.startMode) ||
+      !Object.hasOwn(commercialTypes, data.commercialType) ||
+      !Object.hasOwn(boards, data.moodboard) ||
+      !Object.hasOwn(boards, data.ambiance) ||
+      !MATERIAL_PALETTES[data.moodboard].some((f) => f.id === data.finishing) ||
+      !["joinery", "floor", "walls"].includes(data.finishTarget) ||
+      !data.dimensions ||
+      !Number.isFinite(data.dimensions.w) ||
+      !Number.isFinite(data.dimensions.d) ||
+      data.dimensions.w < 4 ||
+      data.dimensions.w > 16 ||
+      data.dimensions.d < 4 ||
+      data.dimensions.d > 14 ||
+      data.dimensions.w % 0.5 !== 0 ||
+      data.dimensions.d % 0.5 !== 0
+    )
+      return false;
+
     if (
       !data ||
       !Object.hasOwn(spaces, data.type) ||
-      !Object.hasOwn(palettes, data.palette) ||
+      (data.palette !== null && !Object.hasOwn(palettes, data.palette)) ||
       typeof data.night !== "boolean" ||
       !Array.isArray(data.items) ||
       data.items.length > 80
     )
       return false;
-    const s = spaces[data.type],
+    const s = spaceConfig(data),
       ids = new Set();
     for (const i of data.items) {
       if (
@@ -321,7 +520,7 @@
         '<ellipse cx="59" cy="62" rx="17" ry="6" fill="#d6d9c7"/><path d="m44 46 5 16q10 6 20-1l5-15" fill="#b89576"/><ellipse cx="59" cy="46" rx="15" ry="5" fill="#caae8e"/><path d="M59 48V12m0 19L43 21m16 2 14-10" stroke="#847c56" stroke-width="3"/><g fill="#7d9367"><ellipse cx="42" cy="20" rx="12" ry="6" transform="rotate(25 42 20)"/><ellipse cx="71" cy="13" rx="12" ry="6" transform="rotate(-30 71 13)"/><ellipse cx="59" cy="10" rx="9" ry="7"/><ellipse cx="69" cy="30" rx="11" ry="7"/><ellipse cx="49" cy="34" rx="11" ry="7"/></g>',
       lamp: '<ellipse cx="57" cy="62" rx="16" ry="6" fill="#b7b39b"/><path d="M57 61V17q0-11 13-11" fill="none" stroke="#8b7d5b" stroke-width="3"/><path d="m58 11-5 15q15 11 30 0l-5-15Z" fill="#d7c59d"/><ellipse cx="68" cy="26" rx="15" ry="5" fill="#eee0b9"/>',
     };
-    return `<svg viewBox="0 0 120 78" aria-hidden="true">${shapes[kind]}</svg>`;
+    return `<svg viewBox="0 0 120 78" aria-hidden="true">${shapes[kind] || shapes[{ stool: "chair", treatment: "bed", salon: "desk" }[kind]]}</svg>`;
   }
   function renderCatalog() {
     const entries = Object.entries(catalog).filter(
@@ -336,10 +535,11 @@
       .join("");
   }
   function renderUI() {
-    const s = spaces[state.type],
+    const s = spaceConfig(),
       total = state.items.reduce((v, i) => v + catalog[i.kind].price, 0);
     $("project-name").textContent = s.name;
-    $("project-meta").textContent = `${s.label} · ${s.w} × ${s.d} m`;
+    $("project-meta").textContent =
+      `${s.label} · ${s.w} × ${s.d} m${state.startMode === "blank" ? " · From scratch" : ""}`;
     $("area-label").textContent = `${s.w * s.d} m²`;
     $("budget-total").textContent = money(total);
     $("budget-caption").textContent =
@@ -351,7 +551,9 @@
     $("budget-progress").style.background =
       total > s.budget ? "#b56a4f" : "#788d55";
     $("piece-count").textContent = state.items.length;
-    $("palette-name").textContent = palettes[state.palette].name;
+    $("palette-name").textContent = state.palette
+      ? palettes[state.palette].name
+      : boards[state.ambiance].ambiance.short;
     document
       .querySelectorAll("[data-space]")
       .forEach((b) =>
@@ -361,6 +563,40 @@
       .querySelectorAll("[data-palette]")
       .forEach((b) =>
         b.setAttribute("aria-pressed", b.dataset.palette === state.palette),
+      );
+    applyTheme();
+    $("commercial-options").hidden = state.type !== "commercial";
+    $("commercial-type").value = state.commercialType;
+    $("room-size").hidden = state.startMode !== "blank";
+    $("room-width").value = s.w;
+    $("room-depth").value = s.d;
+    $("start-description").textContent =
+      state.startMode === "blank"
+        ? "An empty shell. Set your dimensions and build your own layout."
+        : "A furnished starting point. Make it your own.";
+    document
+      .querySelectorAll("[data-start]")
+      .forEach((b) =>
+        b.setAttribute("aria-pressed", b.dataset.start === state.startMode),
+      );
+    $("moodboard-select").value = state.moodboard;
+    $("moodboard-description").textContent = boards[state.moodboard].desc;
+    $("finishing-select").innerHTML = MATERIAL_PALETTES[state.moodboard]
+      .map((f) => `<option value="${f.id}">${f.name}</option>`)
+      .join("");
+    $("finishing-select").value = state.finishing;
+    $("finish-target").value = state.finishTarget;
+    $("finish-swatch").style.backgroundColor = hex(selectedFinish().color);
+    $("finish-description").textContent =
+      `${selectedFinish().type} · Applied to ${{ joinery: "furniture & joinery", floor: "flooring", walls: "walls" }[state.finishTarget]}`;
+    $("ambiance-select").value = state.ambiance;
+    document
+      .querySelectorAll("[data-light]")
+      .forEach((b) =>
+        b.setAttribute(
+          "aria-pressed",
+          (b.dataset.light === "evening") === state.night,
+        ),
       );
     $("daylight").setAttribute("aria-pressed", !state.night);
     $("daylight").textContent = state.night ? "☾" : "☀";
@@ -404,8 +640,8 @@
   function changed() {
     if (!placing) clearGhost();
     markDirty();
-    rebuild();
     renderUI();
+    rebuild();
   }
   function disposeGroup(group) {
     if (!group) return;
@@ -454,13 +690,22 @@
   }
   function makeFurniture(item) {
     const g = new THREE.Group(),
-      p = palettes[state.palette],
-      wood = material("#a78661"),
-      fabric = material(p.fabric),
+      p = roomPalette(),
+      wood =
+        state.finishTarget === "joinery"
+          ? finishMaterial()
+          : material("#a78661"),
+      fabric =
+        state.finishTarget === "joinery" && selectedFinish().type === "Fabric"
+          ? finishMaterial()
+          : material(p.fabric),
       accent = material(p.accent),
       dark = material("#454b3b"),
       cream = material("#f0ead8"),
-      metal = material("#9f8b56", 0.35);
+      metal =
+        state.finishTarget === "joinery" && selectedFinish().type === "Metal"
+          ? finishMaterial()
+          : material("#9f8b56", 0.35);
     if (item.kind === "sofa" || item.kind === "chair") {
       const w = item.kind === "sofa" ? 2.1 : 0.85;
       box(g, w, 0.23, 0.85, 0, 0.3, 0, fabric);
@@ -516,6 +761,27 @@
         box(g, 0.025, 0.82, 0.015, x, 0.5, 0.36, wood);
       box(g, 0.35, 0.28, 0.3, -0.55, 1.16, 0, dark);
       cylinder(g, 0.08, 0.08, 0.12, 0.35, 1.09, 0.05, cream);
+    } else if (item.kind === "stool") {
+      cylinder(g, 0.24, 0.24, 0.12, 0, 0.82, 0, fabric);
+      for (const x of [-0.16, 0.16])
+        for (const z of [-0.16, 0.16])
+          box(g, 0.035, 0.74, 0.035, x, 0.39, z, metal);
+      box(g, 0.36, 0.03, 0.03, 0, 0.3, 0.16, metal);
+    } else if (item.kind === "treatment") {
+      box(g, 0.8, 0.12, 1.95, 0, 0.74, 0, wood);
+      box(g, 0.84, 0.16, 1.98, 0, 0.87, 0, fabric);
+      for (const x of [-0.32, 0.32])
+        for (const z of [-0.75, 0.75])
+          box(g, 0.06, 0.68, 0.06, x, 0.34, z, wood);
+      box(g, 0.62, 0.12, 0.38, 0, 1, -0.65, cream);
+      box(g, 0.85, 0.025, 0.65, 0, 0.965, 0.6, accent);
+    } else if (item.kind === "salon") {
+      box(g, 1.1, 0.08, 0.5, 0, 0.83, 0, wood);
+      box(g, 0.45, 0.76, 0.45, -0.3, 0.4, 0, wood);
+      box(g, 0.06, 0.8, 0.45, 0.49, 0.4, 0, metal);
+      box(g, 0.78, 1.1, 0.06, 0, 1.5, -0.22, metal);
+      box(g, 0.68, 1, 0.065, 0, 1.5, -0.18, material("#a7c6cb", 0.08));
+      cylinder(g, 0.06, 0.055, 0.2, 0.4, 0.97, 0, accent);
     } else if (item.kind === "plant") {
       cylinder(g, 0.22, 0.16, 0.38, 0, 0.2, 0, material("#b18d6a"));
       cylinder(g, 0.18, 0.18, 0.015, 0, 0.395, 0, dark);
@@ -546,41 +812,51 @@
     furniture = new THREE.Group();
     scene.add(room, furniture);
     wallColliders = [];
-    const s = spaces[state.type],
-      p = palettes[state.palette],
-      floor = material(p.floor),
-      wall = material(p.wall),
+    const s = spaceConfig(),
+      p = roomPalette(),
+      floor =
+        state.finishTarget === "floor" ? finishMaterial() : material(p.floor),
+      wall =
+        state.finishTarget === "walls" ? finishMaterial() : material(p.wall),
       trim = material("#f1ecd9"),
       frame = material("#6a705a");
     scene.background = new THREE.Color(
-      state.night ? "#525e55" : "#e9ebdf",
+      state.night
+        ? "#52535c"
+        : getComputedStyle(document.documentElement)
+            .getPropertyValue("--scene-tone")
+            .trim(),
     ).convertSRGBToLinear();
     scene.fog = new THREE.Fog(scene.background, 40, 100);
+    if (scene.userData.ground)
+      scene.userData.ground.material.color.copy(scene.background);
     box(room, s.w + 0.35, 0.25, s.d + 0.35, 0, -0.16, 0, material("#e8e5d7"));
     box(room, s.w, 0.04, s.d, 0, -0.015, 0, floor);
-    for (let x = -s.w / 2 + 0.25; x < s.w / 2; x += 0.38)
-      box(
-        room,
-        0.012,
-        0.005,
-        s.d,
-        x,
-        0.009,
-        0,
-        material(state.night ? "#9b886b" : "#b2926c"),
-      );
-    for (let z = -s.d / 2 + 1; z < s.d / 2; z += 1.3)
-      for (let x = -s.w / 2 + 0.2; x < s.w / 2; x += 0.76)
+    if (state.finishTarget !== "floor" || selectedFinish().type === "Wood") {
+      for (let x = -s.w / 2 + 0.25; x < s.w / 2; x += 0.38)
         box(
           room,
-          0.36,
+          0.012,
           0.005,
-          0.008,
-          x + (Math.round(z) % 2) * 0.35,
-          0.01,
-          z,
-          material("#a98a68"),
+          s.d,
+          x,
+          0.009,
+          0,
+          material(state.night ? "#9b886b" : "#b2926c"),
         );
+      for (let z = -s.d / 2 + 1; z < s.d / 2; z += 1.3)
+        for (let x = -s.w / 2 + 0.2; x < s.w / 2; x += 0.76)
+          box(
+            room,
+            0.36,
+            0.005,
+            0.008,
+            x + (Math.round(z) % 2) * 0.35,
+            0.01,
+            z,
+            material("#a98a68"),
+          );
+    }
     // Cutaway shell: two open sides keep the layout legible while editing.
     box(room, s.w, 0.8, 0.14, 0, 0.4, -s.d / 2, wall);
     box(room, s.w, 0.43, 0.14, 0, 2.57, -s.d / 2, wall);
@@ -618,18 +894,29 @@
     box(room, 0.14, 2.8, s.d, -s.w / 2, 1.4, 0, wall);
     box(room, 0.16, 0.12, s.d, -s.w / 2 + 0.02, 0.08, 0, trim);
     box(room, s.w, 0.12, 0.17, 0, 0.08, -s.d / 2 + 0.03, trim);
-    // Wall art and joinery give the scene an inhabited, architectural feel.
-    box(room, 0.08, 0.95, 1.2, -s.w / 2 + 0.09, 1.65, 0.3, frame);
-    box(room, 0.085, 0.81, 1.06, -s.w / 2 + 0.1, 1.65, 0.3, trim);
-    box(room, 0.09, 0.38, 0.38, -s.w / 2 + 0.11, 1.63, 0.2, material(p.accent));
-    if (state.type === "residence") {
+    if (state.startMode !== "blank") {
+      // Wall art and joinery give the scene an inhabited, architectural feel.
+      box(room, 0.08, 0.95, 1.2, -s.w / 2 + 0.09, 1.65, 0.3, frame);
+      box(room, 0.085, 0.81, 1.06, -s.w / 2 + 0.1, 1.65, 0.3, trim);
+      box(
+        room,
+        0.09,
+        0.38,
+        0.38,
+        -s.w / 2 + 0.11,
+        1.63,
+        0.2,
+        material(p.accent),
+      );
+    }
+    if (state.type === "residence" && state.startMode !== "blank") {
       // Bedroom divider with a 1.4 m opening at the front.
       const depth = s.d - 2.2;
       box(room, 0.13, 1.35, depth, -1, 0.675, -1.1, wall);
       wallColliders.push({ x: -1, z: -1.1, w: 0.13, d: depth });
       box(room, 0.16, 0.08, depth, -1, 1.39, -1.1, woodMaterial());
     }
-    if (state.type === "commercial") {
+    if (state.type === "commercial" && state.startMode !== "blank") {
       box(room, 0.1, 0.9, 1.65, -s.w / 2 + 0.09, 1.7, -0.8, frame);
       box(
         room,
@@ -644,27 +931,29 @@
       for (let z = -0.9; z < 0.1; z += 0.28)
         box(room, 0.12, 0.025, 0.6, -s.w / 2 + 0.12, 1.8, z, frame);
     }
-    const rug = box(
-      room,
-      state.type === "studio" ? 3.6 : 4.6,
-      0.012,
-      3.1,
-      state.type === "residence" ? 1.6 : 0.35,
-      0.025,
-      1,
-      material(p.fabric),
-    );
-    for (let i = 0; i < 10; i++)
-      box(
+    if (state.startMode !== "blank") {
+      const rug = box(
         room,
-        0.018,
-        0.004,
-        3.05,
-        rug.position.x - (state.type === "studio" ? 1.5 : 2) + i * 0.35,
-        0.034,
+        state.type === "studio" ? 3.6 : 4.6,
+        0.012,
+        3.1,
+        state.type === "residence" ? 1.6 : 0.35,
+        0.025,
         1,
-        material(p.accent),
+        material(p.fabric),
       );
+      for (let i = 0; i < 10; i++)
+        box(
+          room,
+          0.018,
+          0.004,
+          3.05,
+          rug.position.x - (state.type === "studio" ? 1.5 : 2) + i * 0.35,
+          0.034,
+          1,
+          material(p.accent),
+        );
+    }
     meshes = state.items.map(makeFurniture);
     meshes.forEach((m) => furniture.add(m));
     sun.intensity = state.night ? 0.25 : 1.25;
@@ -678,7 +967,7 @@
     return material("#ac916a");
   }
   function walkable(x, z) {
-    const s = spaces[state.type],
+    const s = spaceConfig(),
       point = { x, z, w: 0.38, d: 0.38 };
     return (
       Math.abs(x) < s.w / 2 - 0.27 &&
@@ -691,7 +980,7 @@
   }
   function ensureAvatar() {
     if (!walkable(avatarPosition.x, avatarPosition.z)) {
-      const s = spaces[state.type];
+      const s = spaceConfig();
       let found = false;
       for (let z = s.d / 2 - 0.5; z > -s.d / 2 && !found; z -= 0.5)
         for (let x = 0; x < s.w / 2 - 0.3; x += 0.5)
@@ -735,7 +1024,7 @@
   function updateCamera(immediate = false) {
     if (!initialized) return;
     renderPending = true;
-    const s = spaces[state.type],
+    const s = spaceConfig(),
       size = Math.max(s.w, s.d),
       aspect = $("scene").clientWidth / $("scene").clientHeight;
     const distance = ((size * 1.62) / Math.min(1.1, aspect)) * zoom;
@@ -805,6 +1094,7 @@
       ground.position.y = -0.31;
       ground.receiveShadow = true;
       scene.add(ground);
+      scene.userData.ground = ground;
       avatar = new THREE.Group();
       const shirt = material("#798d56"),
         skin = material("#d6ad83"),
@@ -1200,20 +1490,125 @@
       renderCatalog();
     }),
   );
+  function startLayout(type, startMode, commercialType) {
+    remember();
+    const previous = state;
+    state = {
+      ...fresh(type, startMode, commercialType),
+      moodboard: previous.moodboard,
+      finishing: previous.finishing,
+      finishTarget: previous.finishTarget,
+      ambiance: previous.ambiance,
+      palette: previous.palette,
+      night: previous.night,
+    };
+    if (
+      previous.type === type &&
+      previous.startMode === "blank" &&
+      startMode === "blank"
+    )
+      state.dimensions = { ...previous.dimensions };
+    walked = 0;
+    choose(null);
+    setMode("build");
+    angle = 0.76;
+    zoom = 1;
+    changed();
+    notify(
+      startMode === "blank"
+        ? "Your blank canvas is ready. Set the dimensions and add your first piece."
+        : "A fresh starter layout. Undo restores your previous space.",
+    );
+  }
+  document.querySelectorAll("[data-start]").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (b.dataset.start !== state.startMode)
+        startLayout(state.type, b.dataset.start, state.commercialType);
+    }),
+  );
+  $("commercial-type").addEventListener("change", (e) =>
+    startLayout("commercial", state.startMode, e.target.value),
+  );
+  $("room-size").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (state.startMode !== "blank" || !e.target.reportValidity()) return;
+    const before = snapshot(),
+      previous = state.dimensions;
+    const w = Number($("room-width").value),
+      d = Number($("room-depth").value);
+    if (w < 4 || w > 16 || d < 4 || d > 14 || w % 0.5 !== 0 || d % 0.5 !== 0)
+      return;
+    state.dimensions = { w, d };
+    if (state.items.some((item) => !fits(item))) {
+      state.dimensions = previous;
+      notify(
+        "Move pieces inside the new boundary before making the room smaller.",
+      );
+      return;
+    }
+    if (snapshot() === before) return;
+    remember(before);
+    changed();
+    notify(`Room resized to ${w} × ${d} metres.`);
+  });
+  $("moodboard-select").innerHTML = MOODBOARDS.map(
+    (b) => `<option value="${b.id}">${b.name} · ${b.style}</option>`,
+  ).join("");
+  $("ambiance-select").innerHTML = MOODBOARDS.map(
+    (b) =>
+      `<option value="${b.id}">${boards[b.id].ambiance.short} · ${b.style}</option>`,
+  ).join("");
+  $("moodboard-select").addEventListener("change", (e) => {
+    remember();
+    state.moodboard = e.target.value;
+    state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
+    state.ambiance = state.moodboard;
+    state.palette = null;
+    state.quests.palette = true;
+    changed();
+    notify(
+      `${boards[state.moodboard].name}. Moodboard, finishing and ambiance applied.`,
+    );
+  });
+  $("finish-target").addEventListener("change", (e) => {
+    remember();
+    state.finishTarget = e.target.value;
+    state.quests.palette = true;
+    changed();
+    notify("Finishing application updated.");
+  });
+  $("finishing-select").addEventListener("change", (e) => {
+    remember();
+    state.finishing = e.target.value;
+    state.quests.palette = true;
+    changed();
+    notify(
+      `${selectedFinish().name} applied to ${{ joinery: "furniture and joinery", floor: "flooring", walls: "walls" }[state.finishTarget]}.`,
+    );
+  });
+  $("ambiance-select").addEventListener("change", (e) => {
+    remember();
+    state.ambiance = e.target.value;
+    state.palette = null;
+    state.quests.palette = true;
+    changed();
+    notify(
+      `${boards[state.ambiance].ambiance.short} ambiance applied. Your layout stays in place.`,
+    );
+  });
+  document.querySelectorAll("[data-light]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const night = b.dataset.light === "evening";
+      if (state.night === night) return;
+      remember();
+      state.night = night;
+      changed();
+    }),
+  );
   document.querySelectorAll("[data-space]").forEach((b) =>
     b.addEventListener("click", () => {
       if (state.type === b.dataset.space) return;
-      remember();
-      state = fresh(b.dataset.space);
-      walked = 0;
-      choose(null);
-      setMode("build");
-      angle = 0.76;
-      zoom = 1;
-      changed();
-      notify(
-        "A fresh space to explore. Undo brings your previous layout back.",
-      );
+      startLayout(b.dataset.space, state.startMode, state.commercialType);
     }),
   );
   document.querySelectorAll("[data-palette]").forEach((b) =>
@@ -1303,7 +1698,7 @@
             format: "secha-playground",
             version: 1,
             project: state,
-            dimensions: spaces[state.type],
+            dimensions: { w: spaceConfig().w, d: spaceConfig().d },
             estimatedTotal: state.items.reduce(
               (n, i) => n + catalog[i.kind].price,
               0,
@@ -1325,7 +1720,17 @@
   });
   $("reset-project").addEventListener("click", () => {
     remember();
-    state = fresh(state.type);
+    const previous = state;
+    state = {
+      ...fresh(state.type, state.startMode, state.commercialType),
+      dimensions: { ...previous.dimensions },
+      moodboard: previous.moodboard,
+      finishing: previous.finishing,
+      finishTarget: previous.finishTarget,
+      ambiance: previous.ambiance,
+      palette: previous.palette,
+      night: previous.night,
+    };
     selected = null;
     placing = null;
     renderCatalog();
@@ -1382,7 +1787,7 @@
     }
     if (e.key === "Enter" && placing && document.activeElement === $("scene")) {
       e.preventDefault();
-      const s = spaces[state.type];
+      const s = spaceConfig();
       for (let z = s.d / 2 - 0.5; z > -s.d / 2; z -= 0.25)
         for (let x = -s.w / 2 + 0.5; x < s.w / 2; x += 0.25)
           if (fits({ id: -1, kind: placing, x, z, r: 0 })) {

@@ -1490,7 +1490,7 @@ body.modal-open {
   margin: 22px 0 26px;
 }
 .affiliation-intro h3 em {
-  font-family: Georgia, serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   color: #295343;
 }
@@ -1502,7 +1502,7 @@ body.modal-open {
   max-width: 560px;
 }
 .affiliation-intro > .affiliation-lede {
-  font-family: Georgia, serif;
+  font-family: "Inter", sans-serif;
   font-size: 23px !important;
   line-height: 1.45 !important;
   color: #223e30 !important;
@@ -1568,8 +1568,8 @@ body.modal-open {
 }
 .material-film-header h4 {
   font:
-    24px Georgia,
-    serif;
+    24px "Inter",
+    sans-serif;
   margin-top: 8px;
 }
 .material-motion-toggle {

@@ -6,6 +6,10 @@ Interior inspiration photography was downloaded from these Unsplash sources (the
 
 Replace inspiration photography with approved SECHA product photography before presenting it as completed SECHA work.
 
+## Typography
+
+`fonts/Inter-Variable.ttf` is the Inter variable font from the Google Fonts repository: https://github.com/google/fonts/tree/main/ofl/inter. Downloaded from its official `Inter[opsz,wght].ttf` source and served locally through `css/fonts.css`. Licensed under the SIL Open Font License 1.1, included in `fonts/OFL.txt`.
+
 - `modular-work.jpg`: https://images.unsplash.com/photo-1497366811353-6870744d04b2
 - `modular-rest.jpg`: https://images.unsplash.com/photo-1611892440504-42a792e24d32
 

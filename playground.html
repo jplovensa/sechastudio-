@@ -9,8 +9,10 @@
       name="description"
       content="An interactive 3D renovation playground. Furnish, style, and walk through a studio apartment, residence, or commercial space."
     />
+    <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/playground.css" />
     <script defer src="vendor/three.r128.min.js"></script>
+    <script defer src="js/design-options.js"></script>
     <script defer src="js/playground.js"></script>
   </head>
   <body>
@@ -54,13 +56,91 @@
             </button>
             <button data-space="commercial" aria-pressed="false">
               <span class="space-icon" aria-hidden="true">▤</span
-              ><strong>Commercial</strong><small>Creative café</small>
+              ><strong>Commercial</strong><small>Work & hospitality</small>
             </button>
+          </div>
+          <div class="setup-options">
+            <label id="commercial-options" hidden
+              >Commercial type
+              <select id="commercial-type">
+                <option value="office">Office</option>
+                <option value="cafe" selected>Café</option>
+                <option value="bar">Bar</option>
+                <option value="wellness">Wellness</option>
+                <option value="salon">Salon</option>
+              </select>
+            </label>
+            <div
+              class="start-options"
+              role="group"
+              aria-label="Starting layout"
+            >
+              <button data-start="furnished" aria-pressed="true">
+                Use starter layout</button
+              ><button data-start="blank" aria-pressed="false">
+                Build from scratch
+              </button>
+            </div>
+            <form id="room-size" hidden>
+              <div class="size-fields">
+                <label
+                  >Width (m)<input
+                    id="room-width"
+                    type="number"
+                    min="4"
+                    max="16"
+                    step="0.5"
+                    value="8"
+                    required /></label
+                ><label
+                  >Depth (m)<input
+                    id="room-depth"
+                    type="number"
+                    min="4"
+                    max="14"
+                    step="0.5"
+                    value="6"
+                    required
+                /></label>
+              </div>
+              <button type="submit">Apply dimensions</button>
+            </form>
+            <p class="setup-hint" id="start-description">
+              A furnished starting point. Make it your own.
+            </p>
+          </div>
+        </section>
+        <section class="design-directions" aria-labelledby="directions-heading">
+          <div class="section-label">
+            <h2 id="directions-heading">02 / Find your direction</h2>
+            <span>SECHA collection</span>
+          </div>
+          <label>Moodboard<select id="moodboard-select"></select></label>
+          <p class="direction-description" id="moodboard-description"></p>
+          <label>Finishing<select id="finishing-select"></select></label>
+          <label
+            >Apply finishing to<select id="finish-target">
+              <option value="joinery">Furniture & joinery</option>
+              <option value="floor">Flooring</option>
+              <option value="walls">Walls</option>
+            </select></label
+          >
+          <div id="finish-preview">
+            <i id="finish-swatch"></i><span id="finish-description"></span>
+          </div>
+          <label>Ambiance<select id="ambiance-select"></select></label>
+          <div
+            class="lighting-options"
+            role="group"
+            aria-label="Ambiance lighting"
+          >
+            <button data-light="day" aria-pressed="true">Daylight</button
+            ><button data-light="evening" aria-pressed="false">Evening</button>
           </div>
         </section>
         <section aria-labelledby="furnish-heading" class="furnish-section">
           <div class="section-label">
-            <h2 id="furnish-heading">02 / Bring it to life</h2>
+            <h2 id="furnish-heading">03 / Bring it to life</h2>
             <span id="catalog-count">8 pieces</span>
           </div>
           <div
@@ -83,7 +163,7 @@
         </section>
         <section class="finishes" aria-labelledby="finish-heading">
           <div class="section-label">
-            <h2 id="finish-heading">03 / Set the feeling</h2>
+            <h2 id="finish-heading">04 / Quick colour variations</h2>
             <span id="palette-name">Warm natural</span>
           </div>
           <div class="palette-options" role="group" aria-label="Room palette">

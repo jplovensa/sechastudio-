@@ -1,11 +1,11 @@
 :root {
   --ink: #243e33;
   --paper: #faf9f5;
-  --muted: #606b59;
+  --muted: #4c5745;
   --line: #e5e6dd;
   --accent: #d6e6a2;
   --green: #355140;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;
@@ -146,7 +146,7 @@ button:hover:not(:disabled) {
   letter-spacing: 1.05px;
 }
 .sidebar-heading h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Inter", Arial, sans-serif;
   font-weight: 400;
   font-size: 34px;
   letter-spacing: -1.2px;
@@ -202,7 +202,7 @@ button:hover:not(:disabled) {
 .space-icon {
   font-size: 25px;
   height: 30px;
-  font-family: Georgia, serif;
+  font-family: "Inter", Arial, sans-serif;
 }
 .space-options strong {
   font-size: 10px;
@@ -345,7 +345,7 @@ button:hover:not(:disabled) {
   color: #666f5d;
 }
 .scene-top h2 {
-  font-family: Georgia, serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 26px;
   letter-spacing: -0.7px;
   font-weight: 400;
@@ -598,7 +598,7 @@ button:hover:not(:disabled) {
   line-height: 1.75;
 }
 .help-panel strong {
-  font-family: Georgia, serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 20px;
   font-weight: 400;
 }
@@ -634,7 +634,7 @@ button:hover:not(:disabled) {
   color: #7a826e;
 }
 .project-panel h2 {
-  font-family: Georgia, serif;
+  font-family: "Inter", Arial, sans-serif;
   font-weight: 400;
   font-size: 25px;
   line-height: 1.25;
@@ -757,7 +757,7 @@ button:hover:not(:disabled) {
   color: #7c8f5f;
 }
 .design-note p {
-  font-family: Georgia, serif;
+  font-family: "Inter", Arial, sans-serif;
   font-style: italic;
   font-size: 20px;
   line-height: 1.3;
@@ -1096,10 +1096,175 @@ button:hover:not(:disabled) {
 .placed-piece small,
 .design-note small,
 .app-footer {
-  color: #606b59;
+  color: #4c5745;
 }
 .scene-top .eyebrow,
 .project-meta,
 .challenge p {
   color: #56624d;
+}
+/* Shared SECHA directions and scratch-build tools. */
+.setup-options,
+.design-directions {
+  margin-top: 18px;
+}
+.setup-options label,
+.design-directions label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 500;
+  margin-top: 13px;
+}
+.setup-options select,
+.design-directions select,
+.size-fields input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #b6bfaf;
+  border-radius: 6px;
+  padding: 10px 8px;
+  font: inherit;
+  font-size: 10px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.setup-options select:focus-visible,
+.design-directions select:focus-visible,
+.size-fields input:focus-visible {
+  outline: 3px solid #8a653a;
+  outline-offset: 2px;
+}
+.start-options,
+.lighting-options {
+  display: flex;
+  gap: 5px;
+  margin-top: 13px;
+}
+.start-options button,
+.lighting-options button {
+  flex: 1;
+  padding: 10px 6px;
+  font-size: 9px;
+  border: 1px solid #b6bfaf;
+  border-radius: 6px;
+}
+.start-options [aria-pressed="true"],
+.lighting-options [aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.setup-hint,
+.direction-description {
+  font-size: 9px;
+  line-height: 1.7;
+  color: #56624d;
+  margin-bottom: 0;
+}
+.design-directions {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.size-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+#room-size > button {
+  font-size: 10px;
+  border: 1px solid #b6bfaf;
+  border-radius: 5px;
+  padding: 9px 12px;
+  margin-top: 10px;
+  width: 100%;
+}
+#finish-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 8px;
+  color: #56624d;
+  margin-top: 9px;
+  line-height: 1.7;
+}
+#finish-swatch {
+  display: block;
+  width: 23px;
+  height: 23px;
+  border-radius: 5px;
+  border: 1px solid #89917f;
+  flex-shrink: 0;
+}
+.workspace {
+  background: var(--scene-tone, #e9ebdf);
+}
+.scene-top > div {
+  background: var(--paper);
+  padding: 9px 12px;
+  border-radius: 8px;
+  box-shadow: 0 3px 16px #253c3209;
+  max-width: calc(100% - 45px);
+}
+.scene-hint {
+  background: var(--paper);
+  padding: 8px;
+  border-radius: 6px;
+}
+.pg-skip {
+  top: 0;
+  transform: translateY(-150%);
+  clip-path: inset(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.pg-skip:focus {
+  transform: none;
+  clip-path: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+.budget-card,
+.catalog-card,
+.space-options button[aria-pressed="true"],
+.placed-piece[aria-pressed="true"] {
+  background: var(--soft-tone, #edf0e3);
+}
+.sidebar-heading h1,
+.scene-top h2,
+.project-panel h2 {
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+.design-note p {
+  font-style: normal;
+  font-weight: 400;
+}
+@media (max-width: 620px) {
+  .design-directions {
+    grid-column: 1/-1;
+    margin: 0;
+  }
+  .setup-options {
+    margin-top: 13px;
+  }
+  .design-directions select,
+  .setup-options select,
+  .size-fields input {
+    font-size: 14px;
+    min-height: 42px;
+  }
+  .setup-options label,
+  .design-directions label {
+    font-size: 11px;
+  }
+  .start-options button,
+  .lighting-options button {
+    font-size: 11px;
+    min-height: 42px;
+  }
+  .space-options small {
+    font-size: 7px;
+  }
 }
