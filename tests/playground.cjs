@@ -451,6 +451,35 @@ async function floorScreen(page, x, z, y = 0) {
   );
   await legacy.close();
 
+  const linked = await browser.newPage({ reducedMotion: "reduce" });
+  await linked.goto(`${base}/playground.html?moodboard=nomad&finishing=n2`);
+  assert.equal(await linked.locator("#moodboard-select").inputValue(), "nomad");
+  assert.equal(
+    await linked.locator("#finishing-select").inputValue(),
+    "n2",
+    "Material library passes its exact selected finish",
+  );
+  assert.equal(await linked.locator(".placed-piece").count(), 6);
+  assert.equal(
+    await linked.evaluate(() => localStorage.getItem("secha-playground-v1")),
+    null,
+    "Opening a website direction does not overwrite a saved layout",
+  );
+  await linked.goto(
+    `${base}/playground.html?space=commercial&commercial=office&moodboard=visionary&finishing=v3`,
+  );
+  assert.equal(await linked.locator("#commercial-type").inputValue(), "office");
+  assert.equal(await linked.locator("#finishing-select").inputValue(), "v3");
+  await linked.goto(
+    `${base}/playground.html?space=invalid&moodboard=invalid&finishing=invalid`,
+  );
+  assert.equal(
+    await linked.locator("#moodboard-select").inputValue(),
+    "nomad",
+    "Unknown website selections fall back safely",
+  );
+  await linked.close();
+
   const fallback = await browser.newPage();
   await fallback.route("**/vendor/three.r128.min.js", (r) => r.abort());
   await fallback.goto(`${base}/playground.html`);

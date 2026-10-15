@@ -504,6 +504,37 @@
   } catch {
     /* Storage is optional. */
   }
+  // A website material or designer direction can style a restored layout without overwriting its saved copy.
+  const incoming = new URLSearchParams(location.search);
+  let linkedDirection = false;
+  if (Object.hasOwn(spaces, incoming.get("space"))) {
+    const type = incoming.get("space"),
+      commercial = Object.hasOwn(commercialTypes, incoming.get("commercial"))
+        ? incoming.get("commercial")
+        : "cafe";
+    state = fresh(type, "furnished", commercial);
+    linkedDirection = true;
+  }
+  if (Object.hasOwn(boards, incoming.get("moodboard"))) {
+    state.moodboard = incoming.get("moodboard");
+    state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
+    state.ambiance = state.moodboard;
+    state.palette = null;
+    linkedDirection = true;
+  }
+  if (
+    MATERIAL_PALETTES[state.moodboard].some(
+      (m) => m.id === incoming.get("finishing"),
+    )
+  ) {
+    state.finishing = incoming.get("finishing");
+    linkedDirection = true;
+  }
+  if (linkedDirection) {
+    state.quests.palette = true;
+    $("save-state").textContent = "Website direction applied · Save to keep";
+    dirty = true;
+  }
   function thumbnail(kind) {
     const colors = catalog[kind];
     const shapes = {

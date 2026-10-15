@@ -38,9 +38,9 @@ Choose a furniture piece and click an open floor spot to place it; the placement
 - `index.html`: page sections and accessible controls.
 - `js/commerce-core.js`: catalogue, canonical prices, totals, item identity, safe cart restoration.
 - `js/commerce.js`: catalogue, bag, checkout validation and request export.
-- `js/ambiance.js`: same-room neutral/styled comparison, six directions, day/evening lighting and transfer to the studio.
-- `js/interior.js`: shared furnished living room, home office and bedroom previews with room dimensions, storage modules, lighting and surface finishes.
-- `js/studio.js`: existing moodboard and style exploration scenes.
+- `js/material-showcase.js`: textured WebGL material slabs, six moodboard directions, physical samples and exact finish links into the playground.
+- `js/site-process.js`: five interactive project stages with deliverables and keyboard navigation.
+- `js/studio.js`: shared storefront state, modal content, intro and page initialization. Legacy room renderers remain in `js/interior.js` and `js/ambiance.js` but are no longer loaded by the homepage.
 - `vendor/`: pinned Three.js and GSAP distributions, served locally.
 - `assets/`: locally served inspiration photography with source notes.
 - `tests/`: pricing/restoration rules and desktop/mobile browser journeys.
@@ -66,7 +66,9 @@ The signature section uses Josephine (Founder & CEO), Daffa (Architect of Form) 
 
 The modular section explains the use of expanded polystyrene (EPS)-based interior panels. Its generated exploded-panel image is an illustrative material study, not a manufacturing drawing. Actual panel build-ups, finishes, supports and fixings need project-specific specifications; the site does not assert unprovided fire, structural, acoustic or environmental certifications.
 
-Ambiance try-on uses the same furnished-room renderer as the build studio. A draggable, keyboard-accessible slider compares the neutral daylight room with a chosen palette and lighting, with three room types and six style directions. The selected room, lighting and palette transfer to the studio without modifying the customer's bag.
+The homepage now uses one Playground feature instead of separate Architect room and ambiance try-on sections. Curated moodboards are presented as an interactive material library: inspect three textured sample slabs for each of the six directions, drag or use keyboard arrows to turn them, adjust the light angle, select a finish, or order a physical sample. The material-to-playground link carries the selected moodboard and finish. Designer direction links and catalogue preview links also open the playground with the relevant choices; existing local layouts are not overwritten until Save is used.
+
+EPS content is consolidated into a compact panel illustration, three-layer key, affiliation logos and expandable project-scope notes. How we work is a five-step selectable timeline with imagery and clear deliverables; its steps support arrow, Home and End keys. The new sections use `css/site-refresh.css`. Sample textures are procedural visual approximations, not scans or performance specifications.
 
 ## Studio+ film, affiliation and design directions
 
@@ -74,12 +76,12 @@ The opening film is a locally hosted, silent H.264 MP4 (four seconds, 960×540, 
 
 The EPS section displays the user-provided affiliation: SECHA is affiliated with Fjäll Group through Greenshift. Brand images are generated reproductions of the supplied inline references; they are not original brand source files. The section does not invent certifications, ownership terms or environmental performance claims. The three new modular catalogue images are generated concept visualisations, not photographs of installed SECHA projects; their visible modules illustrate the listed room packages.
 
-Each signature designer opens an accessible modal with a design narrative, suggested style card, material direction and three-colour palette. These directions interpret the supplied profile narratives and are starting points for a customer brief. The modal CTA applies the corresponding Earth, Noir or Japandi direction to the existing ambiance preview and moves keyboard focus to its controls.
+Each signature designer opens an accessible modal with a design narrative, suggested style card, material direction and three-colour palette. These directions interpret the supplied profile narratives and are starting points for a customer brief. The modal CTA opens the corresponding Earth, Noir or Japandi direction in the playground.
 
 Run `npm run test:studio` for desktop/mobile film and designer checks, alongside `npm test` and `npm run test:e2e` for commerce and room-preview regression coverage.
 
-### Affiliation editorial and service presentations
+### Compact affiliation and service presentations
 
-The affiliation article now tells the relationship through SECHA’s design perspective and the EPS material approach. Both logo PNGs have genuine alpha transparency, with the white backdrops removed using Image Gen; they sit directly on the editorial paper surface. The live CSS motion study separates and assembles illustrative core/finish layers and traces SECHA → Greenshift → Fjäll Group. A visible pause/play control, reduced-motion still view, viewport observer and hidden-tab handling control the animation. It adds no video download and remains readable without JavaScript.
+The EPS section preserves the supplied SECHA → Greenshift → Fjäll Group relationship and transparent logo assets, alongside a compact panel illustration and expandable scope details. The previous long affiliation article, animated layer study and repeated build-step cards have been consolidated into this section and the main project timeline.
 
-Design / Lite, Pro and Premium use generated studio presentations showing, respectively, a concept/material moodboard, floor plan plus 3D presentation, and detailed drawings plus a scale model. These images illustrate the type of service deliverable; they are not completed project photographs or contractual drawing sets. Existing package inclusions and prices remain the catalogue source of truth.
+Design / Lite, Pro and Premium retain their generated service presentation images. These illustrate deliverable types rather than completed projects or contractual drawing sets. Existing package inclusions and prices remain the catalogue source of truth.

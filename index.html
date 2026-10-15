@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/utilities.css" />
     <link rel="stylesheet" href="css/commerce.css" />
+    <link rel="stylesheet" href="css/site-refresh.css" />
 
     <!-- Three.js -->
     <script src="vendor/three.r128.min.js"></script>
@@ -190,11 +191,15 @@
           >Modular build</a
         >
         <a
-          href="#finishing-studio"
+          href="#moodboards"
           class="hover:opacity-50 transition-opacity cursor-hover"
-          >Room studio</a
+          >Materials</a
         >
-        <a href="playground.html" class="hover:opacity-50 transition-opacity cursor-hover">Playground</a>
+        <a
+          href="playground.html"
+          class="hover:opacity-50 transition-opacity cursor-hover"
+          >Playground</a
+        >
         <a
           href="#designers"
           class="hover:opacity-50 transition-opacity cursor-hover"
@@ -415,65 +420,94 @@
 
       <section
         id="moodboards"
-        class="w-full relative min-h-screen bg-[#050505] border-t border-zinc-800 flex flex-col md:flex-row overflow-hidden"
+        class="material-library"
+        aria-labelledby="materials-heading"
       >
-        <!-- 3D Canvas Background Area -->
-        <div class="absolute inset-0 z-0 w-full h-full">
-          <div id="moodboard-canvas" class="w-full h-full outline-none"></div>
-          <!-- Overlay Gradients -->
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505] pointer-events-none opacity-80"
-          ></div>
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent pointer-events-none"
-          ></div>
-        </div>
-
-        <!-- Interactive UI Overlay -->
-        <div
-          class="relative z-10 w-full max-w-[1440px] mx-auto p-4 md:p-8 flex flex-col justify-between h-auto md:h-screen pointer-events-none"
-        >
-          <!-- Header -->
-          <div class="mt-20 md:mt-24 pointer-events-auto reveal-item">
-            <h2
-              class="text-xs font-mono text-zinc-500 uppercase tracking-[0.3em] mb-2"
-            >
-              Material Exploration
-            </h2>
-            <h3
-              class="text-3xl md:text-6xl font-black uppercase tracking-tighter text-white"
-            >
-              Curated<br />Moodboards.
-            </h3>
-            <p
-              class="max-w-md text-xs md:text-sm text-zinc-400 font-medium uppercase tracking-wide mt-4 md:mt-6 leading-relaxed"
-            >
-              Step into the interactive 3D environment to feel the textures and
-              select the exact material finishes that speak to your soul.
+        <header class="library-heading">
+          <div>
+            <p class="eyebrow">
+              01 / Curated moodboards · The material library
             </p>
+            <h2 id="materials-heading">
+              A palette you can<br /><em>almost feel.</em>
+            </h2>
           </div>
-
-          <!-- Selection Interface -->
-          <div
-            class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-end pt-8 pb-12 pointer-events-auto"
-          >
-            <!-- Navigation List (Flex wrap on small screens, stacked on large) -->
-            <div
-              class="md:col-span-4 flex flex-col sm:flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0"
-              id="moodboard-nav"
-            >
-              <!-- Populated by JS -->
+          <p>
+            Grain, softness, a little reflection. Explore the materials behind
+            each SECHA direction, then make them your own.
+          </p>
+        </header>
+        <div
+          id="moodboard-nav"
+          class="direction-nav"
+          role="group"
+          aria-label="Curated moodboard"
+        ></div>
+        <div class="material-showcase">
+          <div class="material-view">
+            <div class="sample-stage-label">
+              <span id="showcase-board">Noir Brutalism</span
+              ><span>SECHA / MATERIAL STUDY</span>
             </div>
-
-            <!-- Details Panel -->
-            <div class="md:col-span-8">
-              <div
-                id="moodboard-details"
-                class="border border-zinc-800 bg-zinc-950/80 backdrop-blur-md p-6 md:p-12 relative overflow-hidden transition-all duration-300"
-              >
-                <!-- Populated by JS -->
+            <div
+              id="moodboard-canvas"
+              tabindex="0"
+              role="application"
+              aria-label="3D material samples. Drag to turn the samples. Use the rotate and lighting controls for keyboard access."
+            >
+              <p id="material-fallback">
+                Explore the material swatches below. Enable WebGL to inspect the
+                3D samples.
+              </p>
+            </div>
+            <div class="sample-toolbar">
+              <button id="sample-rotate" aria-pressed="false" disabled>
+                ↻ Rotate samples</button
+              ><label for="sample-light"
+                >Light angle
+                <input
+                  id="sample-light"
+                  disabled
+                  type="range"
+                  min="-80"
+                  max="80"
+                  value="25" /></label
+              ><button id="sample-reset" disabled>Reset view</button>
+            </div>
+          </div>
+          <div id="moodboard-details" class="material-story">
+            <p class="eyebrow" id="material-board-name"></p>
+            <h3 id="material-style"></h3>
+            <p id="material-feeling"></p>
+            <div
+              id="material-list"
+              class="material-swatches"
+              role="group"
+              aria-label="Material finish"
+            ></div>
+            <div class="surface-notes">
+              <span id="surface-type"></span>
+              <p id="surface-feel" role="status" aria-live="polite"></p>
+              <div class="surface-scale">
+                <span>Matte</span><i><b id="sheen-marker"></b></i
+                ><span>Reflective</span>
               </div>
             </div>
+            <a
+              id="material-playground"
+              class="secha-button"
+              href="playground.html"
+              >Style with this palette <span aria-hidden="true">↗</span></a
+            ><button
+              id="btn-add-cart"
+              class="sample-order"
+              onclick="addToCart()"
+            >
+              Add physical sample · Rp150.000</button
+            ><small class="material-note"
+              >Digital textures suggest a feeling. Review physical samples
+              before specifying.</small
+            >
           </div>
         </div>
       </section>
@@ -513,631 +547,148 @@
           modules are listed on each card.
         </p>
       </section>
-      <section id="modular-build" class="commerce-section modular-section">
-        <div class="modular-intro">
-          <p class="eyebrow">02 / EPS interiors · Connected expertise</p>
-          <h2>Light at the core.<br />Stronger together.</h2>
-          <p>
-            SECHA is affiliated with Fjäll Group through Greenshift. Together,
-            we use EPS-based materials in our modular interior approach. The
-            expanded polystyrene core brings a lightweight foundation to
-            selected interior panels, with surface finishes, supports and fixing
-            details specified around your space.
-          </p>
-          <a class="secha-button" href="#finishing-studio"
-            >Configure your room
-            <svg
-              class="action-arrow"
-              aria-hidden="true"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M3 13 13 3M3 3h10v10" /></svg
-          ></a>
-        </div>
-        <figure class="eps-study">
+      <section
+        id="modular-build"
+        class="eps-compact"
+        aria-labelledby="eps-heading"
+      >
+        <figure>
           <img
             src="assets/eps-material-study.png"
-            alt="Illustrative exploded interior panel showing a white expanded polystyrene bead core, separate finish layers and a completed modular wall"
+            alt="Illustrative exploded panel with a lightweight EPS core and separate surface layers"
             width="1536"
             height="1024"
             loading="lazy"
           />
-          <figcaption>
-            EPS core / specified finish / your interior<br /><span
-              >Illustrative material study. Final layers and fixing details are
-              specified per project.</span
-            >
-          </figcaption>
+          <figcaption>CORE / FINISH / YOUR INTERIOR</figcaption>
         </figure>
-        <article class="affiliation-panel" aria-labelledby="affiliation-title">
-          <div class="affiliation-intro">
-            <p class="eyebrow">Our affiliation / The material journal</p>
-            <h3 id="affiliation-title">
-              A shared direction.<br /><em>A considered interior.</em>
-            </h3>
-            <p class="affiliation-lede">
-              Good spaces begin with people. They take shape through the
-              materials we choose.
-            </p>
-            <p>
-              SECHA is affiliated with Fjäll Group through Greenshift. This
-              connection sits alongside our studio’s belief that an interior
-              should feel personal, work beautifully and be thoughtfully put
-              together.
-            </p>
-            <p>
-              For our modular approach, EPS-based materials form the lightweight
-              core of selected interior panels. The surface is only one part of
-              the story: finishes, supports and fixing details are considered
-              together, around the needs of your space.
-            </p>
-            <p>
-              From the first brief to the final detail, we bring the
-              conversation back to how you live. A material direction becomes
-              meaningful when it becomes a room that belongs to you.
-            </p>
-            <a class="affiliation-story-link" href="#finishing-studio"
-              >Explore the material direction
-              <span aria-hidden="true">↗</span></a
-            >
+        <div class="eps-copy">
+          <p class="eyebrow">02 / A lighter way to build</p>
+          <h2 id="eps-heading">
+            Light at the core.<br />Considered at every layer.
+          </h2>
+          <p>
+            EPS-based materials form the lightweight core of selected SECHA
+            interior panels. The finish, supports and fixing details are
+            specified together, around your space.
+          </p>
+          <div class="eps-layer-key">
+            <span><i>01</i> EPS core</span><span><i>02</i> Surface finish</span
+            ><span><i>03</i> Project-specific fixings</span>
           </div>
-          <div class="affiliation-brands">
-            <p class="affiliation-brand-kicker">Connected through Greenshift</p>
-            <figure>
+          <details class="eps-specs">
+            <summary>What’s included in the approach?</summary>
+            <p>
+              Selected EPS-based interior panels, coordinated joinery and
+              surface finishes. Structural works, MEP changes, appliances, loose
+              furniture, delivery and installation need a separately confirmed
+              scope. Final panel layers and fixings require project-specific
+              review; the illustration is not a manufacturing drawing.
+            </p>
+          </details>
+          <div class="eps-affiliation">
+            <span
+              >SECHA is affiliated with Fjäll Group through Greenshift.</span
+            >
+            <div>
               <img
                 src="assets/brands/greenshift.png"
                 alt="Greenshift"
                 width="2145"
                 height="733"
                 loading="lazy"
-              />
-              <figcaption>SECHA’s connection to Fjäll Group</figcaption>
-            </figure>
-            <span class="affiliation-link">↓</span>
-            <figure>
-              <img
+              /><span aria-hidden="true">→</span
+              ><img
                 src="assets/brands/fjall-group.png"
                 alt="Fjäll Group"
                 width="2119"
                 height="742"
                 loading="lazy"
               />
-              <figcaption>Affiliated group</figcaption>
-            </figure>
-            <p class="affiliation-brand-note">
-              People. Materials. Possibilities.
-            </p>
-          </div>
-          <figure
-            class="affiliation-motion motion-paused"
-            aria-labelledby="affiliation-motion-title"
-          >
-            <div class="material-film-header">
-              <div>
-                <p class="eyebrow">A study in layers / Studio+</p>
-                <h4 id="affiliation-motion-title">
-                  From core to considered space.
-                </h4>
-              </div>
-              <button
-                class="material-motion-toggle"
-                type="button"
-                aria-pressed="false"
-              >
-                Pause motion
-              </button>
             </div>
-            <div
-              class="material-motion-stage"
-              role="img"
-              aria-label="Motion study of an EPS panel: the lightweight core and specified finish separate, then assemble into one interior panel."
-            >
-              <div class="material-motion-grid" aria-hidden="true"></div>
-              <div class="material-layer-stack" aria-hidden="true">
-                <div class="material-layer material-backing"></div>
-                <div class="material-layer material-core"></div>
-                <div class="material-layer material-finish"></div>
-              </div>
-              <div class="material-stage-note">
-                <span>01 / EPS CORE</span><span>02 / SPECIFIED FINISH</span
-                ><span>03 / YOUR INTERIOR</span>
-              </div>
-              <p class="material-stage-wordmark" aria-hidden="true">
-                STUDIO<span>+</span>
-              </p>
-            </div>
-            <div class="material-network" aria-hidden="true">
-              <span>SECHA STUDIO+</span><i class="network-link"></i
-              ><span>GREENSHIFT</span><i class="network-link"></i
-              ><span>FJÄLL GROUP</span>
-            </div>
-            <figcaption>
-              Lightweight core. A finish chosen around you.
-              <span
-                >Illustrative motion study; final panel layers and fixings are
-                specified per project.</span
-              >
-            </figcaption>
-          </figure>
-          <p class="affiliation-path">
-            SECHA STUDIO+ <span>→</span> GREENSHIFT <span>→</span> FJÄLL GROUP
-          </p>
-        </article>
-        <div class="build-steps">
-          <article>
-            <span>01</span>
-            <h3>Measure & plan</h3>
-            <p>
-              Share your room and needs. We verify dimensions and agree on the
-              layout before production.
-            </p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Choose your finish</h3>
-            <p>
-              Explore EPS-based panels and the available surface finishes, then
-              review physical samples with your designer. Screens are a guide;
-              real materials come first.
-            </p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Approve & build</h3>
-            <p>
-              Confirm drawings, price and schedule. Modules are fabricated for
-              the agreed configuration.
-            </p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>Install & evolve</h3>
-            <p>
-              Plan assembly and handover with your team. Future additions are
-              checked for fit and compatibility.
-            </p>
-          </article>
-        </div>
-        <div class="build-scope">
-          <h3>What is part of the plan?</h3>
-          <p>
-            EPS-based interior panels, coordinated joinery, room layout, surface
-            finishes and build planning. Structural works, MEP changes,
-            appliances, loose furniture, delivery and installation require a
-            separate confirmed scope. Lead times shown are estimates, subject to
-            approval and capacity.
-          </p>
-        </div>
-      </section>
-
-      <!-- 3D Finishing Options Section (Vignette) -->
-      <section
-        id="finishing-studio"
-        class="w-full relative min-h-screen bg-[#0a0a0a] border-t border-zinc-800 flex flex-col md:flex-row overflow-hidden"
-      >
-        <!-- Interactive 3D Canvas -->
-        <div class="relative w-full h-[40vh] md:h-screen md:w-2/3 cursor-move">
-          <div id="vignette-canvas" class="absolute inset-0 w-full h-full">
-            <p class="studio-fallback">
-              Interactive 3D needs WebGL and access to the studio libraries. You
-              can still configure your room below.
-            </p>
-          </div>
-          <p class="room-caption">
-            Move your pointer to explore · Illustrative room, not a measured
-            design
-          </p>
-
-          <!-- Absolute Title Overlay -->
-          <div
-            class="absolute top-6 left-6 md:top-12 md:left-12 pointer-events-none mix-blend-difference text-white"
-          >
-            <p
-              id="vignette-subtitle"
-              class="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] mb-1 md:mb-2"
-            >
-              The Architect
-            </p>
-            <h2
-              id="vignette-title"
-              class="text-3xl md:text-6xl font-black uppercase tracking-tighter leading-none"
-            >
-              Noir Brutalism
-            </h2>
-          </div>
-        </div>
-
-        <!-- Sidebar UI (Scrollable viewport for all device layouts) -->
-        <div
-          class="relative w-full md:w-1/3 bg-zinc-950 border-t md:border-t-0 md:border-l border-zinc-800 flex flex-col p-6 md:p-12 z-10 min-h-[60vh] md:h-screen md:overflow-y-auto"
-        >
-          <div class="flex justify-between items-center mb-6 md:mb-8">
-            <h3
-              class="text-xl md:text-2xl font-black uppercase tracking-tighter text-white"
-            >
-              Room Studio
-            </h3>
-            <!-- Cart Toggle -->
-            <button
-              onclick="toggleCart()"
-              class="flex items-center gap-2 px-3 py-1.5 border border-zinc-700 hover:border-white hover:text-white transition-colors text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-400 group relative cursor-hover"
-            >
-              Cart (<span id="cart-count">0</span>)
-              <span
-                id="cart-indicator"
-                class="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-pulse hidden"
-              ></span>
-            </button>
-          </div>
-
-          <div class="room-controls">
-            <label
-              >Room<select id="room-kind">
-                <option value="living">Living room</option>
-                <option value="work">Home office</option>
-                <option value="bedroom">Bedroom</option>
-              </select></label
-            >
-            <label
-              >Lighting<select id="room-light">
-                <option value="day">Daylight</option>
-                <option value="warm">Warm evening</option>
-              </select></label
-            >
-            <label
-              >Width · metres<input
-                id="room-width"
-                type="range"
-                min="3"
-                max="6"
-                step="0.5"
-                value="4"
-              /><output id="room-width-value">4 m</output></label
-            >
-            <label
-              >Depth · metres<input
-                id="room-depth"
-                type="range"
-                min="3"
-                max="6"
-                step="0.5"
-                value="4"
-              /><output id="room-depth-value">4 m</output></label
-            >
-            <label
-              >Storage modules<select id="room-modules">
-                <option value="2">2 modules</option>
-                <option value="3" selected>3 modules</option>
-                <option value="4">4 modules</option>
-              </select></label
-            >
-          </div>
-          <div class="studio-build-card">
-            <p>
-              Configured modular setup <strong id="studio-build-price"></strong>
-            </p>
-            <p class="small-note">
-              Starting estimate by module count. Room dimensions are a
-              reference; fitting, fabrication and installation require a
-              confirmed quote.
-            </p>
-            <button class="secha-button" onclick="addStudioBuild()">
-              Add room setup to bag
-              <svg
-                class="action-arrow"
-                aria-hidden="true"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M3 13 13 3M3 3h10v10" />
-              </svg>
-            </button>
-          </div>
-          <!-- Dynamic Moodboard Tabs -->
-          <div class="mb-6 md:mb-10 flex-shrink-0">
-            <p
-              class="text-[10px] md:text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3 md:mb-4 border-b border-zinc-800 pb-2"
-            >
-              1. Select Archetype
-            </p>
-            <div class="flex flex-wrap gap-1.5 md:gap-2" id="archetype-tabs">
-              <!-- Populated by JS -->
-            </div>
-          </div>
-
-          <!-- Material Selection -->
-          <div class="flex-grow overflow-y-auto pr-1 pb-4">
-            <p
-              class="text-[10px] md:text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3 md:mb-4 border-b border-zinc-800 pb-2"
-            >
-              2. Surface Finish
-            </p>
-            <div class="flex flex-col gap-2.5 md:gap-3" id="material-list">
-              <!-- Populated by JS -->
-            </div>
-            <p
-              class="text-xs md:text-sm text-zinc-400 font-medium mt-6 leading-relaxed"
-            >
-              Expertly crafted to reflect our studio's core aesthetic. This
-              material anchors the room with defining presence.
-            </p>
-          </div>
-
-          <div class="mt-4 pt-4 border-t border-zinc-800 flex-shrink-0">
-            <button
-              onclick="addToCart()"
-              id="btn-add-cart"
-              class="w-full py-4 md:py-5 bg-white text-black text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors flex justify-center items-center gap-2 cursor-hover"
-            >
-              Add to Cart
-            </button>
           </div>
         </div>
       </section>
 
-      <!-- NEW SECTION: Redesigned Walking to Your Style (Sanctuary Virtual Try-On) -->
       <section
-        id="style-walkway"
-        class="commerce-section ambiance-section"
-        aria-labelledby="ambiance-heading"
+        id="playground"
+        class="playground-feature"
+        aria-labelledby="playground-heading"
       >
-        <div class="section-heading">
-          <p class="eyebrow">03 / Ambiance try-on</p>
-          <h2 id="ambiance-heading">
-            See the feeling.<br />Before you decide.
+        <div class="playground-copy">
+          <p class="eyebrow">03 / One space for all your ideas</p>
+          <span class="feature-tag">SECHA PLAYGROUND</span>
+          <h2 id="playground-heading">
+            Move things around.<br />See what feels right.
           </h2>
           <p>
-            Try a style in a furnished room. Compare it with a neutral starting
-            point, switch the lighting, then take your favourite direction into
-            the room studio.
+            Build from a blank canvas or step into a furnished space. Try
+            materials, change the light, and take a walk through your next idea.
           </p>
+          <ul>
+            <li>Studio apartment & residence</li>
+            <li>Office, café, bar, wellness & salon</li>
+            <li>Moodboards, finishes & ambiance in one place</li>
+          </ul>
+          <a class="secha-button" href="playground.html"
+            >Enter the playground <span aria-hidden="true">↗</span></a
+          ><small
+            >Your ideas stay in your browser. Save or export whenever you’re
+            ready.</small
+          >
         </div>
-        <div class="ambiance-layout">
-          <div class="ambiance-preview-column">
-            <div class="ambiance-stage" id="ambiance-stage">
-              <div id="walkway-canvas">
-                <div class="ambiance-fallback">
-                  <img
-                    id="ambiance-fallback-image"
-                    src="assets/interior-living.jpg"
-                    alt="Interior inspiration; interactive comparison unavailable"
-                  />
-                  <p>
-                    3D comparison needs WebGL. You can still explore palettes
-                    and use them in the room studio.
-                  </p>
-                </div>
-              </div>
-              <div class="ambiance-labels" aria-hidden="true">
-                <span id="ambiance-reference-label">Neutral / daylight</span
-                ><span id="ambiance-style-label">Japandi / daylight</span>
-              </div>
-              <div
-                id="comparison-divider"
-                class="comparison-divider"
-                aria-hidden="true"
-              ></div>
-            </div>
-            <div class="comparison-controls">
-              <label for="ambiance-compare"
-                >Compare the same room
-                <output id="comparison-value"
-                  >50% neutral / 50% styled</output
-                ></label
-              ><input
-                id="ambiance-compare"
-                type="range"
-                min="0"
-                max="100"
-                value="50"
-                aria-label="Neutral versus styled room comparison"
-              />
-              <p>
-                Slide left to see more of your chosen style. Slide right to see
-                more of the neutral room.
-              </p>
-            </div>
-            <p class="small-note">
-              Illustrative room and screen colours. Your actual room, physical
-              finishes, lighting and EPS panel build-up are reviewed with your
-              designer.
-            </p>
-          </div>
-          <div class="ambiance-controls">
-            <fieldset class="ambiance-fieldset">
-              <legend>01 / Choose your room</legend>
-              <div
-                class="ambiance-room-buttons"
-                role="group"
-                aria-label="Try-on room"
-              >
-                <button data-ambiance-room="living" aria-pressed="true">
-                  Living</button
-                ><button data-ambiance-room="work" aria-pressed="false">
-                  Work</button
-                ><button data-ambiance-room="bedroom" aria-pressed="false">
-                  Bedroom
-                </button>
-              </div>
-            </fieldset>
-            <fieldset class="ambiance-fieldset">
-              <legend>02 / Try a direction</legend>
-              <div id="walkway-tryon-grid" class="ambiance-style-grid"></div>
-            </fieldset>
-            <fieldset class="ambiance-fieldset">
-              <legend>03 / See it in your light</legend>
-              <div
-                class="ambiance-light-buttons"
-                role="group"
-                aria-label="Try-on lighting"
-              >
-                <button data-ambiance-light="day" aria-pressed="true">
-                  Daylight</button
-                ><button data-ambiance-light="warm" aria-pressed="false">
-                  Warm evening
-                </button>
-              </div>
-            </fieldset>
-            <div id="ambiance-palette" class="ambiance-palette"></div>
-            <div
-              id="walkway-tryon-specs"
-              class="ambiance-style-notes"
-              aria-live="polite"
-            ></div>
-            <button class="secha-button" onclick="allocateActiveStyle()">
-              Use this look in room studio
-            </button>
-            <button class="secha-button secondary" id="ambiance-reset">
-              Reset comparison
-            </button>
-          </div>
-        </div>
+        <a
+          class="playground-preview"
+          href="playground.html"
+          aria-label="Open the interactive renovation playground"
+          ><img
+            src="assets/playground-preview.png"
+            alt="SECHA playground showing an editable furnished studio in an isometric 3D view"
+            width="900"
+            height="780"
+            loading="lazy"
+          />
+          <div>
+            <span><i></i> BUILD. STYLE. WALK THROUGH.</span
+            ><b aria-hidden="true">↗</b>
+          </div></a
+        >
       </section>
 
-      <!-- The Process Bento -->
       <section
         id="process"
-        class="w-full max-w-[1440px] mx-auto p-4 md:p-8 pt-16 pb-16 md:pt-24 md:pb-24"
+        class="process-journal"
+        aria-labelledby="process-heading"
       >
-        <div class="flex justify-between items-end mb-8">
-          <h2
-            class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none reveal-item"
-          >
-            04.<br />How We Work
-          </h2>
+        <header>
+          <div>
+            <p class="eyebrow">04 / How we work</p>
+            <h2 id="process-heading">
+              From first hello<br />to the final detail.
+            </h2>
+          </div>
+          <p>
+            A clear path, with room for your ideas.<br />Choose a step to see
+            what happens next.
+          </p>
+        </header>
+        <div class="process-layout">
+          <div
+            class="process-steps"
+            role="group"
+            aria-label="Project steps"
+          ></div>
+          <article
+            id="process-detail"
+            class="process-detail"
+            aria-live="polite"
+          ></article>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Step 1 -->
-          <div
-            class="relative overflow-hidden p-6 md:p-8 border border-zinc-800 flex flex-col justify-between bg-zinc-950 hover:bg-zinc-900 transition-colors group col-span-1 min-h-[250px] md:min-h-[350px] reveal-item cursor-hover"
+        <div class="process-bottom">
+          <span>Every project begins with a conversation.</span
+          ><a href="#investment"
+            >Find your design package <span aria-hidden="true">↗</span></a
           >
-            <div class="relative z-10 flex justify-between items-start">
-              <div>
-                <p
-                  class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2"
-                >
-                  Step 01
-                </p>
-                <h3
-                  class="text-xl md:text-2xl font-black tracking-tighter text-white uppercase"
-                >
-                  Getting to Know You
-                </h3>
-              </div>
-            </div>
-            <p
-              class="relative z-10 text-zinc-400 font-medium max-w-lg mt-8 md:mt-12 text-xs md:text-sm leading-relaxed"
-            >
-              We start with a conversation. We listen to your needs, understand
-              how you live, and align our vision with your budget and space
-              realities.
-            </p>
-          </div>
-          <!-- Step 2 -->
-          <div
-            class="relative overflow-hidden p-6 md:p-8 border border-zinc-800 flex flex-col justify-between bg-zinc-950 hover:bg-zinc-900 transition-colors group col-span-1 min-h-[250px] md:min-h-[350px] reveal-item cursor-hover"
-          >
-            <div class="relative z-10 flex justify-between items-start">
-              <div>
-                <p
-                  class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2"
-                >
-                  Step 02
-                </p>
-                <h3
-                  class="text-xl md:text-2xl font-black tracking-tighter text-white uppercase"
-                >
-                  The Vision
-                </h3>
-              </div>
-            </div>
-            <p
-              class="relative z-10 text-zinc-400 font-medium max-w-lg mt-8 md:mt-12 text-xs md:text-sm leading-relaxed"
-            >
-              Your ideas turn into a visual plan. We create bespoke moodboards
-              and clear 2D layouts so you can see exactly how the space will be
-              utilised.
-            </p>
-          </div>
-          <!-- Step 3 -->
-          <div
-            class="relative overflow-hidden p-6 md:p-8 border border-zinc-800 flex flex-col justify-between bg-zinc-950 hover:bg-zinc-900 transition-colors group col-span-1 min-h-[250px] md:min-h-[350px] reveal-item cursor-hover"
-          >
-            <div class="relative z-10 flex justify-between items-start">
-              <div>
-                <p
-                  class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2"
-                >
-                  Step 03
-                </p>
-                <h3
-                  class="text-xl md:text-2xl font-black tracking-tighter text-white uppercase"
-                >
-                  Bringing It to Life
-                </h3>
-              </div>
-            </div>
-            <p
-              class="relative z-10 text-zinc-400 font-medium max-w-lg mt-8 md:mt-12 text-xs md:text-sm leading-relaxed"
-            >
-              No more guessing. We provide high-quality 3D renders that show you
-              exactly what your finished room will look like before execution.
-            </p>
-          </div>
-          <!-- Step 4 -->
-          <div
-            class="relative overflow-hidden p-6 md:p-8 border border-zinc-800 flex flex-col justify-between bg-zinc-950 hover:bg-zinc-900 transition-colors group md:col-span-2 min-h-[250px] md:min-h-[350px] reveal-item cursor-hover"
-          >
-            <div class="relative z-10 flex justify-between items-start">
-              <div>
-                <p
-                  class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2"
-                >
-                  Step 04
-                </p>
-                <h3
-                  class="text-xl md:text-2xl font-black tracking-tighter text-white uppercase"
-                >
-                  The Blueprint
-                </h3>
-              </div>
-            </div>
-            <p
-              class="relative z-10 text-zinc-400 font-medium max-w-lg mt-8 md:mt-12 text-xs md:text-sm leading-relaxed"
-            >
-              We handle the technical details. You receive detailed engineering
-              drawings (DED) so contractors know exactly how to build the design
-              flawlessly.
-            </p>
-          </div>
-          <!-- Step 5 -->
-          <div
-            class="relative overflow-hidden p-6 md:p-8 border border-zinc-800 flex flex-col justify-between bg-zinc-950 hover:bg-zinc-900 transition-colors group col-span-1 min-h-[250px] md:min-h-[350px] reveal-item cursor-hover"
-          >
-            <div class="relative z-10 flex justify-between items-start">
-              <div>
-                <p
-                  class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2"
-                >
-                  Step 05
-                </p>
-                <h3
-                  class="text-xl md:text-2xl font-black tracking-tighter text-white uppercase"
-                >
-                  Making it Happen
-                </h3>
-              </div>
-            </div>
-            <p
-              class="relative z-10 text-zinc-400 font-medium max-w-lg mt-8 md:mt-12 text-xs md:text-sm leading-relaxed"
-            >
-              The final handover. Take our plans to your builder, or transition
-              seamlessly into our bespoke furniture production.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -1213,11 +764,11 @@
     <script src="js/commerce-core.js"></script>
     <script src="js/design-options.js"></script>
     <script src="js/studio.js"></script>
-    <script src="js/interior.js"></script>
-    <script src="js/ambiance.js"></script>
+    <script src="js/material-showcase.js"></script>
+
     <script src="js/commerce.js"></script>
     <script src="js/designers.js"></script>
     <script src="js/intro.js"></script>
-    <script src="js/affiliation.js"></script>
+    <script src="js/site-process.js"></script>
   </body>
 </html>

@@ -98,88 +98,74 @@ let browser, server;
       await page
         .getByRole("button", { name: "Try this direction in your room" })
         .click();
-      assert.equal(await page.locator("#global-modal").isVisible(), false);
+      await page.waitForURL("**/playground.html?moodboard=*");
       assert.equal(
-        await page.evaluate(() => walkwayStep),
-        { josephine: 3, daffa: 0, audina: 1 }[id],
+        new URL(page.url()).searchParams.get("moodboard"),
+        { josephine: "purist", daffa: "architect", audina: "nomad" }[id],
       );
       assert.equal(
-        await page.evaluate(() =>
-          document
-            .getElementById("walkway-tryon-grid")
-            .contains(document.activeElement),
-        ),
-        true,
+        await page.locator("#moodboard-select").inputValue(),
+        { josephine: "purist", daffa: "architect", audina: "nomad" }[id],
       );
+      await page.goto(base, { waitUntil: "domcontentloaded" });
+      await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     }
     await page.locator("#modular-build").screenshot({
       path: path.join(__dirname, `../qa-artifacts/${width}-affiliation.png`),
     });
-    const motion = page.locator(".affiliation-motion");
-    await motion.scrollIntoViewIfNeeded();
     assert.equal(
-      await motion.evaluate((el) => el.classList.contains("motion-paused")),
-      true,
+      await page.locator("#finishing-studio, #style-walkway").count(),
+      0,
     );
-    assert.equal(
-      await page.locator(".material-motion-toggle").isVisible(),
-      false,
+    assert.ok(
+      (await page.locator("#modular-build").boundingBox()).height <
+        (width === 1440 ? 650 : 1100),
+      "EPS section is compact",
     );
-    await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.waitForFunction(
-      () =>
-        !document
-          .querySelector(".affiliation-motion")
-          .classList.contains("motion-paused"),
-    );
-    const layer = page.locator(".material-finish");
-    const before = await layer.evaluate((el) => getComputedStyle(el).transform);
-    await page.waitForTimeout(1600);
-    assert.notEqual(
-      await layer.evaluate((el) => getComputedStyle(el).transform),
-      before,
-      "Material layers animate",
-    );
-    await page.getByRole("button", { name: "Pause motion" }).click();
-    await page.waitForFunction(
-      () =>
-        getComputedStyle(document.querySelector(".material-finish"))
-          .animationPlayState === "paused",
-    );
-    await page.evaluate(
-      () =>
-        new Promise((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(resolve)),
-        ),
-    );
-    const stopped = await layer.evaluate(
-      (el) => getComputedStyle(el).transform,
-    );
-    await page.waitForTimeout(250);
-    assert.equal(
-      await layer.evaluate((el) => getComputedStyle(el).transform),
-      stopped,
-      "Pause freezes the material motion",
-    );
-    await page.getByRole("button", { name: "Play motion" }).click();
-    assert.equal(
-      await motion.evaluate((el) => el.classList.contains("motion-paused")),
-      false,
-    );
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     const editorialAudit = await page.evaluate(async () =>
       (
-        await axe.run(document.querySelector(".affiliation-panel"), {
-          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
-        })
+        await axe.run(
+          {
+            include: [
+              "#moodboards",
+              "#modular-build",
+              "#playground",
+              "#process",
+            ],
+          },
+          {
+            runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
+          },
+        )
       ).violations.map((v) => ({
         id: v.id,
         targets: v.nodes.map((n) => n.target),
       })),
     );
-    assert.deepEqual(editorialAudit, [], "Editorial section accessibility");
+    assert.deepEqual(editorialAudit, [], "Redesigned sections accessibility");
+    for (let i = 0; i < 5; i++) {
+      await page.locator(`[data-process="${i}"]`).click();
+      assert.equal(
+        await page
+          .locator(`[data-process="${i}"]`)
+          .getAttribute("aria-pressed"),
+        "true",
+      );
+      await page.waitForFunction(() => {
+        const img = document.querySelector("#process-detail img");
+        return img.complete && img.naturalWidth > 0;
+      });
+    }
+    await page.locator('[data-process="0"]').focus();
+    await page.keyboard.press("End");
     assert.equal(
-      await page.locator(".affiliation-brands img").evaluateAll((images) =>
+      await page.locator('[data-process="4"]').getAttribute("aria-pressed"),
+      "true",
+      "Process steps support keyboard selection",
+    );
+    assert.equal(
+      await page.locator(".eps-affiliation img").evaluateAll((images) =>
         images.every((img) => {
           const c = document.createElement("canvas");
           c.width = img.naturalWidth;
@@ -193,12 +179,12 @@ let browser, server;
       "Both logos have genuinely transparent corners",
     );
     assert.match(
-      await page.locator(".affiliation-panel").textContent(),
+      await page.locator("#modular-build").textContent(),
       /Fjäll Group/,
     );
     assert.equal(
       await page
-        .locator(".affiliation-brands img")
+        .locator(".eps-affiliation img")
         .evaluateAll((images) =>
           images.every((i) => i.complete && i.naturalWidth > 0),
         ),
@@ -240,11 +226,6 @@ let browser, server;
       true,
       "Design services use deliverable-specific images",
     );
-    await page.waitForFunction(() =>
-      document
-        .querySelector(".affiliation-motion")
-        .classList.contains("motion-paused"),
-    );
     assert.equal(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -266,7 +247,7 @@ let browser, server;
   );
   await failed.close();
   console.log(
-    "Studio QA passed: desktop/mobile playback, refresh replay, skip, Escape, reduced motion, failed media, all designer modals, keyboard focus, WCAG audit, palette transfer, transparent affiliation logos, editorial accessibility, material motion/pause/reduced-motion and deliverable-specific service assets.",
+    "Studio QA passed: film playback and recovery, designer modal focus and WCAG checks, designer-to-playground navigation, compact EPS and transparent affiliation logos, interactive process steps and keyboard access, redesigned-section accessibility, service assets and responsive layout.",
   );
 })()
   .catch((e) => {

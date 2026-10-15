@@ -61,12 +61,5 @@ function getDesignerModalData(id) {
 function tryDesignerDirection(id) {
   const d = DESIGNER_DIRECTIONS[id];
   if (!d) return;
-  closeModal();
-  tryOnStyle(d.palette);
-  document
-    .getElementById("style-walkway")
-    .scrollIntoView({ behavior: "instant" });
-  const target = document.getElementById("walkway-tryon-grid");
-  const button = target?.querySelector("button");
-  if (button) button.focus({ preventScroll: true });
+  location.assign(`playground.html?moodboard=${MOODBOARDS[d.palette].id}`);
 }

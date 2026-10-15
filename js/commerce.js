@@ -34,7 +34,7 @@ function initCommerce() {
   cart = C.restore(storageRead(CART_KEY), MATERIAL_PALETTES);
   document.body.insertAdjacentHTML(
     "beforeend",
-    `<div id="cart-backdrop" class="cart-backdrop" hidden></div><aside id="cart-drawer" class="commerce-drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title" hidden><div class="drawer-heading"><h2 id="bag-title">Your space / Your bag</h2><button class="icon-button" onclick="toggleCart()" aria-label="Close bag">×</button></div><div id="cart-items"></div><div id="cart-footer" class="cart-summary"></div></aside><div id="commerce-toast" class="toast" role="status" aria-live="polite" hidden></div><nav class="mobile-links" aria-label="Mobile navigation"><a href="#shop">Shop</a><a href="#modular-build">Modular</a><a href="#finishing-studio">Studio</a><button onclick="toggleCart()">Bag <span id="mobile-cart-count">0</span></button></nav>`,
+    `<div id="cart-backdrop" class="cart-backdrop" hidden></div><aside id="cart-drawer" class="commerce-drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title" hidden><div class="drawer-heading"><h2 id="bag-title">Your space / Your bag</h2><button class="icon-button" onclick="toggleCart()" aria-label="Close bag">×</button></div><div id="cart-items"></div><div id="cart-footer" class="cart-summary"></div></aside><div id="commerce-toast" class="toast" role="status" aria-live="polite" hidden></div><nav class="mobile-links" aria-label="Mobile navigation"><a href="#shop">Shop</a><a href="#modular-build">Modular</a><a href="playground.html">Playground</a><button onclick="toggleCart()">Bag <span id="mobile-cart-count">0</span></button></nav>`,
   );
   document
     .getElementById("cart-backdrop")
@@ -83,23 +83,8 @@ function initCommerce() {
       renderProducts(button.dataset.filter);
     }),
   );
-  for (const [id, key] of [
-    ["room-kind", "room"],
-    ["room-light", "light"],
-    ["room-width", "width"],
-    ["room-depth", "depth"],
-    ["room-modules", "modules"],
-  ])
-    document.getElementById(id).addEventListener("input", (e) => {
-      roomConfig[key] = ["width", "depth", "modules"].includes(key)
-        ? Number(e.target.value)
-        : e.target.value;
-      updateRoomControls();
-      if (refreshInterior) refreshInterior();
-    });
   renderProducts();
   updateCartUI();
-  updateRoomControls();
   document.querySelectorAll("#designers [onclick]").forEach((el) => {
     el.tabIndex = 0;
     el.setAttribute("role", "button");
@@ -125,34 +110,21 @@ function renderProducts(filter = "all") {
     )
     .join("");
 }
-function updateRoomControls() {
-  const product = C.catalogue.find((p) => p.room === roomConfig.room);
-  document.getElementById("studio-build-price").textContent = C.money(
-    Math.round((product.price / product.modules) * roomConfig.modules),
-  );
-  for (const [id, key] of [
-    ["room-kind", "room"],
-    ["room-light", "light"],
-    ["room-width", "width"],
-    ["room-depth", "depth"],
-    ["room-modules", "modules"],
-  ])
-    document.getElementById(id).value = roomConfig[key];
-  document.getElementById("room-width-value").textContent =
-    roomConfig.width + " m";
-  document.getElementById("room-depth-value").textContent =
-    roomConfig.depth + " m";
-}
 function previewProduct(id) {
   const p = C.catalogue.find((p) => p.id === id);
   if (!p || p.category !== "modular") return;
-  Object.assign(roomConfig, { room: p.room, modules: p.modules });
-  updateRoomControls();
-  if (refreshInterior) refreshInterior();
-  document
-    .getElementById("finishing-studio")
-    .scrollIntoView({ behavior: "smooth" });
-  toast("Previewing " + p.name + ". Loose furniture is illustrative.");
+  const params = new URLSearchParams({
+    space:
+      p.room === "work"
+        ? "commercial"
+        : p.room === "living"
+          ? "residence"
+          : "studio",
+    moodboard: MOODBOARDS[activeFinishingIdx].id,
+    finishing: activeMaterial.id,
+  });
+  if (p.room === "work") params.set("commercial", "office");
+  location.assign(`playground.html?${params}`);
 }
 function addProduct(id, fromStudio = false) {
   const p = C.catalogue.find((p) => p.id === id);
@@ -266,7 +238,6 @@ function updateCartUI() {
     const el = document.getElementById(id);
     if (el) el.textContent = count;
   }
-  document.getElementById("cart-indicator").classList.toggle("hidden", !count);
   if (!document.getElementById("cart-items")) return;
   document.getElementById("cart-items").innerHTML = cart.length
     ? cart
