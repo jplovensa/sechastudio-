@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#213e32" />
+    <title>SECHA Playground — Make room for your ideas</title>
+    <meta
+      name="description"
+      content="An interactive 3D renovation playground. Furnish, style, and walk through a studio apartment, residence, or commercial space."
+    />
+    <link rel="stylesheet" href="css/playground.css" />
+    <script defer src="vendor/three.r128.min.js"></script>
+    <script defer src="js/playground.js"></script>
+  </head>
+  <body>
+    <a class="pg-skip" href="#workspace">Skip to the playground</a>
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="SECHA home"
+        >SECHA<span>+</span></a
+      >
+      <div class="product-name">
+        <span class="tiny-dot"></span> PLAYGROUND <span class="beta">BETA</span>
+      </div>
+      <div class="top-actions">
+        <span id="save-state">Your next great space starts here</span
+        ><button id="save-project" class="button dark">
+          Save project <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </header>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Design tools">
+        <div class="sidebar-heading">
+          <span class="eyebrow">A LITTLE SPACE. ENDLESS POSSIBILITIES.</span>
+          <h1>Make yourself<br />at home<span>.</span></h1>
+          <p>
+            A place to try things. Move things.<br />And make something yours.
+          </p>
+        </div>
+        <section class="space-section" aria-labelledby="space-heading">
+          <div class="section-label">
+            <h2 id="space-heading">01 / Choose your canvas</h2>
+            <span id="area-label">48 m²</span>
+          </div>
+          <div class="space-options" role="group" aria-label="Space type">
+            <button data-space="studio" aria-pressed="true">
+              <span class="space-icon" aria-hidden="true">▧</span
+              ><strong>Studio</strong><small>Apartment</small>
+            </button>
+            <button data-space="residence" aria-pressed="false">
+              <span class="space-icon" aria-hidden="true">⌂</span
+              ><strong>Residence</strong><small>Family living</small>
+            </button>
+            <button data-space="commercial" aria-pressed="false">
+              <span class="space-icon" aria-hidden="true">▤</span
+              ><strong>Commercial</strong><small>Creative café</small>
+            </button>
+          </div>
+        </section>
+        <section aria-labelledby="furnish-heading" class="furnish-section">
+          <div class="section-label">
+            <h2 id="furnish-heading">02 / Bring it to life</h2>
+            <span id="catalog-count">8 pieces</span>
+          </div>
+          <div
+            class="catalog-tabs"
+            role="group"
+            aria-label="Furniture categories"
+          >
+            <button data-category="all" aria-pressed="true">All pieces</button
+            ><button data-category="living" aria-pressed="false">Living</button
+            ><button data-category="work" aria-pressed="false">Work</button
+            ><button data-category="details" aria-pressed="false">
+              Details
+            </button>
+          </div>
+          <div id="catalog" class="catalog"></div>
+          <p class="catalog-hint">
+            <span aria-hidden="true">＋</span> Choose a piece, then tap the
+            floor. Keyboard: focus the room and press Enter.
+          </p>
+        </section>
+        <section class="finishes" aria-labelledby="finish-heading">
+          <div class="section-label">
+            <h2 id="finish-heading">03 / Set the feeling</h2>
+            <span id="palette-name">Warm natural</span>
+          </div>
+          <div class="palette-options" role="group" aria-label="Room palette">
+            <button
+              data-palette="natural"
+              aria-pressed="true"
+              aria-label="Warm natural"
+            >
+              <i style="--swatch: #b79570"></i><span>Natural</span></button
+            ><button
+              data-palette="sage"
+              aria-pressed="false"
+              aria-label="Soft sage"
+            >
+              <i style="--swatch: #88967c"></i><span>Sage</span></button
+            ><button
+              data-palette="clay"
+              aria-pressed="false"
+              aria-label="Terracotta"
+            >
+              <i style="--swatch: #bf8069"></i><span>Clay</span></button
+            ><button
+              data-palette="noir"
+              aria-pressed="false"
+              aria-label="Gallery noir"
+            >
+              <i style="--swatch: #55565a"></i><span>Noir</span>
+            </button>
+          </div>
+        </section>
+        <div class="sidebar-foot">
+          <span class="tiny-dot"></span> Designed to be played with.
+        </div>
+      </aside>
+      <section
+        id="workspace"
+        class="workspace"
+        tabindex="-1"
+        aria-label="Interactive renovation workspace"
+      >
+        <div class="scene-top">
+          <div>
+            <div class="eyebrow">YOUR SPACE, REIMAGINED</div>
+            <h2 id="project-name">The Sunday studio</h2>
+            <span class="project-meta" id="project-meta"
+              >Studio apartment · 8 × 6 m</span
+            >
+          </div>
+          <button
+            id="help-button"
+            class="round-button"
+            aria-label="How to play"
+            aria-expanded="false"
+          >
+            ?
+          </button>
+        </div>
+        <div class="view-switch" role="group" aria-label="Interaction mode">
+          <button data-mode="build" aria-pressed="true">
+            <span aria-hidden="true">▦</span> Build & style</button
+          ><button data-mode="walk" aria-pressed="false">
+            <span aria-hidden="true">♙</span> Walk through
+          </button>
+        </div>
+        <div
+          id="scene"
+          tabindex="0"
+          role="application"
+          aria-label="3D room. In build mode select or drag furniture. In walk mode use arrow keys or W A S D to move. Use the furniture list for keyboard editing."
+        >
+          <div id="webgl-fallback" hidden>
+            WebGL is unavailable. Enable hardware acceleration or use a
+            WebGL-capable browser to enter the 3D playground. Your saved layout
+            is kept.
+          </div>
+        </div>
+        <div id="help-panel" class="help-panel" hidden>
+          <strong>A little guide to your playground</strong>
+          <p>
+            <b>Build:</b> choose a piece and tap the floor. Drag placed pieces
+            to move them. Use the selected-piece controls to rotate or remove.
+          </p>
+          <p>
+            <b>Explore:</b> switch to Walk through, tap an open spot, or use
+            WASD / arrow keys. Your character stays inside the room and avoids
+            furniture.
+          </p>
+          <p>
+            <b>Look around:</b> drag empty floor to orbit in Build mode. Scroll
+            or use + / − to zoom. Use Plan for a view from above.
+          </p>
+          <p>
+            Use the placed-pieces list and arrow buttons to edit with a
+            keyboard. Save stores this project in this browser; Export downloads
+            a layout file.
+          </p>
+        </div>
+        <div class="challenge">
+          <span class="challenge-icon" aria-hidden="true">✦</span>
+          <div>
+            <span class="eyebrow">LITTLE DESIGN QUEST</span
+            ><strong id="quest-title">Make room for living</strong>
+            <p id="quest-detail">Add a piece, try a palette, take a walk.</p>
+            <div
+              class="quest-progress"
+              role="progressbar"
+              aria-label="Design quest progress"
+              aria-valuemin="0"
+              aria-valuemax="3"
+              aria-valuenow="0"
+            >
+              <i id="quest-progress"></i>
+            </div>
+          </div>
+          <span id="quest-count">0/3</span>
+        </div>
+        <div id="selection-panel" class="selection-panel" hidden>
+          <div>
+            <span class="eyebrow">SELECTED PIECE</span
+            ><strong id="selected-name"></strong>
+          </div>
+          <div class="selection-actions">
+            <button data-move="left" aria-label="Move selected piece left">
+              ←</button
+            ><button data-move="back" aria-label="Move selected piece back">
+              ↑</button
+            ><button
+              data-move="forward"
+              aria-label="Move selected piece forward"
+            >
+              ↓</button
+            ><button data-move="right" aria-label="Move selected piece right">
+              →</button
+            ><button
+              id="rotate-piece"
+              aria-label="Rotate selected piece 90 degrees"
+            >
+              ↻</button
+            ><button id="delete-piece" aria-label="Remove selected piece">
+              ✕
+            </button>
+          </div>
+        </div>
+        <div class="scene-bottom">
+          <div class="scene-hint" id="scene-hint">
+            <span class="tiny-dot"></span> Build mode
+            <span class="hint-divider">/</span> Drag a piece to make it yours
+          </div>
+          <div class="camera-controls">
+            <button id="plan-view" aria-pressed="false">
+              ▱ <span>Plan</span></button
+            ><button id="zoom-out" aria-label="Zoom out">−</button
+            ><button id="zoom-in" aria-label="Zoom in">+</button
+            ><button id="reset-camera" aria-label="Reset camera">⌖</button
+            ><button
+              id="daylight"
+              aria-pressed="true"
+              aria-label="Toggle daylight"
+            >
+              ☀
+            </button>
+          </div>
+        </div>
+        <div class="walk-pad" id="walk-pad" hidden aria-label="Walk controls">
+          <button data-walk="forward" aria-label="Walk forward">↑</button>
+          <div>
+            <button data-walk="left" aria-label="Walk left">←</button
+            ><button data-walk="back" aria-label="Walk backward">↓</button
+            ><button data-walk="right" aria-label="Walk right">→</button>
+          </div>
+        </div>
+        <div id="status" class="toast" role="status" aria-live="polite">
+          Welcome home. Let’s make it yours.
+        </div>
+      </section>
+      <aside class="project-panel" aria-label="Project details">
+        <div class="project-panel-head">
+          <span class="eyebrow">THE BIG PICTURE</span>
+          <h2>Your space<br />in the making.</h2>
+        </div>
+        <div class="budget-card">
+          <div class="section-label">
+            <h3>Concept budget</h3>
+            <span>IDR</span>
+          </div>
+          <strong id="budget-total">0</strong>
+          <div class="budget-track"><i id="budget-progress"></i></div>
+          <p id="budget-caption"></p>
+          <small
+            >Illustrative styling estimates.<br />Not a quotation or
+            order.</small
+          >
+        </div>
+        <div class="pieces-heading">
+          <h3>In your space</h3>
+          <span id="piece-count">0</span>
+        </div>
+        <div id="placed-list" class="placed-list"></div>
+        <div class="project-utilities">
+          <button id="undo-action" disabled>↶ Undo last change</button
+          ><button id="export-project">↓ Export layout</button
+          ><button id="reset-project">↺ Reset this space</button>
+        </div>
+        <div class="design-note">
+          <span aria-hidden="true">✳</span>
+          <p>Good spaces begin<br />with a little curiosity.</p>
+          <small>Explore freely. There’s always undo.</small>
+        </div>
+      </aside>
+    </main>
+    <footer class="app-footer">
+      <span
+        >SECHA PLAYGROUND <span class="footer-divider">/</span> A SPACE FOR
+        WHAT’S NEXT.</span
+      ><span>Concept simulation · Dimensions require a site survey.</span>
+    </footer>
+  </body>
+</html>

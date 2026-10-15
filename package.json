@@ -8,6 +8,7 @@
     "test": "node --test tests/commerce.test.cjs",
     "test:e2e": "node tests/e2e.cjs",
     "test:studio": "node tests/studio-experience.cjs",
+    "test:playground": "node tests/playground.cjs",
     "render:intro": "node scripts/render-intro.cjs"
   },
   "devDependencies": {

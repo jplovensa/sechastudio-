@@ -21,6 +21,14 @@ npm run test:e2e
 
 Browser QA starts its own Python server on port 8001 and uses `/usr/bin/chromium`. Set `CHROMIUM_PATH` for another Chromium binary, `QA_BASE_URL` to test an existing server, or `QA_ARTIFACTS` to choose the screenshot/results directory. Artifacts default to the ignored `qa-artifacts/` directory. QA uses synthetic contact details and does not submit orders.
 
+## Renovation playground
+
+Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 70 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.
+
+Choose a furniture piece and click an open floor spot to place it; the placement guide turns red for blocked spots. Drag furniture, or select it from **In your space** and use the move, rotate, and remove controls. Keyboard users can activate a catalogue piece and press Enter in the focused room to place it in the first available spot. Escape cancels placement. Try four finish palettes, daylight/evening lighting, orbit by dragging empty floor, zoom, or switch to a plan view. **Walk through** adds a controllable avatar: use WASD, arrow keys, tap a clear destination, or hold the on-screen directional buttons. Furniture and walls block movement. Straight-line destination walking stops at obstructions; use the directional controls to navigate around them.
+
+**Save project** stores the active layout in this browser; **Export layout** downloads a JSON copy. Only one active project is saved. Template changes and resets can be undone; unsaved edits do not survive a reload. Budget figures are illustrative styling estimates, and all room geometry is conceptual, rather than a construction plan. Run `npm run test:playground` for browser regression coverage, including mobile controls and accessibility. The suite starts its own server on port 8004, accepts `CHROMIUM_PATH` / `QA_BASE_URL`, and writes screenshots under ignored `qa-artifacts/`.
+
 ## Structure
 
 - `index.html`: page sections and accessible controls.
