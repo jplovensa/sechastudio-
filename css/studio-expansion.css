@@ -17,7 +17,7 @@
 .design-investment-heading p:not(.eyebrow) { color: #665845; font-size: 13px; line-height: 1.9; }
 .design-investment-heading > div > span { display: block; font-size: 8px; letter-spacing: 1.2px; color: #6d5b45; border-top: 1px solid #bbad97; margin-top: 21px; padding-top: 13px; }
 /* 04 / a considered brief, with the existing request flow kept intact. */
-#onboarding.design-onboarding { max-width: none; background: #20372c; color: #f1eedf; padding: 55px max(24px, calc((100vw - 1280px) / 2)) 46px; font-family: Inter, Arial, sans-serif; scroll-margin-top: 80px; }
+#onboarding.design-onboarding { max-width: none; background: #000000; color: #f1eedf; padding: 55px max(24px, calc((100vw - 1280px) / 2)) 46px; font-family: Inter, Arial, sans-serif; scroll-margin-top: 80px; }
 .design-onboarding-heading { display: grid; grid-template-columns: 1.4fr 1fr; align-items: end; gap: 60px; margin-bottom: 33px; }
 .design-onboarding .eyebrow { color: #c4d0b4; font-family: Inter, Arial, sans-serif; font-size: 9px; letter-spacing: 1.8px; margin-bottom: 22px; }
 .design-onboarding-heading h2 { font-size: clamp(42px, 4.8vw, 67px); font-weight: 400; letter-spacing: -3px; line-height: 1.02; }
