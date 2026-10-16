@@ -9,6 +9,8 @@ const { spawn } = require('node:child_process');
   for(const [width,height] of [[1440,900],[768,900],[390,844],[320,740]]) {
    const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto('http://127.0.0.1:8049',{waitUntil:'domcontentloaded'});
+   assert.match(await page.locator('#art-image').getAttribute('src'),/sculpted-art\.webp$/);
+   assert.doesNotMatch(await page.locator('#custom-art').textContent(),/pottery|ceramic|vessels|accessories/i);
    await page.locator('#commercial-styling').scrollIntoViewIfNeeded();
    assert.ok((await page.locator('#commercial-styling').boundingBox()).height<=height-50,'Commercial edition fits a screen');
    await page.locator('[data-commercial-step="1"]').click();assert.equal(await page.locator('#commercial-position').textContent(),'02 / 05');
@@ -17,22 +19,22 @@ const { spawn } = require('node:child_process');
    const edition=await page.locator('.commercial-style-card:visible').boundingBox(),cta=await page.locator('.commercial-style-card:visible .commercial-plan-link').boundingBox();
    assert.ok(cta.y>=edition.y && cta.y+cta.height<=edition.y+edition.height+1,'Playground CTA is pinned inside the edition');
    await page.locator('#commercial-styling').screenshot({path:`qa-artifacts/commercial-fit-${width}.png`});
-   for(const direction of ['painted-walls','original-art','home-accessories']) {
+   for(const direction of ['sculpted-art','painted-walls','hand-painted-art']) {
     await page.locator(`[data-art="${direction}"]`).click();
     assert.match(await page.locator('#art-image').getAttribute('src'),new RegExp(direction+'\\.webp$'));
     await page.locator('#art-image').evaluate(image=>image.decode());
     assert.equal(await page.locator('[data-art][aria-pressed="true"]').count(),1);
    }
    await page.locator('[data-art-palette="Earth"]').click();await page.locator('#art-commission').click();
-   assert.equal(await page.locator('#art-brief-type').inputValue(),'home-accessories');assert.equal(await page.locator('#art-brief-palette').inputValue(),'Earth');
-   await page.locator('#art-brief-size').fill('Two handmade vessels');
+   assert.equal(await page.locator('#art-brief-type').inputValue(),'hand-painted-art');assert.equal(await page.locator('#art-brief-palette').inputValue(),'Earth');
+   await page.locator('#art-brief-size').fill('One 120 × 90 cm hand-painted canvas');
    await page.locator('#art-brief-notes').fill('<img src=x onerror=alert(1)> Sculptural, warm clay.');
    await page.locator('#art-brief-form button').click();assert.equal(await page.locator('#art-brief-form').isVisible(),false);assert.equal(await page.locator('#art-brief-result').isVisible(),true);
    assert.equal(await page.locator('#art-brief-summary img').count(),0);
-   const target=new URL(await page.locator('#art-whatsapp').getAttribute('href'));assert.equal(target.host,'wa.me');assert.equal(target.pathname,'/6287786010290');assert.match(target.searchParams.get('text'),/Two handmade vessels/);assert.match(target.searchParams.get('text'),/Earth/);
+   const target=new URL(await page.locator('#art-whatsapp').getAttribute('href'));assert.equal(target.host,'wa.me');assert.equal(target.pathname,'/6287786010290');assert.match(target.searchParams.get('text'),/One 120 × 90 cm hand-painted canvas/);assert.match(target.searchParams.get('text'),/Earth/);
    await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});
    const audit=async selector=>assert.deepEqual(await page.evaluate(async selector=>(await axe.run(document.querySelector(selector),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)})),selector),[]);
-   await audit('#art-brief-dialog');await page.locator('#art-brief-edit').click();assert.equal(await page.locator('#art-brief-size').inputValue(),'Two handmade vessels');
+   await audit('#art-brief-dialog');await page.locator('#art-brief-edit').click();assert.equal(await page.locator('#art-brief-size').inputValue(),'One 120 × 90 cm hand-painted canvas');
    await page.keyboard.press('Escape');assert.equal(await page.locator('#art-brief-dialog').isVisible(),false);assert.equal(await page.locator('#art-commission').evaluate(button=>document.activeElement===button),true);
    await audit('#custom-art');await audit('#commercial-styling');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

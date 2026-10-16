@@ -73,10 +73,12 @@ The Ember bar room/detail images were regenerated on 2026-10-16 for the new list
 
 ## Custom art atelier — October 2026
 
-`assets/art/painted-walls.webp`, `original-art.webp` and `home-accessories.webp` are generated editorial concept photographs for the new Custom Art section. They illustrate a commissioned painted mural, framed original artwork, and handmade home accessories; they are not photographs of completed SECHA commissions or stocked products. Created using the OpenAI image generation tool and encoded as WebP without compositing or retouching. Source images remain in the workspace generated-images directory:
-
-- Painted walls: `exec-726621f1-4b90-410a-891e-2c592e10adf6.png`
-- Original art: `exec-7ee6ce31-dd3d-4d2a-9ae3-a307018878ce.png`
-- Home accessories: `exec-7be9e059-0ca9-4727-92ac-6c92a8e2fc16.png`
+The current atelier artwork focuses entirely on paintings as home centrepieces. `assets/art/sculpted-art.webp` shows a raised sculpted 3D textured painting, `painted-walls.webp` shows a hand-painted residential mural, and `hand-painted-art.webp` shows a framed original-style canvas. All three are generated editorial concept photographs, not photographs of completed SECHA commissions or stocked products. They were generated without pottery, ceramics or decorative objects, then encoded as WebP without compositing or retouching. The earlier accessory and pottery photographs have been removed from the site assets.
 
 The playground catalogue thumbnails render the same authored procedural furniture geometry as the walkthrough. They are not generated interior photographs.
+
+Current generated sources (retained in `/workspace/generated_images`):
+
+- `sculpted-art.webp`: `exec-02b94459-3d6e-45cc-8348-08e5ca2c82ed.png`
+- `painted-walls.webp`: `exec-7e96fb68-5268-4ead-985a-815f8f37196a.png`
+- `hand-painted-art.webp`: `exec-b3cdf580-68dd-45d1-9692-d6b638e1450e.png`

@@ -3,11 +3,11 @@
   const section=document.getElementById('custom-art');if(!section)return;
   const get=id=>document.getElementById(id);
   const directions={
-    'painted-walls': {name:'Painted walls', title:'Let the wall\nbe the artwork.', description:'Expressive brushwork, mineral colour and a composition made for your architecture. From a quiet gesture to a full-room statement.', materials:'Limewash · Hand-painted murals · Textured finishes', alt:'Hand-painted ochre and charcoal mural on a textured plaster wall with a walnut bench'},
-    'original-art': {name:'Original art', title:'A piece with\na point of view.', description:'Original compositions, tactile surfaces and considered framing. A personal work of art, scaled to the place it will call home.', materials:'Original painting · Textured relief · Bespoke framing', alt:'Framed ivory relief painting and a smaller charcoal composition on a walnut console'},
-    'home-accessories': {name:'Home accessories', title:'Objects to\nlive with.', description:'Sculptural vessels, tactile textiles and useful little treasures. A considered edit of pieces that gives your room its own rhythm.', materials:'Hand-built ceramics · Sculptural objects · Natural textiles', alt:'Hand-built terracotta and chalk-white vessels with a timber bowl and flax linen on travertine'},
+    'sculpted-art': {name:'Sculpted 3D paintings', title:'A painting with\npresence.', description:'Deep sculpted relief, raised brushwork and hand-painted colour. A tactile artwork that catches the light and becomes the centrepiece of your home.', materials:'Sculpted relief · Layered impasto · Hand-painted canvas', alt:'Large sculpted relief painting with raised ivory folds and a terracotta painted band above an empty walnut bench'},
+    'painted-walls': {name:'Painted walls & murals', title:'Let the wall\nbe the artwork.', description:'A hand-painted composition made for your architecture. Expressive brushwork and layered colour turn a whole wall into a personal statement.', materials:'Hand-painted murals · Mineral pigments · Textured wall finishes', alt:'Hand-painted indigo, ochre and terracotta abstract mural across a residential plaster wall with an empty oak bench'},
+    'hand-painted-art': {name:'Hand-painted art', title:'An original,\nonly yours.', description:'Original brushwork, richly textured paint and a composition created for your room. A singular canvas, framed and scaled to take its place at the heart of your home.', materials:'Original painting · Palette-knife texture · Bespoke framing', alt:'Walnut-framed hand-painted abstract canvas with burgundy, clay and cobalt paint, raised strokes and visible linen texture'},
   };
-  let current='painted-walls',palette='Mineral';
+  let current='sculpted-art',palette='Mineral';
   section.querySelectorAll('[data-art]').forEach((button,index)=>button.addEventListener('click',()=>{
     current=button.dataset.art;const item=directions[current];
     section.querySelectorAll('[data-art]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));

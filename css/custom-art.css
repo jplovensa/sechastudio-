@@ -7,7 +7,7 @@
 .art-edition { grid-column:1/-1; font-size:7px; letter-spacing:1.5px; color:#bfc8b5; margin-top:10px; }
 .art-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:clamp(26px,5vw,75px); padding-top:34px; }
 .art-hero { position:relative; margin:0; min-width:0; background:#334137; }
-.art-hero > img { width:100%; height:100%; min-height:480px; object-fit:cover; display:block; }
+.art-hero > img { width:100%; height:100%; min-height:480px; object-fit:contain; background:#e8dfcf; display:block; }
 .art-hero figcaption { position:absolute; bottom:0; left:0; right:0; display:flex; gap:15px; justify-content:space-between; padding:40px 20px 20px; background:linear-gradient(transparent,#18241ce6); font-size:8px; letter-spacing:.6px; }
 .art-hero figcaption span:last-child { font-size:6px; align-self:end; }
 .art-copy { display:flex; flex-direction:column; padding:12px 0 0; min-width:0; }
