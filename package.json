@@ -9,7 +9,8 @@
     "test:e2e": "node tests/e2e.cjs",
     "test:studio": "node tests/studio-experience.cjs",
     "test:playground": "node tests/playground.cjs",
-    "render:intro": "node scripts/render-intro.cjs"
+    "render:intro": "node scripts/render-intro.cjs",
+    "test:commercial": "node tests/commercial-styling.cjs"
   },
   "devDependencies": {
     "axe-core": "4.10.3",

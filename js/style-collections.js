@@ -5,14 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!section || !dialog) return;
   const { MOODBOARDS, MATERIAL_PALETTES } = window.SECHA_DESIGN_OPTIONS;
   const cards = [...section.querySelectorAll("[data-style]")];
+  const commercialCards = [...section.querySelectorAll("[data-commercial-style]")];
+  const cardSelector = "[data-style], [data-commercial-style]";
   const collections = new Map(
-    cards.map((card) => {
+    [...cards, ...commercialCards].map((card) => {
       const photo = card.querySelector("figure > img");
       return [
-        card.dataset.style,
+        card.dataset.style || card.dataset.commercialStyle,
         {
-          id: card.dataset.style,
-          name: card.querySelector("h3").textContent,
+          id: card.dataset.style || card.dataset.commercialStyle,
+          commercialType: card.dataset.commercialType,
+          name: card.querySelector("h3, h4").textContent,
           description: card
             .querySelector(".style-collection-description")
             .textContent.trim(),
@@ -49,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     galleryOpener = null;
 
   function showCardView(card, index) {
-    const collection = collections.get(card.dataset.style);
+    const collection = collections.get(card.dataset.style || card.dataset.commercialStyle);
     const view = collection.views[index];
     const image = card.querySelector("figure > img");
     image.src = view.src;
@@ -77,9 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function openGallery(id, trigger) {
     galleryCollection = collections.get(id);
-    galleryIndex = Number(trigger.closest("[data-style]").dataset.activeView || 0);
+    galleryIndex = Number(trigger.closest(cardSelector).dataset.activeView || 0);
     galleryOpener = trigger;
     get("style-gallery-title").textContent = galleryCollection.name;
+    get("style-gallery-shop").innerHTML = `${galleryCollection.commercialType ? "Plan this space" : "Shop my style"} <span aria-hidden="true">↗</span>`;
+    get("style-gallery-disclosure").textContent = galleryCollection.commercialType
+      ? "Generated commercial interior concept. Explore this direction in the playground."
+      : "Generated interior concept. Explore the look with curated SECHA selections.";
     get("style-viewer-thumbnails").innerHTML = galleryCollection.views.map((view, index) =>
       `<button data-viewer-index="${index}" aria-pressed="${index === galleryIndex}" aria-controls="style-gallery-image" aria-label="Show ${C.escape(view.label)}"><img src="${view.src}" alt="" width="1536" height="1024" loading="lazy"><span>${String(index + 1).padStart(2, "0")} / ${C.escape(view.label)}</span></button>`
     ).join("");
@@ -120,10 +127,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dialog.open) galleryOpener?.focus({ preventScroll: true });
   });
   get("style-gallery-shop").addEventListener("click", () => {
+    if (galleryCollection.commercialType) {
+      const params = new URLSearchParams({ space: "commercial", commercial: galleryCollection.commercialType, moodboard: galleryCollection.board.id });
+      location.assign(`playground.html?${params}`);
+      return;
+    }
     const id = galleryCollection.id;
     const trigger = section.querySelector(`[data-shop-style="${id}"]`);
     viewer.close();
     openStyle(id, trigger);
+  });
+
+  section.querySelectorAll("[data-commercial-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      section.querySelectorAll("[data-commercial-filter]").forEach((other) =>
+        other.setAttribute("aria-pressed", String(other === button)),
+      );
+      commercialCards.forEach((card) => {
+        card.hidden = card.dataset.commercialStyle !== button.dataset.commercialFilter;
+      });
+      get("style-gallery-announcement").textContent = `${collections.get(button.dataset.commercialFilter).name} commercial collection selected.`;
+    });
   });
 
   section.querySelectorAll("[data-style-filter]").forEach((button) => {
@@ -200,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = event.target.closest("[data-shop-style]");
     if (button) openStyle(button.dataset.shopStyle, button);
     const thumbnail = event.target.closest("[data-style-view]");
-    if (thumbnail) showCardView(thumbnail.closest("[data-style]"), Number(thumbnail.dataset.styleView));
+    if (thumbnail) showCardView(thumbnail.closest(cardSelector), Number(thumbnail.dataset.styleView));
     const galleryButton = event.target.closest("[data-open-style-gallery]");
     if (galleryButton) openGallery(galleryButton.dataset.openStyleGallery, galleryButton);
   });

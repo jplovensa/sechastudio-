@@ -1,0 +1,64 @@
+/* A compact commercial collection inside The Styling Studio. */
+.commercial-studio {
+  --commercial-ink: #f3eddf;
+  margin-top: 55px;
+  padding: 32px;
+  background: #24362c;
+  color: var(--commercial-ink);
+  scroll-margin-top: 80px;
+}
+.commercial-studio-heading { display: grid; grid-template-columns: 1.4fr 1fr; gap: 45px; align-items: end; margin-bottom: 30px; }
+.commercial-studio-heading > div > p { font-size: 8px; line-height: 1.8; letter-spacing: 1.7px; color: #c8d4bb; margin-bottom: 21px; }
+.commercial-studio-heading h3 { font-size: clamp(39px, 4.2vw, 57px); font-weight: 400; line-height: 1.02; letter-spacing: -2.5px; }
+.commercial-studio-heading > p { color: #cad4be; font-size: 12px; line-height: 1.9; max-width: 310px; justify-self: end; }
+.commercial-type-selectors { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid #899a7e; margin-bottom: 24px; }
+.commercial-type-selectors button { display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse; gap: 10px; min-height: 55px; padding: 14px 18px; font-size: 12px; color: #e3ead6; border-right: 1px solid #899a7e; }
+.commercial-type-selectors button:last-child { border-right: 0; }
+.commercial-type-selectors button > span { font-size: 8px; opacity: .85; }
+.commercial-type-selectors button:hover { background: #3d5140; }
+.commercial-type-selectors [aria-pressed="true"] { background: #e0e5ce; color: #2c402c; }
+.commercial-type-selectors [aria-pressed="true"]:hover { background: #e0e5ce; }
+.commercial-style-card { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); min-width: 0; background: #eee8db; color: #352e29; }
+.commercial-style-card[hidden] { display: none; }
+.commercial-style-card > figure { position: relative; margin: 0; overflow: hidden; min-width: 0; background: #526049; }
+.commercial-style-card > figure > img { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.commercial-style-card > figure > figcaption { display: flex; position: absolute; bottom: 0; left: 0; right: 0; justify-content: space-between; gap: 20px; padding: 45px 18px 16px; background: linear-gradient(transparent, #12190fe8); color: #fff8eb; font-size: 8px; line-height: 1.8; letter-spacing: .7px; }
+.commercial-style-card > figure > figcaption > span:last-child { text-align: right; font-size: 6px; }
+.commercial-style-copy { padding: 25px; }
+.commercial-style-copy .style-collection-meta { font-size: 7px; letter-spacing: 1px; }
+.commercial-style-copy .style-collection-eyebrow { margin-top: 27px; }
+.commercial-style-copy h4 { font-size: clamp(31px, 3vw, 44px); font-weight: 400; letter-spacing: -1.7px; line-height: 1.08; margin: 0 0 16px; }
+.commercial-style-copy .style-collection-description { font-size: 11px; }
+.commercial-style-copy .style-material-notes > p { font-size: 10px; }
+.commercial-style-copy .style-gallery-thumbnails img { height: 84px; }
+.commercial-plan-link { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 13px 14px; background: #354a35; color: #fff7e6; font-size: 10px; line-height: 1.6; min-height: 48px; margin-top: 19px; }
+.commercial-plan-link > span { font-size: 22px; }
+.commercial-plan-link:hover { background: #243e28; }
+.commercial-studio-note { color: #c8d4bb; font-size: 9px; line-height: 1.9; margin-top: 19px; }
+.commercial-studio button:focus-visible, .commercial-studio a:focus-visible { outline: 3px solid #b87f50; outline-offset: 4px; }
+@media (max-width: 1000px) {
+  .commercial-studio { padding: 25px; }
+  .commercial-studio-heading { gap: 30px; }
+  .commercial-type-selectors button { padding: 12px; font-size: 11px; }
+  .commercial-style-card { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .commercial-style-copy { padding: 20px; }
+  .commercial-style-copy .style-gallery-thumbnails img { height: 70px; }
+}
+@media (max-width: 700px) {
+  .commercial-studio { margin: 38px -20px 0; padding: 28px 20px; }
+  .commercial-studio-heading { grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
+  .commercial-studio-heading h3 { font-size: 43px; letter-spacing: -1.8px; }
+  .commercial-studio-heading > div > p { font-size: 7px; letter-spacing: 1.1px; margin-bottom: 17px; }
+  .commercial-studio-heading > p { justify-self: start; max-width: none; }
+  .commercial-type-selectors button { flex-direction: column; gap: 8px; padding: 11px 4px; font-size: 10px; min-height: 60px; }
+  .commercial-type-selectors button > span { font-size: 7px; }
+  .commercial-style-card { grid-template-columns: 1fr; }
+  .commercial-style-card > figure { min-height: 0; aspect-ratio: 4/3; }
+  .commercial-style-card > figure > figcaption { padding: 35px 13px 13px; gap: 13px; }
+  .commercial-style-copy { padding: 21px; }
+  .commercial-style-copy h4 { font-size: 38px; }
+  .commercial-style-copy .style-collection-eyebrow { margin-top: 22px; }
+  .commercial-style-copy .style-collection-description { font-size: 12px; }
+  .commercial-style-copy .style-gallery-thumbnails img { height: auto; }
+  .commercial-plan-link { font-size: 11px; }
+}

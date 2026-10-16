@@ -27,6 +27,12 @@ The section directly below the designers presents four interior themes: Warm Mod
 
 Each shop dialog presents a curated SECHA modular concept, a choice of three finishes from the shared moodboard catalogue, and three physical finish samples. Selected builds and samples carry the collection name and correct material into the existing persistent bag and order-request checkout. These are curated catalogue options, rather than an exact list of furniture in the generated interiors. Prices remain the existing catalogue estimates. The gallery and shopping flow live in `js/style-collections.js`, `css/site-refresh.css` and `css/studio-expansion.css`; `npm run test:e2e` covers filters, all four room/detail galleries, arrow and swipe navigation, gallery-to-shop handoff, material identity, focus restoration, accessibility and bag persistence.
 
+### Commercial Styling Studio
+
+A commercial collection inside The Styling Studio adds five independent directions: **Café Sol** (café / soft brutalism), **Nocturne** (bar / cinematic deco), **Still** (wellness / mineral calm), **Common Ground** (office / warm precision), and **Contour** (salon / sculptural modernism). A five-way selector keeps one commercial concept visible, with two generated room/detail views, a colour palette and material notes per concept. Residential filters remain independent.
+
+The shared full-screen gallery switches its action to **Plan this space** for commercial concepts, linking to the matching commercial starter and moodboard in the existing playground. Commercial styling does not create new priced catalogue packages. `css/commercial-styling.css` supplies the responsive layout; `npm run test:commercial` verifies all five selectors, both image views, gallery focus, correct playground handoffs, residential-gallery compatibility, accessibility and overflow at 1440, 390 and 320 pixels.
+
 ## Renovation playground
 
 Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 70 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.
