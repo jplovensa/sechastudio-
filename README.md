@@ -21,6 +21,12 @@ npm run test:e2e
 
 Browser QA starts its own Python server on port 8001 and uses `/usr/bin/chromium`. Set `CHROMIUM_PATH` for another Chromium binary, `QA_BASE_URL` to test an existing server, or `QA_ARTIFACTS` to choose the screenshot/results directory. Artifacts default to the ignored `qa-artifacts/` directory. QA uses synthetic contact details and does not submit orders.
 
+## The Styling Studio™ collections
+
+The section directly below the designers is a collection of four photo-led interior themes: Warm Modern, Soft Contemporary, Earthy Retreat, and Urban Studio. These use the existing locally served Unsplash interior photographs documented in `assets/README.md`, rather than generated room imagery or claims of completed SECHA projects. Visitors can filter by theme and open **Shop my style** for the selected collection.
+
+Each shop dialog presents a curated SECHA modular concept, a choice of three finishes from the shared moodboard catalogue, and three physical finish samples. Selected builds and samples carry the collection name and correct material into the existing persistent bag and order-request checkout. These are curated catalogue options, rather than an exact list of furniture in the inspiration photographs. Prices remain the existing catalogue estimates. The gallery and shopping flow live in `js/style-collections.js` and `css/site-refresh.css`; `npm run test:e2e` covers filters, shopping all four collections, material identity, focus restoration, accessibility and persistence.
+
 ## Renovation playground
 
 Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 70 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.

@@ -21,3 +21,5 @@ Replace inspiration photography with approved SECHA product photography before p
 - `playground-preview.png`: an actual local Chromium capture of the SECHA WebGL playground canvas, used to link into the interactive studio.
 
 - `styling-boutique-concept.png`: Image Gen editorial styling concept created for The Styling Studio™ boutique presentation. The room, furniture and objects are illustrative; this is not a photograph of a completed SECHA project. The secondary detail is a CSS crop of the same image.
+
+The Styling Studio™ collection gallery uses actual interior photography: `interior-living.jpg` (Warm Modern), `interior-rest.jpg` (Soft Contemporary), `modular-rest.jpg` (Earthy Retreat), and `modular-work.jpg` (Urban Studio). Source URLs are listed above. The earlier `styling-boutique-concept.png` remains a generated concept asset and is not used in the collection gallery.

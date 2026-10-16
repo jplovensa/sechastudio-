@@ -285,6 +285,199 @@ async function waitForServer() {
     });
     await context.close();
   }
+  for (const width of [1440, 390]) {
+    const context = await browser.newContext({
+      viewport: { width, height: 1000 },
+      reducedMotion: "reduce",
+    });
+    const shopPage = await context.newPage();
+    const errors = [];
+    shopPage.on("pageerror", (error) => errors.push(error.message));
+    await shopPage.goto(base, { waitUntil: "domcontentloaded" });
+    assert.equal(
+      await shopPage
+        .locator(
+          "#designers + #styling-studio + #curated-style-shop + #moodboards",
+        )
+        .count(),
+      1,
+      "Style collections remain directly below the designers",
+    );
+    assert.equal(await shopPage.locator(".style-collection-card").count(), 4);
+    assert.equal(
+      await shopPage
+        .locator(".style-collection-card img")
+        .evaluateAll((images) =>
+          images.every((image) => image.getAttribute("src").endsWith(".jpg")),
+        ),
+      true,
+      "Collections use actual interior photographs",
+    );
+    await shopPage.locator('[data-style-filter="natural"]').click();
+    assert.equal(
+      await shopPage.locator(".style-collection-card:visible").count(),
+      2,
+    );
+    assert.equal(
+      await shopPage.locator("#style-collection-count").textContent(),
+      "2 curated styles",
+    );
+    await shopPage.locator('[data-style-filter="earthy"]').click();
+    assert.equal(
+      await shopPage.locator(".style-collection-card:visible").count(),
+      1,
+    );
+    await shopPage.locator('[data-style-filter="architectural"]').click();
+    assert.equal(
+      await shopPage.locator(".style-collection-card:visible").count(),
+      1,
+    );
+    await shopPage.locator('[data-style-filter="all"]').click();
+    await shopPage.addScriptTag({
+      path: require.resolve("axe-core/axe.min.js"),
+    });
+    const expectations = [
+      {
+        id: "warm-modern",
+        name: "Warm Modern",
+        board: "nomad",
+        finish: "n2",
+        sample: "n3",
+        product: "modular-living",
+      },
+      {
+        id: "soft-contemporary",
+        name: "Soft Contemporary",
+        board: "dreamer",
+        finish: "d2",
+        sample: "d3",
+        product: "modular-living",
+      },
+      {
+        id: "earthy-retreat",
+        name: "Earthy Retreat",
+        board: "purist",
+        finish: "p2",
+        sample: "p3",
+        product: "modular-bedroom",
+      },
+      {
+        id: "urban-studio",
+        name: "Urban Studio",
+        board: "architect",
+        finish: "a2",
+        sample: "a3",
+        product: "modular-work",
+      },
+    ];
+    for (const style of expectations) {
+      const trigger = shopPage.locator(`[data-shop-style="${style.id}"]`);
+      await trigger.click();
+      assert.equal(
+        await shopPage.locator("#curated-style-shop").isVisible(),
+        true,
+      );
+      assert.equal(
+        await shopPage.locator("#style-shop-title").textContent(),
+        style.name,
+      );
+      assert.equal(
+        await shopPage.locator("#style-build-finish option").count(),
+        3,
+      );
+      await shopPage.keyboard.press("Shift+Tab");
+      assert.equal(
+        await shopPage.evaluate(() =>
+          document
+            .getElementById("curated-style-shop")
+            .contains(document.activeElement),
+        ),
+        true,
+        "Shop keeps keyboard focus inside",
+      );
+      await shopPage.locator("#style-build-finish").selectOption(style.finish);
+      await shopPage.locator("#style-add-build").click();
+      await shopPage
+        .locator(`[data-add-style-sample="${style.sample}"]`)
+        .click();
+      const selected = await shopPage.evaluate(() =>
+        JSON.parse(localStorage.getItem("secha-cart-v2")),
+      );
+      assert.ok(
+        selected.some(
+          (item) =>
+            item.productId === style.product &&
+            item.boardId === style.board &&
+            item.material.id === style.finish &&
+            item.boardName === style.name,
+        ),
+        "Build carries the selected collection and finish",
+      );
+      assert.ok(
+        selected.some(
+          (item) =>
+            item.id === `sample:${style.sample}` &&
+            item.boardId === style.board,
+        ),
+        "Physical sample matches the curated palette",
+      );
+      const violations = await shopPage.evaluate(async () =>
+        (
+          await axe.run(document.getElementById("curated-style-shop"), {
+            runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
+          })
+        ).violations.map((v) => ({
+          id: v.id,
+          targets: v.nodes.map((n) => n.target),
+        })),
+      );
+      assert.deepEqual(violations, [], "Curated style shop accessibility");
+      await shopPage.keyboard.press("Escape");
+      assert.equal(
+        await shopPage.locator("#curated-style-shop").isVisible(),
+        false,
+      );
+      assert.equal(
+        await trigger.evaluate((el) => el === document.activeElement),
+        true,
+        "Shop restores focus to its collection",
+      );
+    }
+    await shopPage.locator('[data-shop-style="warm-modern"]').click();
+    await shopPage.locator("#style-view-bag").click();
+    assert.equal(
+      await shopPage.locator("#curated-style-shop").isVisible(),
+      false,
+    );
+    assert.equal(
+      await shopPage.locator(".cart-item").count(),
+      8,
+      "All four curated styles can be shopped independently",
+    );
+    await shopPage.keyboard.press("Escape");
+    await shopPage.reload({ waitUntil: "domcontentloaded" });
+    assert.equal(
+      await shopPage.locator("#nav-cart-count").textContent(),
+      "8",
+      "Curated shopping bag persists and re-prices on reload",
+    );
+    assert.equal(
+      await shopPage.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+      true,
+    );
+    assert.deepEqual(errors, []);
+    results.push({
+      viewport: width,
+      case: "curated style collections",
+      filters: "passed",
+      photos: "real interior photography",
+      shopping: "theme-specific finishes, builds and samples persist",
+      accessibility: "passed",
+    });
+    await context.close();
+  }
   const fallback = await browser.newContext({ reducedMotion: "reduce" });
   const page = await fallback.newPage();
   await page.route("**/vendor/**", (route) => route.abort());

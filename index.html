@@ -424,134 +424,311 @@
         aria-labelledby="styling-heading"
       >
         <div class="styling-masthead">
-          <span>SECHA / THE STYLING STUDIO™</span
-          ><span>A PERSONAL INTERIOR STYLING SERVICE</span>
+          <span>SECHA / CURATED INTERIORS</span
+          ><span>FIND YOUR LOOK. MAKE IT YOURS.</span>
         </div>
         <header class="styling-introduction">
           <div>
-            <p class="styling-kicker">THE ART OF A CONSIDERED SPACE</p>
+            <p class="styling-kicker">THE STYLE COLLECTIONS</p>
             <h2 id="styling-heading">
-              The Styling<br />Studio<span class="styling-trademark">™</span
-              ><span class="styling-title-line" aria-hidden="true"></span>
+              The Styling<br />Studio<span class="styling-trademark">™</span>
             </h2>
           </div>
           <div class="styling-intro-copy">
-            <p class="styling-lede">Your space.<br />Beautifully considered.</p>
-            <p>
-              A thoughtful edit of furniture, colour and the little details. We
-              bring a fresh eye to your space, finding the balance that makes it
-              feel unmistakably yours.
+            <p class="styling-lede">
+              A style to fall for.<br />A collection to make yours.
             </p>
-            <a
-              class="styling-enquire"
-              href="https://wa.me/6287786010290?text=Hi%20SECHA%2C%20I%27d%20like%20to%20discuss%20The%20Styling%20Studio%20service%20for%20my%20space."
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Enquire about styling on WhatsApp (opens in a new tab)"
-              >Enquire about styling <span aria-hidden="true">↗</span></a
-            >
+            <p>
+              Explore real interiors, discover the theme that feels like you,
+              and shop the SECHA finishes and modular pieces curated for that
+              look.
+            </p>
           </div>
         </header>
-        <div class="styling-editorial">
-          <figure class="styling-main-image">
-            <img
-              src="assets/styling-boutique-concept.png"
-              alt="Illustrative interior styling concept with a cream curved sofa, travertine table, walnut chair and warm natural textures"
-              width="1536"
-              height="1024"
-              loading="lazy"
-            />
-            <figcaption>
-              <span>01 / THE FEELING</span><span>A study in quiet warmth.</span>
-            </figcaption>
-            <span class="styling-image-note">STYLING CONCEPT</span>
-          </figure>
-          <aside
-            class="styling-detail-column"
-            aria-label="The details of a considered space"
+        <div class="style-collection-toolbar">
+          <div
+            class="style-collection-filters"
+            role="group"
+            aria-label="Filter style collections"
           >
-            <div class="styling-editor-note">
-              <span class="styling-detail-star" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                  stroke-linecap="round"
-                >
-                  <path d="M16 2v28M2 16h28M6 6l20 20M6 26 26 6" /></svg
-              ></span>
-              <p>Room for your<br />own rhythm.</p>
-              <span>PERSONAL. TACTILE. CONSIDERED.</span>
-            </div>
-            <figure class="styling-detail-image">
-              <div class="styling-detail-crop">
-                <img
-                  src="assets/styling-boutique-concept.png"
-                  alt="Detail of the concept’s walnut lounge chair, textured upholstery and bronze lighting"
-                  width="1536"
-                  height="1024"
-                  loading="lazy"
-                />
-              </div>
+            <button data-style-filter="all" aria-pressed="true">
+              All styles</button
+            ><button data-style-filter="natural" aria-pressed="false">
+              Light &amp; natural</button
+            ><button data-style-filter="earthy" aria-pressed="false">
+              Warm &amp; earthy</button
+            ><button data-style-filter="architectural" aria-pressed="false">
+              Dark &amp; architectural
+            </button>
+          </div>
+          <span id="style-collection-count" role="status" aria-live="polite"
+            >4 curated styles</span
+          >
+        </div>
+        <div class="style-collection-grid">
+          <article
+            class="style-collection-card"
+            data-style="warm-modern"
+            data-style-category="natural"
+            data-style-board="nomad"
+            data-style-product="modular-living"
+          >
+            <figure>
+              <img
+                src="assets/interior-living.jpg"
+                alt="Modern living and dining interior with warm timber, charcoal accents and natural light"
+                width="1200"
+                height="800"
+                loading="lazy"
+              />
               <figcaption>
-                <span>02 / THE DETAILS</span
-                ><span>Texture. Form. A little soul.</span>
+                <span>01 / WARM MODERN</span><span>Living &amp; dining</span>
               </figcaption>
             </figure>
-          </aside>
-        </div>
-        <div class="styling-edit-heading">
-          <p>THE STYLING EDIT</p>
-          <span>Select a detail. See how we bring it together.</span>
-        </div>
-        <div class="styling-edits">
-          <details name="styling-edits">
-            <summary>
-              <span class="styling-edit-number">01 / ARRANGE</span
-              ><span class="styling-edit-title">Space &amp; flow</span
-              ><span class="styling-edit-plus" aria-hidden="true">+</span>
-            </summary>
-            <p>
-              A fresh look at how your furniture sits, how you move through the
-              room, and where everyday life happens. We work with the pieces you
-              love to create a more considered arrangement.
-            </p>
-          </details>
-          <details name="styling-edits">
-            <summary>
-              <span class="styling-edit-number">02 / LAYER</span
-              ><span class="styling-edit-title">Colour &amp; texture</span
-              ><span class="styling-edit-plus" aria-hidden="true">+</span>
-            </summary>
-            <p>
-              A palette that connects your space. We explore the relationship
-              between colour, materials and textiles, bringing warmth, contrast
-              and a sense of continuity to the room.
-            </p>
-          </details>
-          <details name="styling-edits">
-            <summary>
-              <span class="styling-edit-number">03 / FINISH</span
-              ><span class="styling-edit-title">Objects &amp; light</span
-              ><span class="styling-edit-plus" aria-hidden="true">+</span>
-            </summary>
-            <p>
-              The thoughtful final layer: lighting, art, soft furnishings and
-              everyday objects. We help you find the details that feel personal
-              and give each piece room to belong.
-            </p>
-          </details>
+            <div class="style-collection-copy">
+              <div class="style-collection-meta">
+                <span>WARM TIMBER / SOFT NEUTRALS</span>
+                <div aria-label="Warm Modern colours" role="img">
+                  <i style="--tone: #bd9f76"></i><i style="--tone: #e7dfd0"></i
+                  ><i style="--tone: #45483d"></i>
+                </div>
+              </div>
+              <h3>Warm Modern</h3>
+              <p>
+                Natural textures, clean lines and a quiet warmth that brings the
+                room together.
+              </p>
+              <button
+                class="shop-my-style"
+                data-shop-style="warm-modern"
+                aria-label="Shop my style — Warm Modern"
+              >
+                Shop my style <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
+          <article
+            class="style-collection-card"
+            data-style="soft-contemporary"
+            data-style-category="natural"
+            data-style-board="dreamer"
+            data-style-product="modular-living"
+          >
+            <figure>
+              <img
+                src="assets/interior-rest.jpg"
+                alt="Light contemporary living room with pale upholstery, layered greys and a neutral dining area"
+                width="1200"
+                height="800"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>02 / SOFT CONTEMPORARY</span
+                ><span>Living &amp; dining</span>
+              </figcaption>
+            </figure>
+            <div class="style-collection-copy">
+              <div class="style-collection-meta">
+                <span>PALE FINISHES / AIRY SPACES</span>
+                <div aria-label="Soft Contemporary colours" role="img">
+                  <i style="--tone: #f1eee7"></i><i style="--tone: #cdccc7"></i
+                  ><i style="--tone: #9aa1a2"></i>
+                </div>
+              </div>
+              <h3>Soft Contemporary</h3>
+              <p>
+                A light, open feeling with gentle contrasts, thoughtful details
+                and room to breathe.
+              </p>
+              <button
+                class="shop-my-style"
+                data-shop-style="soft-contemporary"
+                aria-label="Shop my style — Soft Contemporary"
+              >
+                Shop my style <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
+          <article
+            class="style-collection-card"
+            data-style="earthy-retreat"
+            data-style-category="earthy"
+            data-style-board="purist"
+            data-style-product="modular-bedroom"
+          >
+            <figure>
+              <img
+                src="assets/modular-rest.jpg"
+                alt="Warm bedroom interior with timber panelling, woven textures and soft bedside lighting"
+                width="1200"
+                height="800"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>03 / EARTHY RETREAT</span><span>Bedroom</span>
+              </figcaption>
+            </figure>
+            <div class="style-collection-copy">
+              <div class="style-collection-meta">
+                <span>EARTH TONES / TACTILE LAYERS</span>
+                <div aria-label="Earthy Retreat colours" role="img">
+                  <i style="--tone: #af5b3c"></i><i style="--tone: #d9c2a3"></i
+                  ><i style="--tone: #8c734b"></i>
+                </div>
+              </div>
+              <h3>Earthy Retreat</h3>
+              <p>
+                Rich wood, grounded tones and a softer light. A personal place
+                to slow down.
+              </p>
+              <button
+                class="shop-my-style"
+                data-shop-style="earthy-retreat"
+                aria-label="Shop my style — Earthy Retreat"
+              >
+                Shop my style <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
+          <article
+            class="style-collection-card"
+            data-style="urban-studio"
+            data-style-category="architectural"
+            data-style-board="architect"
+            data-style-product="modular-work"
+          >
+            <figure>
+              <img
+                src="assets/modular-work.jpg"
+                alt="Industrial workspace with exposed concrete, dark steel frames and a timber meeting table"
+                width="1200"
+                height="800"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>04 / URBAN STUDIO</span><span>Work &amp; commercial</span>
+              </figcaption>
+            </figure>
+            <div class="style-collection-copy">
+              <div class="style-collection-meta">
+                <span>MINERAL SURFACES / DARK ACCENTS</span>
+                <div aria-label="Urban Studio colours" role="img">
+                  <i style="--tone: #888888"></i><i style="--tone: #111111"></i
+                  ><i style="--tone: #746958"></i>
+                </div>
+              </div>
+              <h3>Urban Studio</h3>
+              <p>
+                Architectural lines, honest materials and considered contrast
+                for a space with presence.
+              </p>
+              <button
+                class="shop-my-style"
+                data-shop-style="urban-studio"
+                aria-label="Shop my style — Urban Studio"
+              >
+                Shop my style <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
         </div>
         <footer class="styling-footer">
           <p>
-            For a room refresh, a new space, or the pieces you already love.
+            Interior inspiration photography. Shop the SECHA modular concepts
+            and finish samples curated for each theme.
           </p>
           <a href="#moodboards"
             >Explore the material library <span aria-hidden="true">↗</span></a
           >
         </footer>
       </section>
+      <dialog
+        id="curated-style-shop"
+        class="curated-style-shop"
+        aria-labelledby="style-shop-title"
+        aria-describedby="style-shop-description"
+      >
+        <header class="style-shop-header">
+          <span>THE STYLING STUDIO™ / THE CURATED EDIT</span
+          ><button
+            id="style-shop-close"
+            aria-label="Close curated style"
+            autofocus
+          >
+            ×
+          </button>
+        </header>
+        <div class="style-shop-content">
+          <div class="style-shop-intro">
+            <figure>
+              <img
+                id="style-shop-photo"
+                src="assets/interior-living.jpg"
+                alt="Warm Modern interior inspiration"
+                width="1200"
+                height="800"
+              />
+              <figcaption>INTERIOR INSPIRATION</figcaption>
+            </figure>
+            <div>
+              <p class="style-shop-eyebrow">SHOP MY STYLE</p>
+              <h2 id="style-shop-title">Warm Modern</h2>
+              <p id="style-shop-description"></p>
+              <div id="style-shop-palette" class="style-shop-palette"></div>
+              <p class="style-shop-note">
+                Bring the theme into your space with these SECHA selections.
+              </p>
+            </div>
+          </div>
+          <section
+            class="style-shop-build"
+            aria-labelledby="style-build-heading"
+          >
+            <div>
+              <p class="style-shop-eyebrow">THE FOUNDATION / MODULAR CONCEPT</p>
+              <h3 id="style-build-heading"></h3>
+              <p id="style-build-description"></p>
+              <label for="style-build-finish"
+                >Choose the finish for this setup</label
+              ><select id="style-build-finish"></select
+              ><strong id="style-build-price"></strong
+              ><small>Starting estimate · Scope confirmed with SECHA</small
+              ><button id="style-add-build" class="style-shop-add">
+                Add build to bag <span aria-hidden="true">+</span>
+              </button>
+            </div>
+            <figure>
+              <img
+                id="style-build-image"
+                src="assets/modular-living-concept.png"
+                alt="Illustrative modular living setup"
+                width="1536"
+                height="1024"
+              />
+              <figcaption>MODULAR CONCEPT VISUALISATION</figcaption>
+            </figure>
+          </section>
+          <section
+            class="style-shop-samples"
+            aria-labelledby="style-samples-heading"
+          >
+            <header>
+              <h3 id="style-samples-heading">The material edit</h3>
+              <p>Physical samples to explore the palette in your space.</p>
+            </header>
+            <div id="style-sample-products"></div>
+          </section>
+          <div class="style-shop-bottom">
+            <p id="style-shop-status" role="status" aria-live="polite">
+              Choose a piece or a sample to start your style.
+            </p>
+            <button id="style-view-bag">
+              View bag <span id="style-bag-count">0</span
+              ><span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       <section
         id="moodboards"
@@ -905,5 +1082,6 @@
     <script src="js/designers.js"></script>
     <script src="js/intro.js"></script>
     <script src="js/site-process.js"></script>
+    <script src="js/style-collections.js"></script>
   </body>
 </html>
