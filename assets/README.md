@@ -37,3 +37,10 @@ The room and detail images are independently generated compositions with a coord
 The six catalogue covers are authored SVG graphics in `collection/`: `modular-living.svg`, `modular-work.svg`, `modular-bedroom.svg`, `design-lite.svg`, `design-pro.svg`, and `design-premium.svg`. They replace the generated room and service images in the SECHA collection and its linked style-shop product previews. Each uses original vector linework, a consistent studio-sheet grid, and outlined Inter typography from the bundled licensed font. They have no raster imagery, remote resources or font-loading dependency.
 
 The drawings communicate catalogue scope and are schematic, not measured construction documents. Regenerate them from the repository root using `python3 scripts/create-collection-covers.py` with the optional `fonttools` package installed. The original concept PNGs remain archived assets and are no longer used as catalogue covers.
+
+
+## Studio method and EPS assembly
+
+`process/brief.svg`, `direction.svg`, `visualise.svg`, `detail.svg` and `handover.svg` are original vector studio graphics for the five project stages. They replace the earlier room photographs and generated service images within How we work. `eps-assembly-study.svg` is an original exploded vector study of a surface finish, EPS core and project-specific supports, replacing the generated EPS image on the page. It illustrates a concept; it is not a measured or approved manufacturing drawing. Regenerate these six assets with `python3 scripts/create-studio-graphics.py` (Python standard library only).
+
+The Greenshift and Fjäll Group source PNGs remain unchanged. `css/studio-cards.css` uses their existing alpha silhouettes as CSS masks for an iridescent foil gradient, preserving logo proportions and accessible image names. The sheen shifts on hover, stays static with reduced motion, and falls back to a monochrome mark when masks are unsupported. This is a visual treatment of the existing supplied affiliation, not a new certification or partnership claim.

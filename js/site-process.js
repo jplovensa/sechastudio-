@@ -5,8 +5,8 @@ const PROJECT_STEPS = [
     heading: "Your life is the brief.",
     copy: "We begin with your routines, the way you use your space, and what you want to change. Together, we define the priorities, budget and scope.",
     deliverable: "An agreed brief & project direction",
-    image: "assets/interior-living.jpg",
-    alt: "A warm living space with natural materials",
+    image: "assets/process/brief.svg",
+    alt: "Studio graphic of a project brief, conversation and pencil",
     note: "01 / A conversation, before a concept.",
   },
   {
@@ -15,8 +15,8 @@ const PROJECT_STEPS = [
     heading: "Give your ideas a direction.",
     copy: "Moodboards and 2D layouts connect the feeling of the room with how it needs to function. Explore the playground, then review the direction with your designer.",
     deliverable: "Moodboards & spatial layouts",
-    image: "assets/design-lite-service.png",
-    alt: "Illustrative design concept and material moodboard",
+    image: "assets/process/direction.svg",
+    alt: "Studio graphic of a material palette and room layout",
     note: "02 / A feeling becomes a plan.",
   },
   {
@@ -25,8 +25,8 @@ const PROJECT_STEPS = [
     heading: "See it before it takes shape.",
     copy: "3D views help you review proportions, finishes and lighting. We refine the proposal with your feedback before moving into the technical detail.",
     deliverable: "3D visualisations & design review",
-    image: "assets/design-pro-service.png",
-    alt: "Illustrative floor plan and 3D design presentation",
+    image: "assets/process/visualise.svg",
+    alt: "Studio perspective drawing of a room, furniture and proportions",
     note: "03 / Refine the details together.",
   },
   {
@@ -35,8 +35,8 @@ const PROJECT_STEPS = [
     heading: "A clear plan for the people who build.",
     copy: "For the agreed design package, we document the drawings and specifications your team needs. Scope, finish samples and project-specific details are confirmed together.",
     deliverable: "Drawings & specifications for the chosen package",
-    image: "assets/design-premium-service.png",
-    alt: "Illustrative detailed drawings and a scale model",
+    image: "assets/process/detail.svg",
+    alt: "Studio graphic of joinery elevations and a construction detail",
     note: "04 / From design intention to build detail.",
   },
   {
@@ -45,8 +45,8 @@ const PROJECT_STEPS = [
     heading: "Bring the vision into everyday life.",
     copy: "Take the agreed plans to your builder, or discuss SECHA’s furniture and modular production. Final pricing, production and installation are confirmed for your project.",
     deliverable: "A coordinated handover & confirmed next steps",
-    image: "assets/modular-living-concept.png",
-    alt: "Illustrative modular living room concept",
+    image: "assets/process/handover.svg",
+    alt: "Studio graphic of a coordinated modular system and handover",
     note: "05 / The beginning of life in your space.",
   },
 ];
@@ -55,14 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
     panel = document.getElementById("process-detail");
   nav.innerHTML = PROJECT_STEPS.map(
     (s, i) =>
-      `<button aria-pressed="${i === 0}" data-process="${i}"><span>${String(i + 1).padStart(2, "0")}</span><strong>${s.title}</strong><i aria-hidden="true">↗</i></button>`,
+      `<button aria-pressed="${i === 0}" aria-controls="process-detail" data-process="${i}"><span>${String(i + 1).padStart(2, "0")}</span><img src="${s.image}" alt="" width="900" height="650" loading="lazy"><strong>${s.title}</strong><i aria-hidden="true">↗</i></button>`,
   ).join("");
   function select(index) {
     const s = PROJECT_STEPS[index];
     [...nav.children].forEach((b, i) =>
       b.setAttribute("aria-pressed", i === index),
     );
-    panel.innerHTML = `<figure><img src="${s.image}" alt="${s.alt}" width="1536" height="1024"><figcaption>${s.note}</figcaption></figure><div><p class="eyebrow">${s.tag}</p><h3>${s.heading}</h3><p>${s.copy}</p><span class="process-deliverable"><small>WHAT YOU LEAVE WITH</small>${s.deliverable}</span></div>`;
+    panel.innerHTML = `<figure><img src="${s.image}" alt="${s.alt}" width="900" height="650"><figcaption>${s.note}</figcaption></figure><div><p class="process-card-index">STUDIO METHOD <span>${String(index + 1).padStart(2, "0")} / 05</span></p><p class="eyebrow">${s.tag}</p><h3>${s.heading}</h3><p>${s.copy}</p><span class="process-deliverable"><small>WHAT YOU LEAVE WITH</small>${s.deliverable}</span></div>`;
   }
   nav.addEventListener("click", (e) => {
     const b = e.target.closest("[data-process]");

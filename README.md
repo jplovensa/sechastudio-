@@ -91,3 +91,6 @@ Run `npm run test:studio` for desktop/mobile film and designer checks, alongside
 The EPS section preserves the supplied SECHA → Greenshift → Fjäll Group relationship and transparent logo assets, alongside a compact panel illustration and expandable scope details. The previous long affiliation article, animated layer study and repeated build-step cards have been consolidated into this section and the main project timeline.
 
 Design / Lite, Pro and Premium retain their generated service presentation images. These illustrate deliverable types rather than completed projects or contractual drawing sets. Existing package inclusions and prices remain the catalogue source of truth.
+
+
+The How we work section uses a five-card graphic index with an illustrated stage detail. All stages support click and arrow/Home/End navigation, with a horizontally scrollable index on small screens. The EPS section uses a schematic exploded assembly and an affiliation strip with holographic logo silhouettes. These components use `css/studio-cards.css`; the original vector assets can be regenerated using `scripts/create-studio-graphics.py`. The affiliation wording and project-specific scope remain as supplied.

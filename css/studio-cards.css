@@ -1,0 +1,107 @@
+/* The studio method: a graphic index and a larger project-stage card. */
+.process-journal {
+  background: #e8e5db;
+  color: #303c31;
+  padding: 56px max(24px, calc((100vw - 1280px) / 2)) 30px;
+  font-family: Inter, Arial, sans-serif;
+}
+.process-journal > header { margin-bottom: 30px; }
+.process-journal h2 { font-weight: 400; font-size: clamp(38px, 4.6vw, 64px); line-height: 1.04; letter-spacing: -2.8px; }
+.process-journal > header > p { max-width: 300px; font-size: 12px; }
+.process-layout { display: flex; flex-direction: column; gap: 24px; }
+.process-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.process-steps button { display: grid; grid-template-columns: 1fr auto; align-content: start; gap: 0; padding: 12px; color: #4a5743; background: #f3f0e7; border: 1px solid #b6beac; border-radius: 0; position: relative; min-width: 0; transition: background .2s, border-color .2s; }
+.process-steps button > span { grid-column: 1; font-size: 10px; letter-spacing: 1px; padding-bottom: 10px; }
+.process-steps button > img { grid-column: 1/-1; width: 100%; height: auto; aspect-ratio: 18/13; display: block; object-fit: contain; margin-bottom: 12px; }
+.process-steps strong { font-size: 11px; line-height: 1.6; font-weight: 500; padding-right: 5px; }
+.process-steps i { grid-column: 2; grid-row: 1; font-size: 19px; line-height: 1; margin: 0; }
+.process-steps button:hover { border-color: #425540; background: #e1e5d8; }
+.process-steps [aria-pressed="true"] { color: #fff6e8; background: #354738; border-color: #354738; }
+.process-steps [aria-pressed="true"]:hover { background: #354738; }
+.process-detail { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); border: 1px solid #b6beac; background: #f6f3e9; border-radius: 0; min-height: 0; }
+.process-detail figure { min-width: 0; margin: 0; background: #e1e4d8; border-right: 1px solid #b6beac; }
+.process-detail img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.process-detail figcaption { position: static; background: #e3e7d9; border-top: 1px solid #bdc5b0; padding: 13px 20px; font-size: 10px; line-height: 1.6; }
+.process-detail > div { padding: 30px 32px; }
+.process-detail > div > p.process-card-index { display: flex; justify-content: space-between; width: 100%; gap: 15px; color: #52644c; border-bottom: 1px solid #c0c7b5; font-size: 8px; letter-spacing: 1.3px; padding-bottom: 15px; margin-bottom: 25px; }
+.process-card-index > span { white-space: nowrap; }
+.process-detail .eyebrow { font-family: Inter, Arial, sans-serif; font-size: 8px; line-height: 1.8; }
+.process-detail h3 { font-size: clamp(27px, 2.6vw, 38px); font-weight: 400; line-height: 1.12; letter-spacing: -1.3px; margin: 15px 0 20px; }
+.process-detail > div > p:not(.eyebrow):not(.process-card-index) { font-size: 12px; line-height: 1.9; color: #53614b; }
+.process-deliverable { display: block; width: 100%; border-top: 1px solid #c0c7b5; padding-top: 18px; margin-top: 25px; font-size: 11px; color: #35482e; }
+.process-deliverable small { margin-bottom: 7px; font-size: 8px; }
+.process-bottom { font-size: 11px; line-height: 1.8; }
+.process-bottom a { color: #344b2e; }
+/* An original exploded EPS assembly study and iridescent partner marks. */
+.eps-compact { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 30px 45px; padding: 48px 32px; }
+.eps-compact > figure { background: #1b2a25; border: 1px solid #62776a; border-radius: 0; }
+.eps-compact > figure > img { width: 100%; height: auto; max-height: 440px; object-fit: contain; }
+.eps-compact > figure > figcaption { position: static; background: #24382d; padding: 12px 17px; color: #d5e4d4; font-size: 8px; line-height: 1.7; letter-spacing: 1.4px; border-top: 1px solid #62776a; }
+.eps-copy h2 { font-size: clamp(30px, 3.2vw, 43px); font-weight: 400; letter-spacing: -1.6px; }
+.eps-copy > p:not(.eyebrow) { font-size: 12px; line-height: 1.95; }
+.eps-layer-key { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 23px 0; }
+.eps-layer-key > span { border-top: 1px solid #60755a; padding-top: 12px; font-size: 10px; line-height: 1.7; }
+.eps-layer-key i { display: block; font-size: 9px; margin: 0 0 6px; }
+.eps-affiliation { grid-column: 1/-1; display: flex; align-items: center; flex-direction: row; justify-content: space-between; gap: 30px; margin-top: 0; padding: 22px 26px; background: #15251f; border: 1px solid #566d5b; position: relative; overflow: hidden; }
+.eps-affiliation::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, #c1daca, #b2c9e9, #ddb9ce, #d7e8b6); }
+.eps-affiliation > .eps-network-copy { max-width: 310px; font-size: 10px; line-height: 1.9; color: #c7d7c7; }
+.eps-network-copy strong { display: block; font-size: 8px; font-weight: 500; letter-spacing: 1.6px; margin-bottom: 7px; color: #e5ede0; }
+.eps-affiliation > .eps-holo-rail { display: flex; justify-content: space-between; gap: 23px; align-items: center; background: transparent; padding: 0; border-radius: 0; flex-shrink: 0; }
+.eps-affiliation .holo-logo { display: block; position: relative; width: 190px; height: 66px; flex-shrink: 0; filter: drop-shadow(0 0 8px #b9dbcd25); }
+.eps-affiliation .holo-logo img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
+.eps-affiliation .eps-network-arrow { font-size: 22px; color: #d6dfcc; }
+@supports (mask-image: url("")) or (-webkit-mask-image: url("")) {
+  .holo-logo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(112deg, #dceae4 0%, #b0e1dc 14%, #b5c0ed 29%, #eed4ed 42%, #d8e6b5 55%, #e1d5b2 66%, #d5e9ee 78%, #dceae4 100%); background-size: 240% 100%; background-position: 15% 50%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; transition: background-position 1.3s ease; }
+  .eps-affiliation .holo-logo img { opacity: 0; }
+  .holo-greenshift::after { mask-image: url('../assets/brands/greenshift.png'); -webkit-mask-image: url('../assets/brands/greenshift.png'); mask-size: 100% auto; -webkit-mask-size: 100% auto; }
+  .holo-fjall::after { mask-image: url('../assets/brands/fjall-group.png'); -webkit-mask-image: url('../assets/brands/fjall-group.png'); mask-size: 100% auto; -webkit-mask-size: 100% auto; background-position: 65% 50%; }
+  .eps-holo-rail:hover .holo-logo::after { background-position: 100% 50%; }
+}
+@media (max-width: 1000px) {
+  .process-steps { gap: 8px; }
+  .process-steps button { padding: 9px; }
+  .process-steps strong { font-size: 10px; }
+  .process-detail > div { padding: 24px; }
+  .process-detail figure { max-height: none; }
+  .eps-compact { gap: 25px; }
+  .eps-affiliation { flex-direction: row; align-items: center; gap: 20px; }
+  .eps-affiliation .holo-logo { width: 145px; height: 58px; }
+  .eps-affiliation > .eps-holo-rail { gap: 14px; }
+}
+@media (max-width: 640px) {
+  .process-journal { padding: 38px 20px 28px; }
+  .process-journal > header { display: block; margin-bottom: 24px; }
+  .process-journal h2 { font-size: 38px; letter-spacing: -1.8px; }
+  .process-journal > header > p { margin-top: 18px; font-size: 12px; }
+  .process-steps { display: flex; flex-direction: row; gap: 9px; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 4px 12px; margin: -4px -4px 0; }
+  .process-steps button { flex: 0 0 145px; scroll-snap-align: start; padding: 10px; }
+  .process-steps button > img { margin-bottom: 10px; }
+  .process-steps strong { font-size: 11px; min-height: 36px; }
+  .process-layout { gap: 16px; }
+  .process-detail { grid-template-columns: 1fr; }
+  .process-detail figure { max-height: none; border-right: 0; border-bottom: 1px solid #b6beac; }
+  .process-detail img { min-height: 0; height: auto; }
+  .process-detail figcaption { padding: 12px 15px; font-size: 9px; }
+  .process-detail > div { padding: 22px; }
+  .process-card-index { margin-bottom: 20px; }
+  .process-detail h3 { font-size: 31px; margin: 14px 0 17px; }
+  .process-bottom { flex-direction: column; gap: 10px; margin-top: 23px; padding-top: 19px; font-size: 10px; }
+  .eps-compact { grid-template-columns: 1fr; padding: 35px 20px; gap: 25px; }
+  .eps-compact > figure > img { height: auto; max-height: none; }
+  .eps-copy h2 { font-size: 33px; }
+  .eps-affiliation { flex-direction: column; align-items: stretch; padding: 19px 16px; gap: 18px; }
+  .eps-affiliation > .eps-network-copy { max-width: none; }
+  .eps-affiliation > .eps-holo-rail { width: 100%; gap: 10px; }
+  .eps-affiliation .holo-logo { width: min(40%, 170px); height: 55px; flex: 1; min-width: 0; }
+  .eps-affiliation .eps-network-arrow { font-size: 17px; flex-shrink: 0; }
+  .eps-layer-key { gap: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .holo-logo::after, .process-journal * { transition: none !important; scroll-behavior: auto !important; }
+  .eps-holo-rail:hover .holo-logo::after { background-position: 15% 50%; }
+  .eps-holo-rail:hover .holo-fjall::after { background-position: 65% 50%; }
+}
+@media (forced-colors: active) {
+  .holo-logo::after { display: none; }
+  .eps-affiliation .holo-logo img { opacity: 1; filter: none; }
+}
