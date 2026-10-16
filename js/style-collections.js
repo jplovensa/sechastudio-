@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!section || !dialog) return;
   const { MOODBOARDS, MATERIAL_PALETTES } = window.SECHA_DESIGN_OPTIONS;
   const cards = [...section.querySelectorAll("[data-style]")];
+  section.querySelectorAll("[data-layout-summary]").forEach((element) => {
+    const layout = window.SECHA_COMMERCIAL_LAYOUTS.layouts[element.dataset.layoutSummary];
+    element.textContent = `${layout.w} × ${layout.d} m · ${layout.pieces.length} pieces · ${layout.summary}`;
+  });
   const commercialCards = [...section.querySelectorAll("[data-commercial-style]")];
   const cardSelector = "[data-style], [data-commercial-style]";
   const collections = new Map(

@@ -165,72 +165,11 @@
       color: "#ac8964",
     },
   });
-  const commercialTypes = {
-    office: {
-      name: "The everyday workspace",
-      label: "Office",
-      pieces: [
-        ["desk", -2.5, -2, 0],
-        ["desk", 0, -2, 0],
-        ["desk", 2.5, -2, 0],
-        ["chair", -2.5, -0.7, 0],
-        ["chair", 0, -0.7, 0],
-        ["chair", 2.5, -0.7, 0],
-        ["sofa", -2.5, 2, 0],
-        ["plant", 4, 2.5, 0],
-      ],
-    },
-    cafe: {
-      name: spaces.commercial.name,
-      label: "Café",
-      pieces: spaces.commercial.pieces,
-    },
-    bar: {
-      name: "After-hours gathering",
-      label: "Bar",
-      pieces: [
-        ["counter", -2.5, -2, 0],
-        ["counter", -0.3, -2, 0],
-        ["counter", 1.9, -2, 0],
-        ["stool", -3, -0.8, 0],
-        ["stool", -2, -0.8, 0],
-        ["stool", -0.8, -0.8, 0],
-        ["stool", 0.3, -0.8, 0],
-        ["stool", 1.4, -0.8, 0],
-        ["stool", 2.5, -0.8, 0],
-        ["sofa", 1.5, 2, 0],
-        ["plant", -4, 2.5, 0],
-      ],
-    },
-    wellness: {
-      name: "A moment to restore",
-      label: "Wellness",
-      pieces: [
-        ["treatment", -2, -0.7, 0],
-        ["treatment", 1, -0.7, 0],
-        ["counter", 2.5, -2.7, 0],
-        ["chair", -3, 2, 0],
-        ["plant", -4, -2.5, 0],
-        ["plant", 4, 2.5, 0],
-        ["lamp", -0.4, 2, 0],
-      ],
-    },
-    salon: {
-      name: "The beauty atelier",
-      label: "Salon",
-      pieces: [
-        ["salon", -3, -2.6, 0],
-        ["salon", 0, -2.6, 0],
-        ["salon", 3, -2.6, 0],
-        ["chair", -3, -1.3, 0],
-        ["chair", 0, -1.3, 0],
-        ["chair", 3, -1.3, 0],
-        ["sofa", -2, 2, 0],
-        ["counter", 2.5, 2, 0],
-        ["plant", 4, -0.2, 0],
-      ],
-    },
-  };
+  const commercialData = window.SECHA_COMMERCIAL_LAYOUTS;
+  for (const [kind, spec] of Object.entries(commercialData.catalog)) {
+    catalog[kind] = { ...catalog[kind], ...spec, icon: catalog[kind]?.icon || catalog[spec.model]?.icon || "▥" };
+  }
+  const commercialTypes = commercialData.layouts;
   const palettes = {
     natural: {
       name: "Warm natural",
@@ -268,13 +207,13 @@
     type,
     startMode,
     commercialType,
-    dimensions: { w: spaces[type].w, d: spaces[type].d },
+    dimensions: { w: type === "commercial" ? commercialTypes[commercialType].w : spaces[type].w, d: type === "commercial" ? commercialTypes[commercialType].d : spaces[type].d },
     moodboard: "nomad",
     finishing: "n1",
     finishTarget: "joinery",
     ambiance: "nomad",
     palette: null,
-    night: false,
+    night: type === "commercial" && commercialTypes[commercialType].night === true,
     items: (startMode === "blank"
       ? []
       : type === "commercial"
@@ -333,6 +272,7 @@
       ...base,
       ...(data.type === "commercial"
         ? {
+            ...commercialTypes[data.commercialType],
             name: commercialTypes[data.commercialType].name,
             label: `Commercial · ${commercialTypes[data.commercialType].label}`,
           }
@@ -342,6 +282,8 @@
   }
   function roomPalette() {
     if (state.palette) return palettes[state.palette];
+    if (state.type === "commercial" && state.startMode !== "blank" && state.ambiance === commercialTypes[state.commercialType].board)
+      return commercialTypes[state.commercialType].palette;
     const p = boards[state.ambiance].ambiance;
     return {
       wall: hex(p.wall),
@@ -513,6 +455,10 @@
         ? incoming.get("commercial")
         : "cafe";
     state = fresh(type, "furnished", commercial);
+    if (type === "commercial") {
+      const direction = commercialTypes[commercial];
+      Object.assign(state, { moodboard: direction.board, finishing: direction.finish, ambiance: direction.board });
+    }
     linkedDirection = true;
   }
   if (Object.hasOwn(boards, incoming.get("moodboard"))) {
@@ -551,7 +497,7 @@
         '<ellipse cx="59" cy="62" rx="17" ry="6" fill="#d6d9c7"/><path d="m44 46 5 16q10 6 20-1l5-15" fill="#b89576"/><ellipse cx="59" cy="46" rx="15" ry="5" fill="#caae8e"/><path d="M59 48V12m0 19L43 21m16 2 14-10" stroke="#847c56" stroke-width="3"/><g fill="#7d9367"><ellipse cx="42" cy="20" rx="12" ry="6" transform="rotate(25 42 20)"/><ellipse cx="71" cy="13" rx="12" ry="6" transform="rotate(-30 71 13)"/><ellipse cx="59" cy="10" rx="9" ry="7"/><ellipse cx="69" cy="30" rx="11" ry="7"/><ellipse cx="49" cy="34" rx="11" ry="7"/></g>',
       lamp: '<ellipse cx="57" cy="62" rx="16" ry="6" fill="#b7b39b"/><path d="M57 61V17q0-11 13-11" fill="none" stroke="#8b7d5b" stroke-width="3"/><path d="m58 11-5 15q15 11 30 0l-5-15Z" fill="#d7c59d"/><ellipse cx="68" cy="26" rx="15" ry="5" fill="#eee0b9"/>',
     };
-    return `<svg viewBox="0 0 120 78" aria-hidden="true">${shapes[kind] || shapes[{ stool: "chair", treatment: "bed", salon: "desk" }[kind]]}</svg>`;
+    return `<svg viewBox="0 0 120 78" aria-hidden="true">${shapes[kind] || shapes[catalog[kind].model || { stool: "chair", treatment: "bed", salon: "desk" }[kind]] || shapes.counter}</svg>`;
   }
   function renderCatalog() {
     const entries = Object.entries(catalog).filter(
@@ -598,6 +544,13 @@
     applyTheme();
     $("commercial-options").hidden = state.type !== "commercial";
     $("commercial-type").value = state.commercialType;
+    const schedule = $("commercial-composition");
+    schedule.hidden = state.type !== "commercial";
+    if (state.type === "commercial") {
+      const counts = {};
+      state.items.forEach((item) => { counts[item.kind] = (counts[item.kind] || 0) + 1; });
+      $("commercial-schedule").innerHTML = `<p>${state.startMode === "blank" ? "Your custom composition" : commercialTypes[state.commercialType].summary}</p><ul>${Object.entries(counts).map(([kind, count]) => `<li><span>${count} × ${catalog[kind].name}</span><small>${catalog[kind].w} × ${catalog[kind].d} m</small></li>`).join("")}</ul>`;
+    }
     $("room-size").hidden = state.startMode !== "blank";
     $("room-width").value = s.w;
     $("room-depth").value = s.d;
@@ -737,7 +690,13 @@
         state.finishTarget === "joinery" && selectedFinish().type === "Metal"
           ? finishMaterial()
           : material("#9f8b56", 0.35);
-    if (item.kind === "sofa" || item.kind === "chair") {
+    if (window.SECHA_COMMERCIAL_FURNITURE.build(item.kind, g, {
+      box, cylinder, sphere, material, palette: p,
+      finish: state.finishTarget === "joinery" && (state.type !== "commercial" || state.finishing !== commercialTypes[state.commercialType].finish || state.moodboard !== commercialTypes[state.commercialType].board) ? selectedFinish() : null,
+      commercial: state.type === "commercial",
+    })) {
+      // Detailed commercial models use the same metric footprints as the plan.
+    } else if (item.kind === "sofa" || item.kind === "chair") {
       const w = item.kind === "sofa" ? 2.1 : 0.85;
       box(g, w, 0.23, 0.85, 0, 0.3, 0, fabric);
       box(g, w, 0.55, 0.17, 0, 0.62, -0.35, fabric);
@@ -862,8 +821,9 @@
     if (scene.userData.ground)
       scene.userData.ground.material.color.copy(scene.background);
     box(room, s.w + 0.35, 0.25, s.d + 0.35, 0, -0.16, 0, material("#e8e5d7"));
+    if (state.type === "commercial" && state.finishTarget !== "floor") floor.map = window.SECHA_COMMERCIAL_FURNITURE.texture(state.commercialType === "office" ? "wood" : "stone");
     box(room, s.w, 0.04, s.d, 0, -0.015, 0, floor);
-    if (state.finishTarget !== "floor" || selectedFinish().type === "Wood") {
+    if ((state.type !== "commercial" && (state.finishTarget !== "floor" || selectedFinish().type === "Wood")) || (state.type === "commercial" && state.commercialType === "office")) {
       for (let x = -s.w / 2 + 0.25; x < s.w / 2; x += 0.38)
         box(
           room,
@@ -925,7 +885,7 @@
     box(room, 0.14, 2.8, s.d, -s.w / 2, 1.4, 0, wall);
     box(room, 0.16, 0.12, s.d, -s.w / 2 + 0.02, 0.08, 0, trim);
     box(room, s.w, 0.12, 0.17, 0, 0.08, -s.d / 2 + 0.03, trim);
-    if (state.startMode !== "blank") {
+    if (state.startMode !== "blank" && state.type !== "commercial") {
       // Wall art and joinery give the scene an inhabited, architectural feel.
       box(room, 0.08, 0.95, 1.2, -s.w / 2 + 0.09, 1.65, 0.3, frame);
       box(room, 0.085, 0.81, 1.06, -s.w / 2 + 0.1, 1.65, 0.3, trim);
@@ -948,21 +908,20 @@
       box(room, 0.16, 0.08, depth, -1, 1.39, -1.1, woodMaterial());
     }
     if (state.type === "commercial" && state.startMode !== "blank") {
-      box(room, 0.1, 0.9, 1.65, -s.w / 2 + 0.09, 1.7, -0.8, frame);
-      box(
-        room,
-        0.11,
-        0.74,
-        1.48,
-        -s.w / 2 + 0.1,
-        1.7,
-        -0.8,
-        material("#d4dcc0"),
-      );
-      for (let z = -0.9; z < 0.1; z += 0.28)
-        box(room, 0.12, 0.025, 0.6, -s.w / 2 + 0.12, 1.8, z, frame);
+      const glassPanel = new THREE.MeshStandardMaterial({ color: "#b3c6bc", transparent: true, opacity: .15, roughness: .18 });
+      for (let x = -s.w/2 + .65; x < s.w/2; x += 1.25) {
+        box(room,.025,2.15,.025,x,1.3,-s.d/2+.12,frame);
+      }
+      // A transparent front datum suggests the shopfront without closing the cutaway.
+      box(room,s.w-.5,2.4,.025,0,1.25,-s.d/2+.1,glassPanel);
+
+      for (const x of [-s.w/4, s.w/4]) {
+        const light = new THREE.PointLight(state.commercialType === "bar" ? "#ffd3a0" : "#fff1d5", state.night ? .75 : .22, 6);
+        light.position.set(x,2.45,-s.d/2+1.4);
+        room.add(light);
+      }
     }
-    if (state.startMode !== "blank") {
+    if (state.startMode !== "blank" && state.type !== "commercial") {
       const rug = box(
         room,
         state.type === "studio" ? 3.6 : 4.6,
@@ -1533,6 +1492,10 @@
       palette: previous.palette,
       night: previous.night,
     };
+    if (type === "commercial" && startMode !== "blank") {
+      const direction = commercialTypes[commercialType];
+      Object.assign(state, { moodboard: direction.board, finishing: direction.finish, ambiance: direction.board, palette: null, night: direction.night === true });
+    }
     if (
       previous.type === type &&
       previous.startMode === "blank" &&

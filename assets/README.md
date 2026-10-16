@@ -61,9 +61,12 @@ These are generated complementary style studies, not measured views of the same 
 Ten Image Gen images were created on 2026-10-16, then encoded as WebP at their original 1536 × 1024 resolution (approximately 2.3 MB combined). Each style has a complete room composition and a separate material/detail composition:
 
 - `styling/commercial/cafe-room.webp`, `cafe-detail.webp`: **Café Sol**, a sunlit café in porous travertine, pale yellow glazed tile, oak and linen.
-- `styling/commercial/bar-room.webp`, `bar-detail.webp`: **Nocturne**, an intimate bar with green-black stone, dark walnut, oxblood velvet, aged brass and smoked mirror.
+- `styling/commercial/bar-room.webp`, `bar-detail.webp`: **Ember**, a contemporary listening bar with a linear basalt counter, six umber stools, oak record shelving, copper accents and side banquettes. The room and detail images replace the earlier Nocturne concept.
 - `styling/commercial/wellness-room.webp`, `wellness-detail.webp`: **Still**, a wellness reception in pale limestone, ivory limewash, light oak and celadon linen.
 - `styling/commercial/office-room.webp`, `office-detail.webp`: **Common Ground**, a warm office with smoked oak, sage acoustic felt, charcoal wool and blackened steel.
 - `styling/commercial/salon-room.webp`, `salon-detail.webp`: **Contour**, a boutique salon with bone plaster, wine upholstery, oval mirrors, brushed metal and pale stone.
 
 These are generated editorial style concepts, not photographs of completed SECHA work. Room and detail images are independently composed around a shared palette. The website labels the concepts and links to editable commercial starters; operational layouts, construction details and sourcing are project-specific. The source PNGs remain in `/workspace/generated_images` in the creation workspace.
+
+
+The Ember bar room/detail images were regenerated on 2026-10-16 for the new listening-bar direction, retaining the local WebP filenames. They are generated concept imagery. The five `styling/commercial/*-plan.svg` sheets are authored vector drawings generated directly from `js/commercial-layouts.js` by `scripts/render-commercial-plans.cjs`. Their object locations, rotations, counts and metric footprints match the WebGL starter layouts. The conceptual shells still require a site survey and project-specific design review before construction.

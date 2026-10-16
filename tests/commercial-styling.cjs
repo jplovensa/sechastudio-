@@ -20,7 +20,7 @@ let browser, server;
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(base, { waitUntil: "domcontentloaded" });
     for (const [kind, name, board] of [
-      ["cafe", "Café Sol", "nomad"], ["bar", "Nocturne", "aesthete"],
+      ["cafe", "Café Sol", "nomad"], ["bar", "Ember", "purist"],
       ["wellness", "Still", "dreamer"], ["office", "Common Ground", "architect"], ["salon", "Contour", "purist"],
     ]) {
       const id = `commercial-${kind}`;
@@ -39,9 +39,11 @@ let browser, server;
       const opener = card.locator("[data-open-style-gallery]");
       await opener.click();
       assert.equal(await page.locator("#style-gallery-title").textContent(), name);
-      assert.equal(await page.locator("#style-viewer-thumbnails button").count(), 2);
-      assert.match(await page.locator("#style-gallery-position").textContent(), /02 \/ 02/);
+      assert.equal(await page.locator("#style-viewer-thumbnails button").count(), 3);
+      assert.match(await page.locator("#style-gallery-position").textContent(), /02 \/ 03/);
       assert.match(await page.locator("#style-gallery-shop").textContent(), /Plan this space/);
+      await page.keyboard.press("ArrowRight");
+      assert.match(await page.locator("#style-gallery-image").getAttribute("src"), /-plan.svg$/);
       await page.keyboard.press("ArrowRight");
       assert.match(await page.locator("#style-gallery-image").getAttribute("src"), /-room.webp$/);
       await page.keyboard.press("Escape");
@@ -66,7 +68,7 @@ let browser, server;
     assert.equal(await page.locator("#style-viewer-thumbnails button").count(), 4);
     assert.match(await page.locator("#style-gallery-shop").textContent(), /Shop my style/);
     assert.deepEqual(errors, []);
-    console.log({ width, commercialTypes: 5, galleryViewsPerType: 2, playgroundLinks: "passed", residentialGallery: "preserved", accessibility: "passed" });
+    console.log({ width, commercialTypes: 5, galleryViewsPerType: 3, playgroundLinks: "passed", residentialGallery: "preserved", accessibility: "passed" });
     await context.close();
   }
 })().catch((error) => { console.error(error); process.exitCode = 1; }).finally(async () => {

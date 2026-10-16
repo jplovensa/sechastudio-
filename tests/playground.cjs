@@ -211,7 +211,7 @@ async function floorScreen(page, x, z, y = 0) {
     path: path.join(root, "qa-artifacts/playground-residence.png"),
   });
   await page.locator('[data-space="commercial"]').click();
-  assert.equal(await page.locator("#area-label").textContent(), "70 m²");
+  assert.equal(await page.locator("#area-label").textContent(), "80 m²");
   await page.screenshot({
     path: path.join(root, "qa-artifacts/playground-commercial.png"),
   });
@@ -343,7 +343,7 @@ async function floorScreen(page, x, z, y = 0) {
   await design.locator('[data-start="furnished"]').click();
   const expected = {
     office: "desk",
-    cafe: "counter",
+    cafe: "cafeCounter",
     bar: "stool",
     wellness: "treatment",
     salon: "salon",

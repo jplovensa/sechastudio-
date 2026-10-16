@@ -29,13 +29,13 @@ Each shop dialog presents a curated SECHA modular concept, a choice of three fin
 
 ### Commercial Styling Studio
 
-A commercial collection inside The Styling Studio adds five independent directions: **Café Sol** (café / soft brutalism), **Nocturne** (bar / cinematic deco), **Still** (wellness / mineral calm), **Common Ground** (office / warm precision), and **Contour** (salon / sculptural modernism). A five-way selector keeps one commercial concept visible, with two generated room/detail views, a colour palette and material notes per concept. Residential filters remain independent.
+A commercial collection inside The Styling Studio adds five independent directions: **Café Sol** (café / soft brutalism), **Ember** (bar / contemporary listening bar), **Still** (wellness / mineral calm), **Common Ground** (office / warm precision), and **Contour** (salon / sculptural modernism). A five-way selector keeps one commercial concept visible, with room and detail imagery, a dimensioned furniture-plan view, a colour palette and material notes per concept. Residential filters remain independent.
 
-The shared full-screen gallery switches its action to **Plan this space** for commercial concepts, linking to the matching commercial starter and moodboard in the existing playground. Commercial styling does not create new priced catalogue packages. `css/commercial-styling.css` supplies the responsive layout; `npm run test:commercial` verifies all five selectors, both image views, gallery focus, correct playground handoffs, residential-gallery compatibility, accessibility and overflow at 1440, 390 and 320 pixels.
+The shared full-screen gallery switches its action to **Plan this space** for commercial concepts, linking to the matching commercial starter and moodboard in the existing playground. Commercial styling does not create new priced catalogue packages. `css/commercial-styling.css` supplies the responsive layout; `npm run test:commercial` verifies all five selectors, all three gallery views, gallery focus, correct playground handoffs, residential-gallery compatibility, accessibility and overflow at 1440, 390 and 320 pixels.
 
 ## Renovation playground
 
-Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 70 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.
+Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 80 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.
 
 Choose **Build from scratch** for an empty shell with no furniture, rugs, artwork, or internal dividers. Set its width (4–16 m) and depth (4–14 m) in 0.5 m steps, then add your own pieces. Resizing rejects boundaries that would cut through placed furniture. Commercial spaces offer **Office, Café, Bar, Wellness, and Salon** starter layouts, with counter stools, treatment beds, and salon styling stations in the catalogue. Starting-layout and commercial-type changes support undo. Scratch dimensions are retained when switching commercial types or resetting the same space.
 
@@ -101,6 +101,14 @@ Design / Lite, Pro and Premium retain their generated service presentation image
 
 The How we work section uses a five-card graphic index with an illustrated stage detail. All stages support click and arrow/Home/End navigation, with a horizontally scrollable index on small screens. The EPS section uses a schematic exploded assembly and an affiliation strip with holographic logo silhouettes. These components use `css/studio-cards.css`; the original vector assets can be regenerated using `scripts/create-studio-graphics.py`. The affiliation wording and project-specific scope remain as supplied.
 
+
+## Commercial composition and simulation
+
+`js/commercial-layouts.js` is the metric source for five commercial starters, the website plans and the live furniture schedule. Café and salon use 10 × 8 m shells; bar, wellness and office use 12 × 8 m shells. The café has four two-seat dining tables and separate espresso/display/preparation units. Ember has a 4.8 m counter, six stools, two four-seat banquettes and four bistro tables. Wellness includes three screened treatment beds; the office has six workstations and a four-seat meeting area; the salon has three styling stations, a shampoo unit, reception and waiting.
+
+`js/commercial-furniture.js` models the equipment, counters, seating, cabinets and screens, with procedural wood, stone and fabric textures, softened upholstery edges and operating details. These are interactive concept models; the editorial images establish the design direction. The generated plan and simulation use the same exact positions and metric footprints. The entry routes and starter furniture clearances are tested. Users can move, rotate and remove pieces, and inspect the live furniture schedule. Budgets and furniture values remain illustrative.
+
+Run `node scripts/render-commercial-plans.cjs` after changing the shared layouts. `npm test` includes commercial collision, boundary and entry-route checks. `npm run test:playground` covers editing, undo, save/restore, walkthrough and export. Existing saved layouts are retained; choosing a new commercial starter loads its coordinated composition and default palette.
 
 ## Design guidance and project brief
 

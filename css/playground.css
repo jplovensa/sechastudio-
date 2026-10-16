@@ -1268,3 +1268,10 @@ button:hover:not(:disabled) {
     font-size: 7px;
   }
 }
+/* Live metric furniture schedule for the commercial composition. */
+.commercial-composition { margin:14px 0; border-top:1px solid #a5ae91; border-bottom:1px solid #a5ae91; padding:12px 0; color:var(--ink); }
+.commercial-composition summary { cursor:pointer; font-size:11px; line-height:1.8; }
+#commercial-schedule p { font-size:10px; line-height:1.8; margin:12px 0; }
+#commercial-schedule ul { list-style:none; padding:0; margin:0; }
+#commercial-schedule li { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-top:1px solid #a5ae9160; font-size:10px; line-height:1.6; }
+#commercial-schedule small { font-size:9px; white-space:nowrap; }
