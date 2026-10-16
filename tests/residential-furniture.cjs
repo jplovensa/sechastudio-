@@ -25,16 +25,32 @@ const fs=require('node:fs/promises');
     if(!built||!group.children.length)failures.push(`${style}/${tier}/${kind}: empty`);
     group.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(group);
     if(b.min.x < -spec.w/2-.005 || b.max.x > spec.w/2+.005 || b.min.z < -spec.d/2-.005 || b.max.z > spec.d/2+.005)failures.push(`${style}/${tier}/${kind}: footprint ${JSON.stringify({min:b.min,max:b.max,spec})}`);
-    if(kind==='sofa')signatures[`${style}/${tier}`]=group.children.map(m=>[m.geometry.type,m.geometry.attributes.position.count,m.position.toArray(),m.geometry.parameters]).map(v=>JSON.stringify(v)).join('|');
+    signatures[`${style}/${kind}/${tier}`]=group.children.map(m=>[m.geometry.type,m.geometry.attributes.position.count,m.position.toArray(),m.scale.toArray(),m.geometry.parameters]).map(v=>JSON.stringify(v)).join('|');
     group.traverse(m=>{m.geometry?.dispose();m.material?.dispose();});count++;
    }
    return {count,failures,signatures};
   });
   assert.deepEqual(geometry.failures,[]);
   assert.equal(geometry.count,228);
-  assert.equal(new Set(Object.values(geometry.signatures)).size,12,'All collection/tier sofa geometries differ');
+  for(const style of ['warm-modern','soft-contemporary','earthy-retreat','urban-studio']) {
+    const kinds=Object.keys(geometry.signatures).filter(key=>key.startsWith(style+'/') && key.endsWith('/standard')).map(key=>key.split('/')[1]);
+    for(const kind of kinds)assert.equal(new Set(['standard','premium','lux'].map(tier=>geometry.signatures[`${style}/${kind}/${tier}`])).size,3,`${style}/${kind}: each tier has different geometry`);
+  }
+  const standardPreview=await page.locator('[data-kind="sofa"] img').getAttribute('src');
+  assert.match(standardPreview,/^data:image\/png;base64,/);
+  await page.locator('#furniture-tier').selectOption('premium');
+  assert.notEqual(await page.locator('[data-kind="sofa"] img').getAttribute('src'),standardPreview);
+  assert.match(await page.locator('[data-kind="sofa"] strong').textContent(),/Chaise sofa/);
+  await page.locator('#apply-floor-tier').click();
+  assert.match(await page.locator('#residence-model-schedule').textContent(),/Chaise sofa/);
+  assert.ok((await save()).items.every(item=>item.tier==='premium'));
+  await page.locator('#undo-action').click();
+  await page.locator('#furniture-tier').selectOption('standard');
   // Choosing a tier affects future pieces; upgrading one piece reprices the project and supports undo.
   let project=await save();const original=project.items;const total=await page.locator('#budget-total').textContent();
+  const plan=await page.locator('[data-plan-id]').evaluateAll(nodes=>nodes.map(node=>({id:Number(node.dataset.planId),x:Number(node.dataset.x),z:Number(node.dataset.z),r:Number(node.dataset.rotation)})));
+  assert.deepEqual(plan,project.items.map(({id,x,z,r})=>({id,x,z,r})), 'Live plan has the exact saved positions and rotations');
+  assert.equal(await page.locator('#residence-model-schedule li').count(),project.items.length);
   await page.locator('#furniture-tier').selectOption('lux');
   assert.deepEqual((await save()).items,original);
   await page.locator('[data-category="storage"]').click();assert.equal(await page.locator('.catalog-card').count(),5);
@@ -54,6 +70,7 @@ const fs=require('node:fs/promises');
   await page.locator('#floor-select').selectOption('0');await save();await page.goto('http://127.0.0.1:8046/playground.html');
   assert.equal((await save()).items.at(-1).tier,'lux');
   const download=page.waitForEvent('download');await page.locator('#export-project').click();const file=await download;const exported=JSON.parse(await fs.readFile(await file.path(),'utf8'));assert.equal(exported.project.floors[0].items.at(-1).tier,'lux');
+  assert.equal(exported.furnitureModels[0].models.length,project.items.length);
   assert.equal(exported.estimatedTotal,Number((await page.locator('#budget-total').textContent()).replaceAll('.','')));
   await page.setViewportSize({width:390,height:844});
   await page.locator(`[data-select="${piece.id}"]`).click();
@@ -70,6 +87,6 @@ const fs=require('node:fs/promises');
   const forged=await save();forged.floors[0].items[0].tier='free';
   await page.evaluate(project=>localStorage.setItem('secha-playground-v1',JSON.stringify(project)),forged);await page.reload();assert.equal(await page.locator('[data-space="studio"]').getAttribute('aria-pressed'),'true');
   assert.deepEqual(errors,[]);
-  console.log('PASS: 228 model footprints, 12 distinct sofa geometries, 10 new furniture pieces, tier prices, placement, upgrades/undo, palettes, floors, save/export, invalid tiers, mobile and WCAG');
+  console.log('PASS: 228 model footprints, 76 distinct three-tier model families and rendered previews, 10 new furniture pieces, tier prices, placement, upgrades/undo, palettes, floors, save/export, invalid tiers, mobile and WCAG');
  }finally{await browser?.close();server.kill();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

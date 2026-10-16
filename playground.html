@@ -114,6 +114,7 @@
               </div>
               <button type="submit">Apply dimensions</button>
             </form>
+            <details id="residence-models" class="residence-models"><summary>Live floor plan &amp; model schedule</summary><div id="residence-plan"></div><div id="residence-model-schedule"></div></details>
             <details id="commercial-composition" class="commercial-composition" hidden><summary>Layout &amp; furniture schedule</summary><div id="commercial-schedule"></div></details>
             <p class="setup-hint" id="start-description">
               A furnished starting point. Make it your own.
@@ -156,7 +157,7 @@
           </div>
           <div id="tier-options" class="tier-options">
             <label>Furniture tier<select id="furniture-tier"><option value="standard">Standard</option><option value="premium">Premium</option><option value="lux">Lux</option></select></label>
-            <p id="tier-description"></p><p id="collection-shape-note" class="setup-hint"></p>
+            <p id="tier-description"></p><button id="apply-floor-tier" class="tier-apply" type="button">Apply tier to this floor <span aria-hidden="true">↗</span></button><p id="collection-shape-note" class="setup-hint"></p>
           </div>
           <div
             class="catalog-tabs"

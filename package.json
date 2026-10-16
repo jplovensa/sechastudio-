@@ -10,6 +10,7 @@
     "test:studio": "node tests/studio-experience.cjs",
     "test:playground": "node tests/playground.cjs",
     "render:intro": "node scripts/render-intro.cjs",
+    "test:art": "node tests/custom-art.cjs",
     "test:residential": "node tests/residential-furniture.cjs",
     "test:floors": "node tests/playground-floors.cjs",
     "test:commercial": "node tests/commercial-styling.cjs"

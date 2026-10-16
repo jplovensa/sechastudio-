@@ -300,11 +300,11 @@ async function waitForServer() {
     assert.equal(
       await shopPage
         .locator(
-          "#designers + #styling-studio + #curated-style-shop + #style-gallery-viewer + #moodboards",
+          "#designers + #styling-studio + #custom-art + #art-brief-dialog + #curated-style-shop + #style-gallery-viewer + #moodboards",
         )
         .count(),
       1,
-      "Style collections remain directly below the designers",
+      "Style collections and the custom art atelier remain below the designers",
     );
     assert.equal(await shopPage.locator(".style-collection-card").count(), 4);
     assert.equal(

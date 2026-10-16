@@ -1295,3 +1295,15 @@ button:hover:not(:disabled) {
 @media(max-width:620px) { .selection-panel { flex-wrap: wrap; gap: 10px; max-width: calc(100% - 24px); } .selected-tier-options { min-width: 0; } .selected-tier-options select { min-height: 32px; } }
 .selection-panel:not([hidden]) ~ .toast { bottom: 210px; }
 @media(max-width:620px) { .selection-panel:not([hidden]) ~ .toast { bottom: 230px; } }
+
+.catalog-card .model-preview { width:100%; height:auto; aspect-ratio:192/140; object-fit:contain; }
+.model-dimensions { display:block; margin-top:4px; color:var(--ink); font-size:9px; }
+.residence-models { margin:12px 0; border:1px solid #b9bdb2; border-radius:8px; padding:10px; font-size:11px; }
+.residence-models summary { cursor:pointer; font-weight:600; line-height:1.5; }
+#residence-plan { margin-top:12px; }
+#residence-plan svg { width:100%; height:auto; }
+#residence-model-schedule ol { padding-left:20px; }
+#residence-model-schedule li { padding:7px 0; border-bottom:1px solid #d8dbd0; }
+#residence-model-schedule span, #residence-model-schedule small { display:block; margin-top:4px; line-height:1.6; }
+
+.tier-apply { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; width:100%; border:1px solid #8a9982; background:var(--paper); color:var(--ink); font:inherit; font-size:11px; cursor:pointer; }

@@ -157,7 +157,30 @@ document.addEventListener("DOMContentLoaded", () => {
         card.hidden = card.dataset.commercialStyle !== button.dataset.commercialFilter;
       });
       get("style-gallery-announcement").textContent = `${collections.get(button.dataset.commercialFilter).name} commercial collection selected.`;
+      get("commercial-position").textContent = `${String(commercialCards.findIndex(card => card.dataset.commercialStyle === button.dataset.commercialFilter) + 1).padStart(2,"0")} / 05`;
     });
+  });
+
+  const commercialButtons = [...section.querySelectorAll("[data-commercial-filter]")];
+  const stepCommercial = delta => {
+    const active = commercialButtons.findIndex(button => button.getAttribute("aria-pressed") === "true");
+    commercialButtons[(active + delta + commercialButtons.length) % commercialButtons.length].click();
+  };
+  section.querySelectorAll("[data-commercial-step]").forEach(button => button.addEventListener("click", () => stepCommercial(Number(button.dataset.commercialStep))));
+  section.querySelector(".commercial-type-selectors").addEventListener("keydown", event => {
+    if (!["ArrowLeft","ArrowRight"].includes(event.key)) return;
+    event.preventDefault();stepCommercial(event.key === "ArrowRight" ? 1 : -1);
+    commercialButtons.find(button => button.getAttribute("aria-pressed") === "true").focus();
+  });
+  commercialCards.forEach(card => {
+    let start;
+    card.querySelector("figure").addEventListener("touchstart", event => { start = {x:event.changedTouches[0].clientX,y:event.changedTouches[0].clientY}; }, {passive:true});
+    card.querySelector("figure").addEventListener("touchend", event => {
+      if (!start) return;
+      const dx=event.changedTouches[0].clientX-start.x,dy=event.changedTouches[0].clientY-start.y;
+      if (Math.abs(dx)>65 && Math.abs(dx)>Math.abs(dy)*1.5) stepCommercial(dx<0?1:-1);
+      start=null;
+    }, {passive:true});
   });
 
   section.querySelectorAll("[data-style-filter]").forEach((button) => {

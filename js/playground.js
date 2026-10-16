@@ -172,6 +172,7 @@
   const commercialTypes = commercialData.layouts;
   const residenceFurniture = window.SECHA_RESIDENTIAL_FURNITURE;
   Object.assign(catalog, residenceFurniture.catalog);
+  const modelName = (kind, tier = "standard") => state.type !== "commercial" && residenceFurniture.supported.includes(kind) ? residenceFurniture.model(kind, tier) : catalog[kind].name;
   const itemPrice = item => residenceFurniture.price(catalog[item.kind], item.tier || "standard");
   const palettes = {
     natural: {
@@ -539,7 +540,10 @@
     dirty = true;
   }
   function thumbnail(kind) {
-    if (state.type !== "commercial" || residenceFurniture.catalog[kind]) return residenceFurniture.thumbnail(kind, state.residentialStyle || "warm-modern");
+    if (state.type !== "commercial" && residenceFurniture.supported.includes(kind)) {
+      const url = residenceFurniture.preview(kind, {spec:catalog[kind], palette:roomPalette(), style:state.residentialStyle || "warm-modern", tier:state.furnitureTier, finish:!state.residentialStyle && state.finishTarget === "joinery" ? selectedFinish() : null});
+      return url ? `<img src="${url}" width="192" height="140" alt="" class="model-preview">` : residenceFurniture.thumbnail(kind,state.residentialStyle || "warm-modern");
+    }
     const colors = catalog[kind];
     const shapes = {
       sofa: '<path d="M22 38 58 26 95 39 60 52Z" fill="#d7cfb7"/><path d="M22 38v15l38 14V52Z" fill="#aaa78f"/><path d="M60 52v15l35-15V39Z" fill="#bcb69f"/><path d="M22 38V27l37-12 37 13v11L58 27Z" fill="#b8b49d"/><path d="M20 36 30 33 40 37v15l-10 4-10-4Zm65-1 12 4v15l-11 4-9-4V39Z" fill="#c5bea7"/>',
@@ -565,7 +569,7 @@
     $("catalog").innerHTML = entries
       .map(
         ([kind, p]) =>
-          `<button class="catalog-card" data-kind="${kind}" aria-pressed="${placing === kind}" aria-label="Place ${p.name}"><span class="add-icon" aria-hidden="true">+</span>${thumbnail(kind)}<strong>${p.name}</strong><small>${state.type !== "commercial" ? residenceFurniture.tiers[state.furnitureTier].name + " · " : ""}Rp ${money(residenceFurniture.price(p, state.type === "commercial" ? "standard" : state.furnitureTier))}</small></button>`,
+          `<button class="catalog-card" data-kind="${kind}" aria-pressed="${placing === kind}" aria-label="Place ${modelName(kind, state.furnitureTier)}"><span class="add-icon" aria-hidden="true">+</span>${thumbnail(kind)}<strong>${modelName(kind, state.furnitureTier)}</strong><small>${state.type !== "commercial" ? residenceFurniture.tiers[state.furnitureTier].name + " · " : ""}Rp ${money(residenceFurniture.price(p, state.type === "commercial" ? "standard" : state.furnitureTier))}<span class="model-dimensions">${p.w} × ${p.d} m</span></small></button>`,
       )
       .join("");
   }
@@ -579,7 +583,7 @@
     $("tier-options").hidden = state.type === "commercial";
     $("furniture-tier").value = state.furnitureTier || "standard";
     $("tier-description").textContent = residenceFurniture.tiers[state.furnitureTier || "standard"].description;
-    $("collection-shape-note").textContent = state.type === "residence" ? "Furniture silhouettes follow your Styling Studio collection. Tier changes apply to new pieces; select a placed piece to upgrade it." : "Choose a tier for new pieces. Select a placed piece to change its tier.";
+    $("collection-shape-note").textContent = state.type === "residence" ? "Furniture silhouettes follow your Styling Studio collection. Browse new pieces, upgrade one piece, or apply a tier to the whole floor." : "Choose a tier for new pieces. Select a placed piece to change its tier.";
     $("floor-select").innerHTML = state.floors.map((floor, index) => `<option value="${index}">${index === 0 ? "Ground floor" : `Floor ${index + 1}`} · ${floor.items.length} pieces</option>`).join("");
     $("floor-select").value = state.activeFloor;
     $("add-floor").disabled = state.floors.length >= 6;
@@ -619,6 +623,12 @@
         b.setAttribute("aria-pressed", b.dataset.palette === state.palette),
       );
     applyTheme();
+    $("residence-models").hidden = state.type === "commercial";
+    if (state.type !== "commercial") {
+      const scale=35, margin=28, width=s.w*scale, depth=s.d*scale;
+      $("residence-plan").innerHTML = `<svg viewBox="0 0 ${width+margin*2} ${depth+margin*2}" role="img" aria-label="Exact furniture footprints on the current floor"><rect x="${margin}" y="${margin}" width="${width}" height="${depth}" fill="#f5f2ea" stroke="#596254"/><text x="${margin}" y="16" font-size="10" fill="currentColor">${s.w} × ${s.d} m / ${state.activeFloor === 0 ? "Ground floor" : `Floor ${state.activeFloor+1}`}</text>${state.items.map((item,index)=>`<g data-plan-id="${item.id}" data-model="${modelName(item.kind,item.tier)}" data-x="${item.x}" data-z="${item.z}" data-rotation="${item.r}" transform="translate(${margin+(item.x+s.w/2)*scale} ${margin+(item.z+s.d/2)*scale}) rotate(${-item.r*90})"><rect x="${-catalog[item.kind].w*scale/2}" y="${-catalog[item.kind].d*scale/2}" width="${catalog[item.kind].w*scale}" height="${catalog[item.kind].d*scale}" rx="2" fill="#c9cebd" stroke="#596254"/><text font-size="9" fill="#263529" text-anchor="middle" dominant-baseline="middle">${index+1}</text></g>`).join("")}</svg>`;
+      $("residence-model-schedule").innerHTML = state.items.length ? `<ol>${state.items.map(item=>`<li><strong>${modelName(item.kind,item.tier)}</strong><span>${residenceFurniture.tiers[item.tier || "standard"].name} / ${catalog[item.kind].w} × ${catalog[item.kind].d} m</span><small>Position ${item.x}, ${item.z} m · Rotation ${item.r*90}°</small></li>`).join("")}</ol>` : "<p>Add furniture to start your plan.</p>";
+    }
     $("commercial-options").hidden = state.type !== "commercial";
     $("commercial-type").value = state.commercialType;
     const schedule = $("commercial-composition");
@@ -666,7 +676,7 @@
       ? state.items
           .map(
             (i) =>
-              `<button class="placed-piece" data-select="${i.id}" aria-pressed="${i.id === selected}" aria-label="Select ${catalog[i.kind].name}, piece ${i.id}"><span class="piece-icon" aria-hidden="true">${catalog[i.kind].icon}</span><span><strong>${catalog[i.kind].name}</strong><small>${residenceFurniture.tiers[i.tier || "standard"].name} · Rp ${money(itemPrice(i))}</small></span><span aria-hidden="true">→</span></button>`,
+              `<button class="placed-piece" data-select="${i.id}" aria-pressed="${i.id === selected}" aria-label="Select ${modelName(i.kind, i.tier)}, piece ${i.id}"><span class="piece-icon" aria-hidden="true">${catalog[i.kind].icon}</span><span><strong>${modelName(i.kind, i.tier)}</strong><small>${residenceFurniture.tiers[i.tier || "standard"].name} · Rp ${money(itemPrice(i))}</small></span><span aria-hidden="true">→</span></button>`,
           )
           .join("")
       : '<p class="catalog-hint">A blank canvas. Add your first piece.</p>';
@@ -674,7 +684,7 @@
     $("selection-panel").hidden = !item || mode !== "build";
     $("selected-tier-options").hidden = state.type === "commercial";
     if (item) {
-      $("selected-name").textContent = catalog[item.kind].name;
+      $("selected-name").textContent = modelName(item.kind, item.tier);
       $("piece-tier").value = item.tier || "standard";
       $("selected-price").textContent = `Rp ${money(itemPrice(item))}`;
     }
@@ -1580,6 +1590,13 @@
     changed();
     notify(`${residenceFurniture.tiers[state.furnitureTier].name} selected for new pieces. Existing pieces keep their tier.`);
   });
+  $("apply-floor-tier").addEventListener("click", () => {
+    if (state.type === "commercial" || !state.items.length) return;
+    remember();
+    state.items.forEach(item => { if (residenceFurniture.supported.includes(item.kind)) item.tier=state.furnitureTier; });
+    changed();
+    notify(`${residenceFurniture.tiers[state.furnitureTier].name} models applied to this floor. Positions are kept. Undo restores the previous models.`);
+  });
   $("piece-tier").addEventListener("change", event => {
     const item = state.items.find(piece => piece.id === selected);
     if (!item || state.type === "commercial") return;
@@ -1857,6 +1874,7 @@
             version: 1,
             project: state,
             dimensions: { w: spaceConfig().w, d: spaceConfig().d },
+            furnitureModels: state.floors.map((floor,index) => ({ floor:index, collection:floor.residentialStyle, models:floor.items.map(item => ({ ...item, tier:item.tier || "standard", model:modelName(item.kind,item.tier), footprint:{w:catalog[item.kind].w,d:catalog[item.kind].d} })) })),
             estimatedTotal: allItems().reduce(
               (n, i) => n + itemPrice(i),
               0,

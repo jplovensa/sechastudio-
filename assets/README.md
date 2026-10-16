@@ -70,3 +70,13 @@ These are generated editorial style concepts, not photographs of completed SECHA
 
 
 The Ember bar room/detail images were regenerated on 2026-10-16 for the new listening-bar direction, retaining the local WebP filenames. They are generated concept imagery. The five `styling/commercial/*-plan.svg` sheets are authored vector drawings generated directly from `js/commercial-layouts.js` by `scripts/render-commercial-plans.cjs`. Their object locations, rotations, counts and metric footprints match the WebGL starter layouts. The conceptual shells still require a site survey and project-specific design review before construction.
+
+## Custom art atelier — October 2026
+
+`assets/art/painted-walls.webp`, `original-art.webp` and `home-accessories.webp` are generated editorial concept photographs for the new Custom Art section. They illustrate a commissioned painted mural, framed original artwork, and handmade home accessories; they are not photographs of completed SECHA commissions or stocked products. Created using the OpenAI image generation tool and encoded as WebP without compositing or retouching. Source images remain in the workspace generated-images directory:
+
+- Painted walls: `exec-726621f1-4b90-410a-891e-2c592e10adf6.png`
+- Original art: `exec-7ee6ce31-dd3d-4d2a-9ae3-a307018878ce.png`
+- Home accessories: `exec-7be9e059-0ca9-4727-92ac-6c92a8e2fc16.png`
+
+The playground catalogue thumbnails render the same authored procedural furniture geometry as the walkthrough. They are not generated interior photographs.
