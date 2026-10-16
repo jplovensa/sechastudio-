@@ -55,6 +55,7 @@ async function waitForServer() {
             include: [
               "#designers",
               "#styling-studio",
+              "#styled-by-jl",
               "#shop",
               "#modular-build",
               "#moodboards",
@@ -298,7 +299,7 @@ async function waitForServer() {
     assert.equal(
       await shopPage
         .locator(
-          "#designers + #styling-studio + #curated-style-shop + #style-gallery-viewer + #moodboards",
+          "#designers + #styling-studio + #curated-style-shop + #style-gallery-viewer + #styled-by-jl + #moodboards",
         )
         .count(),
       1,
@@ -337,6 +338,42 @@ async function waitForServer() {
     await shopPage.addScriptTag({
       path: require.resolve("axe-core/axe.min.js"),
     });
+    const jl = shopPage.locator("#styled-by-jl");
+    for (const [material, name] of [
+      ["linen", "Oatmeal linen"],
+      ["oak", "Smoked oak"],
+      ["travertine", "Honed travertine"],
+      ["velvet", "Oxblood velvet"],
+      ["bronze", "Aged bronze"],
+    ]) {
+      await jl.locator(`.jl-material-hotspot[data-jl-material="${material}"]`).click();
+      assert.equal(await jl.locator("#jl-material-name").textContent(), name);
+      assert.equal(await jl.locator('[data-jl-material][aria-pressed="true"]').count(), 2, "Material hotspots and selectors stay in sync");
+      assert.match(await jl.locator("#jl-material-texture").getAttribute("aria-label"), new RegExp(name, "i"));
+    }
+    await jl.locator('.jl-material-selectors [data-jl-material="linen"]').click();
+    assert.equal(await jl.locator("#jl-material-name").textContent(), "Oatmeal linen");
+    const pieceOpener = jl.locator("#jl-open-piece");
+    await pieceOpener.click();
+    assert.equal(await jl.locator("#jl-piece-dialog").isVisible(), true);
+    await shopPage.keyboard.press("Shift+Tab");
+    assert.equal(await shopPage.evaluate(() => document.getElementById("jl-piece-dialog").contains(document.activeElement)), true, "Furniture details contain keyboard focus");
+    const jlViolations = await shopPage.evaluate(async () => (await axe.run(document.getElementById("jl-piece-dialog"), { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] } })).violations.map((v) => ({ id: v.id, targets: v.nodes.map((n) => n.target) })));
+    assert.deepEqual(jlViolations, [], "JL furniture detail accessibility");
+    const enquiry = new URL(await jl.locator("#jl-piece-dialog a").getAttribute("href"));
+    assert.equal(enquiry.hostname, "wa.me");
+    assert.equal(enquiry.pathname, "/6287786010290");
+    assert.match(enquiry.searchParams.get("text"), /Styled by JL Oxblood Lounge/);
+    await shopPage.keyboard.press("Escape");
+    await shopPage.waitForFunction(() => document.activeElement === document.getElementById("jl-open-piece"));
+    await shopPage.waitForFunction(() => !document.body.classList.contains("jl-piece-open"));
+    assert.equal(await shopPage.evaluate(() => document.body.classList.contains("jl-piece-open")), false);
+    await jl.locator("#jl-open-piece").click();
+    await jl.locator("#jl-close-piece").click();
+    assert.equal(await jl.locator("#jl-piece-dialog").isVisible(), false);
+    await jl.locator("img").evaluateAll((images) => images.forEach((image) => { image.loading = "eager"; }));
+    await shopPage.waitForFunction(() => [...document.querySelectorAll("#styled-by-jl img")].every((image) => image.complete && image.naturalWidth > 0));
+    await jl.screenshot({ path: path.join(artifacts, `styled-by-jl-${width}.png`) });
     const expectations = [
       {
         id: "warm-modern",

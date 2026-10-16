@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/utilities.css" />
     <link rel="stylesheet" href="css/commerce.css" />
     <link rel="stylesheet" href="css/site-refresh.css" />
+    <link rel="stylesheet" href="css/styled-by-jl.css" />
 
     <!-- Three.js -->
     <script src="vendor/three.r128.min.js"></script>
@@ -662,6 +663,79 @@
         </footer>
       </dialog>
 
+      <section id="styled-by-jl" class="jl-studio" aria-labelledby="jl-heading">
+        <div class="jl-signature">
+          <div class="jl-masthead"><span>THE STYLING STUDIO™ / THE SIGNATURE EDIT</span><span>VOL. 01 — THE COLLECTED HOME</span></div>
+          <div class="jl-hero">
+            <header class="jl-hero-copy">
+              <p class="jl-eyebrow">A PERSONAL POINT OF VIEW</p>
+              <h2 id="jl-heading">Styled<br /><span>by JL.</span></h2>
+              <p class="jl-hero-lede">Quietly bold.<br />Beautifully collected.</p>
+              <p class="jl-hero-description">Warm materials. Sculptural silhouettes. One unexpected accent. A considered edit for spaces with a little soul.</p>
+              <a class="jl-text-link" href="#jl-moodboard">Discover the material story <span aria-hidden="true">↘</span></a>
+              <span class="jl-signature-mark" aria-hidden="true">JL /</span>
+            </header>
+            <figure class="jl-hero-image">
+              <img src="assets/styled-by-jl/signature-interior.webp" alt="Warm sculptural living room with a linen sofa, travertine table, smoked oak joinery and a deep wine lounge chair" width="1536" height="1024" loading="lazy" decoding="async" />
+              <figcaption><span>THE COLLECTED HOME</span><span>GENERATED INTERIOR CONCEPT</span></figcaption>
+            </figure>
+          </div>
+          <div class="jl-principles" aria-label="The JL style language">
+            <article><span>01 / THE FOUNDATION</span><h3>Warmth, first.</h3><p>Grain, soft light and earthy neutrals that make a room feel inviting.</p></article>
+            <article><span>02 / THE FORM</span><h3>Soften the lines.</h3><p>Rounded silhouettes and generous proportions, balanced by precise joinery.</p></article>
+            <article><span>03 / THE PERSONALITY</span><h3>A little unexpected.</h3><p>A deep wine accent. A sculptural object. A detail that makes the space yours.</p></article>
+          </div>
+        </div>
+        <div class="jl-material-edit" id="jl-moodboard">
+          <header class="jl-edit-heading"><div><p class="jl-eyebrow">THE PALETTE / TOUCH POINTS</p><h3>A mood you<br />can almost feel.</h3></div><p>Five materials. One collected feeling.<br />Select a sample to explore its character.</p></header>
+          <div class="jl-moodboard-layout">
+            <figure class="jl-moodboard-image">
+              <img src="assets/styled-by-jl/material-moodboard.webp" alt="Tactile material flat lay with oatmeal linen, smoked oak, porous travertine, oxblood velvet and aged bronze" width="1536" height="1024" loading="lazy" decoding="async" />
+              <button class="jl-material-hotspot" style="--x:29%;--y:25%" data-jl-material="linen" aria-pressed="true" aria-controls="jl-material-detail" aria-label="Explore oatmeal linen">01</button>
+              <button class="jl-material-hotspot" style="--x:70%;--y:25%" data-jl-material="oak" aria-pressed="false" aria-controls="jl-material-detail" aria-label="Explore smoked oak">02</button>
+              <button class="jl-material-hotspot" style="--x:29%;--y:69%" data-jl-material="travertine" aria-pressed="false" aria-controls="jl-material-detail" aria-label="Explore honed travertine">03</button>
+              <button class="jl-material-hotspot" style="--x:74%;--y:70%" data-jl-material="velvet" aria-pressed="false" aria-controls="jl-material-detail" aria-label="Explore oxblood velvet">04</button>
+              <button class="jl-material-hotspot" style="--x:52%;--y:51%" data-jl-material="bronze" aria-pressed="false" aria-controls="jl-material-detail" aria-label="Explore aged bronze">05</button>
+              <figcaption>THE JL MATERIAL STUDY / GENERATED CONCEPT</figcaption>
+            </figure>
+            <div class="jl-material-panel">
+              <div class="jl-material-selectors" role="group" aria-label="Choose a JL material">
+                <button data-jl-material="linen" aria-pressed="true" aria-controls="jl-material-detail">01 Linen</button>
+                <button data-jl-material="oak" aria-pressed="false" aria-controls="jl-material-detail">02 Oak</button>
+                <button data-jl-material="travertine" aria-pressed="false" aria-controls="jl-material-detail">03 Stone</button>
+                <button data-jl-material="velvet" aria-pressed="false" aria-controls="jl-material-detail">04 Velvet</button>
+                <button data-jl-material="bronze" aria-pressed="false" aria-controls="jl-material-detail">05 Bronze</button>
+              </div>
+              <div id="jl-material-detail" class="jl-material-detail" role="region" aria-label="Selected material" aria-live="polite" aria-atomic="true">
+                <div class="jl-material-title"><div><p class="jl-eyebrow" id="jl-material-number">01 / THE SOFT LAYER</p><h4 id="jl-material-name">Oatmeal linen</h4></div><div id="jl-material-texture" class="jl-material-texture" role="img" aria-label="Close texture study of oatmeal linen" style="--texture-position:17% 9%"></div></div>
+                <p id="jl-material-description">An open weave with a soft, imperfect rhythm. The quiet layer that takes the edge off stone and timber.</p>
+                <dl><div><dt>FEEL</dt><dd id="jl-material-feel">Dry, woven, naturally soft</dd></div><div><dt>WHERE IT LIVES</dt><dd id="jl-material-use">Sofas, cushions &amp; curtains</dd></div><div><dt>THE FINISH</dt><dd id="jl-material-finish">Matte / natural weave</dd></div></dl>
+              </div>
+              <a class="jl-text-link" href="#moodboards">Explore SECHA finish samples <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="jl-palette-strip" role="img" aria-label="The JL palette: oatmeal, smoked oak, warm limestone, oxblood and aged bronze"><span style="--tone:#d7cbb7">OATMEAL</span><span style="--tone:#63503c">SMOKED OAK</span><span style="--tone:#bdab8b">WARM STONE</span><span style="--tone:#5e242c">OXBLOOD</span><span style="--tone:#827054">AGED BRONZE</span></div>
+        </div>
+        <article class="jl-furniture" aria-labelledby="jl-piece-title">
+          <div class="jl-piece-copy">
+            <p class="jl-eyebrow">THE ACCENT PIECE / NO. 01</p>
+            <h3 id="jl-piece-title">One piece.<br />A whole<br /><span>point of view.</span></h3>
+            <h4>The Oxblood Lounge</h4>
+            <p>A rounded embrace in wine velvet, grounded by a warm walnut frame. The accent that gives a quiet room its character.</p>
+            <div class="jl-piece-tags"><span>SCULPTURAL FORM</span><span>TACTILE UPHOLSTERY</span></div>
+            <button class="jl-piece-button" id="jl-open-piece">Explore the piece <span aria-hidden="true">↗</span></button>
+            <p class="jl-concept-note">Furniture concept / Sourcing and final finishes confirmed with SECHA.</p>
+          </div>
+          <figure><img src="assets/styled-by-jl/oxblood-lounge.webp" alt="Sculptural oxblood velvet lounge chair with a walnut frame beside a small travertine table" width="1536" height="1024" loading="lazy" decoding="async" /><figcaption>THE JL EDIT / GENERATED FURNITURE CONCEPT</figcaption></figure>
+        </article>
+        <div class="jl-closing"><p>A room comes together<br />in the details.</p><a href="playground.html?moodboard=purist&amp;finishing=p2">Make room for your style <span aria-hidden="true">↗</span></a></div>
+        <dialog id="jl-piece-dialog" class="jl-piece-dialog" aria-labelledby="jl-dialog-title">
+          <div class="jl-dialog-heading"><span>STYLED BY JL / THE ACCENT PIECE</span><button id="jl-close-piece" aria-label="Close furniture details" autofocus>×</button></div>
+          <img src="assets/styled-by-jl/oxblood-lounge.webp" alt="Full view of the oxblood velvet and walnut lounge chair concept" width="1536" height="1024" loading="lazy" />
+          <div class="jl-dialog-copy"><p class="jl-eyebrow">GENERATED FURNITURE CONCEPT</p><h3 id="jl-dialog-title">The Oxblood Lounge</h3><p>Rounded upholstery, an expressive walnut frame and a deep wine tone. Pair with a warm stone table and natural linen to bring the JL palette into balance.</p><dl><div><dt>UPHOLSTERY DIRECTION</dt><dd>Oxblood velvet</dd></div><div><dt>FRAME DIRECTION</dt><dd>Warm walnut</dd></div><div><dt>STYLE WITH</dt><dd>Honed stone &amp; oatmeal linen</dd></div></dl><a class="jl-piece-button" href="https://wa.me/6287786010290?text=Hello%20SECHA%2C%20I%27d%20like%20to%20discuss%20the%20Styled%20by%20JL%20Oxblood%20Lounge%20concept%20and%20sourcing%20options%20for%20my%20space." target="_blank" rel="noopener noreferrer">Enquire about this piece <span aria-hidden="true">↗</span></a><p class="jl-concept-note">A style concept. Availability, dimensions, upholstery and pricing are confirmed during your enquiry.</p></div>
+        </dialog>
+      </section>
+
       <section
         id="moodboards"
         class="material-library"
@@ -1015,5 +1089,6 @@
     <script src="js/intro.js"></script>
     <script src="js/site-process.js"></script>
     <script src="js/style-collections.js"></script>
+    <script src="js/styled-by-jl.js"></script>
   </body>
 </html>

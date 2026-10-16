@@ -27,6 +27,12 @@ The section directly below the designers presents four interior themes: Warm Mod
 
 Each shop dialog presents a curated SECHA modular concept, a choice of three finishes from the shared moodboard catalogue, and three physical finish samples. Selected builds and samples carry the collection name and correct material into the existing persistent bag and order-request checkout. These are curated catalogue options, rather than an exact list of furniture in the generated interiors. Prices remain the existing catalogue estimates. The gallery and shopping flow live in `js/style-collections.js` and `css/site-refresh.css`; `npm run test:e2e` covers filters, all four room/detail galleries, arrow and swipe navigation, gallery-to-shop handoff, material identity, focus restoration, accessibility and bag persistence.
 
+### Styled by JL
+
+Directly beneath The Styling Studio, `#styled-by-jl` presents a signature edit in warm linen, smoked oak, honed travertine, oxblood velvet and aged bronze. Three coordinated generated images show a room, a tactile material flat lay and a sculptural lounge chair. Five numbered moodboard hotspots and matching buttons update an accessible material detail panel and a close texture view. The furniture spotlight opens a native detail dialog, with a user-initiated SECHA WhatsApp enquiry and a link to the existing playground. This is a proposed visual direction for the JL feature, not a quotation or an independently verified description of a designer's personal style. The furniture is a concept; it is not added to the priced catalogue.
+
+The section is implemented in `css/styled-by-jl.css` and `js/styled-by-jl.js`. Image provenance is recorded in `assets/README.md`. Browser checks cover all five material selections, synchronized controls, dialog focus and dismissal, enquiry destination, responsive layouts and accessibility.
+
 ## Renovation playground
 
 Open `playground.html` from the development server, or use **Playground** in the main navigation. This standalone WebGL workspace provides a 48 m² studio apartment, 80 m² residence, and 70 m² commercial café. Each starts with an editable furnished layout. It uses the locally bundled Three.js and requires no API keys or backend.

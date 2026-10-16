@@ -30,3 +30,12 @@ The Styling Studio™ collection galleries use eight new Image Gen interior conc
 - `styling/urban-studio-room.webp`, `styling/urban-studio-detail.webp`: concrete, smoked oak, charcoal wool, blackened steel and veined dark stone; creative loft workspace and desk detail.
 
 The room and detail images are independently generated compositions with a coordinated material palette; they are not measured views of one exact floor plan. No third-party reference images were used in generation. The earlier `styling-boutique-concept.png` and the existing Unsplash photographs remain available for their other uses; they are not used in the new collection galleries.
+
+
+Styled by JL imagery was generated with Image Gen on 2026-10-16 and encoded as WebP at the original 1536 × 1024 size (approximately 1 MB combined):
+
+- `styled-by-jl/signature-interior.webp`: a warm minimal living room with a linen sofa, travertine table, smoked oak, bronze lighting and a wine lounge accent.
+- `styled-by-jl/material-moodboard.webp`: a photorealistic physical material study with woven linen, timber grain, porous travertine, wine velvet and aged bronze. The small interactive texture preview uses CSS positions within this same image.
+- `styled-by-jl/oxblood-lounge.webp`: a sculptural wine velvet and walnut lounge chair concept, with a travertine side table.
+
+These are generated style studies, not photographs of completed JL or SECHA work, physical samples in stock, or an existing furniture product. The room and furniture compositions were independently generated to share a palette, rather than to document one manufactured chair. No third-party source image or personal likeness was used. Original PNGs remain in `/workspace/generated_images` in the creation workspace.
