@@ -170,6 +170,9 @@
     catalog[kind] = { ...catalog[kind], ...spec, icon: catalog[kind]?.icon || catalog[spec.model]?.icon || "▥" };
   }
   const commercialTypes = commercialData.layouts;
+  const residenceFurniture = window.SECHA_RESIDENTIAL_FURNITURE;
+  Object.assign(catalog, residenceFurniture.catalog);
+  const itemPrice = item => residenceFurniture.price(catalog[item.kind], item.tier || "standard");
   const palettes = {
     natural: {
       name: "Warm natural",
@@ -209,6 +212,7 @@
     floors: [],
     activeFloor: 0,
     residentialStyle: type === "residence" ? "warm-modern" : null,
+    furnitureTier: "standard",
     startMode,
     commercialType,
     dimensions: { w: type === "commercial" ? commercialTypes[commercialType].w : spaces[type].w, d: type === "commercial" ? commercialTypes[commercialType].d : spaces[type].d },
@@ -335,7 +339,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => $("status").classList.add("quiet"), 3800);
   }
-  const floorFields = ["startMode", "dimensions", "moodboard", "finishing", "finishTarget", "ambiance", "palette", "night", "items", "residentialStyle"];
+  const floorFields = ["startMode", "dimensions", "moodboard", "finishing", "finishTarget", "ambiance", "palette", "night", "items", "residentialStyle", "furnitureTier"];
   function floorData() {
     return JSON.parse(JSON.stringify(Object.fromEntries(floorFields.map(key => [key, state[key] ?? null]))));
   }
@@ -403,10 +407,16 @@
     if (data.residentialStyle != null && !Object.hasOwn(residentialStyles, data.residentialStyle)) return false;
     if (!nested && data.floors !== undefined) {
       if (!Array.isArray(data.floors) || data.floors.length < 1 || data.floors.length > 6 || !Number.isInteger(data.activeFloor) || data.activeFloor < 0 || data.activeFloor >= data.floors.length) return false;
-      if (!data.floors.every(floor => floor && validState({ ...data, ...floor, floors: undefined }, true))) return false;
+      if (!data.floors.every(floor => {
+        if (!floor || typeof floor !== "object") return false;
+        floor.furnitureTier ??= "standard";
+        return validState({ ...data, ...floor, floors: undefined }, true);
+      })) return false;
       Object.assign(data, data.floors[data.activeFloor]);
     }
     // Migrate layouts saved before moodboards and scratch builds were available.
+    data.furnitureTier ??= "standard";
+    if (!Object.hasOwn(residenceFurniture.tiers, data.furnitureTier)) return false;
     data.startMode ??= "furnished";
     data.commercialType ??= "cafe";
     data.dimensions ??= { w: spaces[data.type].w, d: spaces[data.type].d };
@@ -448,6 +458,7 @@
       if (
         !i ||
         !Object.hasOwn(catalog, i.kind) ||
+        (i.tier != null && !Object.hasOwn(residenceFurniture.tiers, i.tier)) ||
         !Number.isSafeInteger(i.id) ||
         i.id < 1 ||
         i.id >= Number.MAX_SAFE_INTEGER ||
@@ -528,6 +539,7 @@
     dirty = true;
   }
   function thumbnail(kind) {
+    if (state.type !== "commercial" || residenceFurniture.catalog[kind]) return residenceFurniture.thumbnail(kind, state.residentialStyle || "warm-modern");
     const colors = catalog[kind];
     const shapes = {
       sofa: '<path d="M22 38 58 26 95 39 60 52Z" fill="#d7cfb7"/><path d="M22 38v15l38 14V52Z" fill="#aaa78f"/><path d="M60 52v15l35-15V39Z" fill="#bcb69f"/><path d="M22 38V27l37-12 37 13v11L58 27Z" fill="#b8b49d"/><path d="M20 36 30 33 40 37v15l-10 4-10-4Zm65-1 12 4v15l-11 4-9-4V39Z" fill="#c5bea7"/>',
@@ -547,18 +559,27 @@
   }
   function renderCatalog() {
     const entries = Object.entries(catalog).filter(
-      ([, v]) => category === "all" || v.category === category,
+      ([kind, v]) => (state.type === "commercial" ? !residenceFurniture.catalog[kind] : residenceFurniture.supported.includes(kind)) && (category === "all" || v.category === category),
     );
     $("catalog-count").textContent = `${entries.length} pieces`;
     $("catalog").innerHTML = entries
       .map(
         ([kind, p]) =>
-          `<button class="catalog-card" data-kind="${kind}" aria-pressed="${placing === kind}" aria-label="Place ${p.name}"><span class="add-icon" aria-hidden="true">+</span>${thumbnail(kind)}<strong>${p.name}</strong><small>Rp ${money(p.price)}</small></button>`,
+          `<button class="catalog-card" data-kind="${kind}" aria-pressed="${placing === kind}" aria-label="Place ${p.name}"><span class="add-icon" aria-hidden="true">+</span>${thumbnail(kind)}<strong>${p.name}</strong><small>${state.type !== "commercial" ? residenceFurniture.tiers[state.furnitureTier].name + " · " : ""}Rp ${money(residenceFurniture.price(p, state.type === "commercial" ? "standard" : state.furnitureTier))}</small></button>`,
       )
       .join("");
   }
   function renderUI() {
     syncFloor();
+    if (state.type === "commercial" && ["dining", "storage"].includes(category)) {
+      category = "all";
+      document.querySelectorAll("[data-category]").forEach(button => button.setAttribute("aria-pressed", button.dataset.category === "all"));
+    }
+    document.querySelectorAll('[data-category="dining"], [data-category="storage"]').forEach(button => button.hidden = state.type === "commercial");
+    $("tier-options").hidden = state.type === "commercial";
+    $("furniture-tier").value = state.furnitureTier || "standard";
+    $("tier-description").textContent = residenceFurniture.tiers[state.furnitureTier || "standard"].description;
+    $("collection-shape-note").textContent = state.type === "residence" ? "Furniture silhouettes follow your Styling Studio collection. Tier changes apply to new pieces; select a placed piece to upgrade it." : "Choose a tier for new pieces. Select a placed piece to change its tier.";
     $("floor-select").innerHTML = state.floors.map((floor, index) => `<option value="${index}">${index === 0 ? "Ground floor" : `Floor ${index + 1}`} · ${floor.items.length} pieces</option>`).join("");
     $("floor-select").value = state.activeFloor;
     $("add-floor").disabled = state.floors.length >= 6;
@@ -568,7 +589,7 @@
     $("residential-style").value = state.residentialStyle || "";
     $("residential-swatches").innerHTML = state.residentialStyle ? ["wall", "floor", "fabric", "accent"].map(key => `<span style="background:${residentialStyles[state.residentialStyle][key]}" title="${key}"></span>`).join("") : "";
     const s = spaceConfig(),
-      total = allItems().reduce((v, i) => v + catalog[i.kind].price, 0),
+      total = allItems().reduce((v, i) => v + itemPrice(i), 0),
       budget = s.budget * state.floors.length;
     $("project-name").textContent = s.name;
     $("project-meta").textContent =
@@ -645,13 +666,18 @@
       ? state.items
           .map(
             (i) =>
-              `<button class="placed-piece" data-select="${i.id}" aria-pressed="${i.id === selected}" aria-label="Select ${catalog[i.kind].name}, piece ${i.id}"><span class="piece-icon" aria-hidden="true">${catalog[i.kind].icon}</span><span><strong>${catalog[i.kind].name}</strong><small>Rp ${money(catalog[i.kind].price)}</small></span><span aria-hidden="true">→</span></button>`,
+              `<button class="placed-piece" data-select="${i.id}" aria-pressed="${i.id === selected}" aria-label="Select ${catalog[i.kind].name}, piece ${i.id}"><span class="piece-icon" aria-hidden="true">${catalog[i.kind].icon}</span><span><strong>${catalog[i.kind].name}</strong><small>${residenceFurniture.tiers[i.tier || "standard"].name} · Rp ${money(itemPrice(i))}</small></span><span aria-hidden="true">→</span></button>`,
           )
           .join("")
       : '<p class="catalog-hint">A blank canvas. Add your first piece.</p>';
     const item = state.items.find((i) => i.id === selected);
     $("selection-panel").hidden = !item || mode !== "build";
-    if (item) $("selected-name").textContent = catalog[item.kind].name;
+    $("selected-tier-options").hidden = state.type === "commercial";
+    if (item) {
+      $("selected-name").textContent = catalog[item.kind].name;
+      $("piece-tier").value = item.tier || "standard";
+      $("selected-price").textContent = `Rp ${money(itemPrice(item))}`;
+    }
     const progress = Object.values(state.quests).filter(Boolean).length;
     $("quest-count").textContent = `${progress}/3`;
     $("quest-progress").style.width = `${(progress / 3) * 100}%`;
@@ -682,6 +708,7 @@
     if (!placing) clearGhost();
     markDirty();
     renderUI();
+    renderCatalog();
     rebuild();
   }
   function disposeGroup(group) {
@@ -747,7 +774,14 @@
         state.finishTarget === "joinery" && selectedFinish().type === "Metal"
           ? finishMaterial()
           : material("#9f8b56", 0.35);
-    if (window.SECHA_COMMERCIAL_FURNITURE.build(item.kind, g, {
+    if ((state.type !== "commercial" || residenceFurniture.catalog[item.kind]) && residenceFurniture.build(item.kind, g, {
+      THREE, spec: catalog[item.kind], palette: p,
+      style: state.residentialStyle || "warm-modern", tier: item.tier || "standard",
+      material, texture: window.SECHA_COMMERCIAL_FURNITURE.texture,
+      finish: !state.residentialStyle && state.finishTarget === "joinery" ? selectedFinish() : null,
+    })) {
+      // Collection silhouettes share catalogue collision footprints at every tier.
+    } else if (window.SECHA_COMMERCIAL_FURNITURE.build(item.kind, g, {
       box, cylinder, sphere, material, palette: p,
       finish: !state.residentialStyle && state.finishTarget === "joinery" && (state.type !== "commercial" || state.finishing !== commercialTypes[state.commercialType].finish || state.moodboard !== commercialTypes[state.commercialType].board) ? selectedFinish() : null,
       commercial: state.type === "commercial",
@@ -1250,7 +1284,7 @@
       notify("This space has 80 pieces. Remove a piece to add another.");
       return;
     }
-    const item = { id: nextId, kind: placing, x: snap(x), z: snap(z), r: 0 };
+    const item = { id: nextId, kind: placing, x: snap(x), z: snap(z), r: 0, tier: state.type === "commercial" ? "standard" : state.furnitureTier };
     if (!fits(item)) {
       notify(
         "Give this piece a little room. Choose an open spot inside the floor.",
@@ -1540,6 +1574,20 @@
       renderCatalog();
     }),
   );
+  $("furniture-tier").addEventListener("change", event => {
+    remember();
+    state.furnitureTier = event.target.value;
+    changed();
+    notify(`${residenceFurniture.tiers[state.furnitureTier].name} selected for new pieces. Existing pieces keep their tier.`);
+  });
+  $("piece-tier").addEventListener("change", event => {
+    const item = state.items.find(piece => piece.id === selected);
+    if (!item || state.type === "commercial") return;
+    remember();
+    item.tier = event.target.value;
+    changed();
+    notify(`${catalog[item.kind].name} updated to ${residenceFurniture.tiers[item.tier].name}.`);
+  });
   $("residential-style").innerHTML = '<option value="">Custom moodboard</option>' + Object.entries(residentialStyles).map(([id, style]) => `<option value="${id}">${style.name}</option>`).join("");
   $("residential-style").addEventListener("change", event => {
     remember();
@@ -1595,6 +1643,7 @@
       ambiance: previous.ambiance,
       palette: previous.palette,
       night: previous.night,
+      furnitureTier: previous.furnitureTier || "standard",
       residentialStyle: type === "residence" ? previous.residentialStyle || "warm-modern" : null,
     };
     if (type === "commercial" && startMode !== "blank") {
@@ -1809,7 +1858,7 @@
             project: state,
             dimensions: { w: spaceConfig().w, d: spaceConfig().d },
             estimatedTotal: allItems().reduce(
-              (n, i) => n + catalog[i.kind].price,
+              (n, i) => n + itemPrice(i),
               0,
             ),
           },
@@ -1842,6 +1891,7 @@
       ambiance: previous.ambiance,
       palette: previous.palette,
       night: previous.night,
+      furnitureTier: previous.furnitureTier || "standard",
     };
     selected = null;
     placing = null;

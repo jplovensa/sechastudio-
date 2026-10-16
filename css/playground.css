@@ -1284,3 +1284,14 @@ button:hover:not(:disabled) {
 .floor-actions button:disabled { opacity: .45; cursor: default; }
 #residential-swatches { display: flex; height: 24px; margin-top: 12px; border-radius: 5px; overflow: hidden; }
 #residential-swatches span { flex: 1; }
+
+.tier-options { margin: 14px 0; padding: 14px; border: 1px solid #b9bdb2; border-radius: 12px; }
+.tier-options label, .selected-tier-options label { display: grid; gap: 6px; font-size: 12px; font-weight: 600; }
+.tier-options select, .selected-tier-options select { min-height: 38px; max-width: 100%; border: 1px solid #b9bdb2; border-radius: 7px; padding: 6px 10px; background: var(--paper); color: var(--ink); font: inherit; }
+#tier-description { font-size: 12px; line-height: 1.5; margin: 10px 0; }
+.catalog-tabs { flex-wrap: wrap; }
+.selected-tier-options { display: grid; gap: 5px; min-width: 110px; }
+#selected-price { font-size: 11px; }
+@media(max-width:620px) { .selection-panel { flex-wrap: wrap; gap: 10px; max-width: calc(100% - 24px); } .selected-tier-options { min-width: 0; } .selected-tier-options select { min-height: 32px; } }
+.selection-panel:not([hidden]) ~ .toast { bottom: 210px; }
+@media(max-width:620px) { .selection-panel:not([hidden]) ~ .toast { bottom: 230px; } }

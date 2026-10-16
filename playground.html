@@ -15,6 +15,7 @@
     <script defer src="js/design-options.js"></script>
     <script defer src="js/commercial-layouts.js"></script>
     <script defer src="js/commercial-furniture.js"></script>
+    <script defer src="js/residential-furniture.js"></script>
     <script defer src="js/playground.js"></script>
   </head>
   <body>
@@ -153,6 +154,10 @@
             <h2 id="furnish-heading">03 / Bring it to life</h2>
             <span id="catalog-count">8 pieces</span>
           </div>
+          <div id="tier-options" class="tier-options">
+            <label>Furniture tier<select id="furniture-tier"><option value="standard">Standard</option><option value="premium">Premium</option><option value="lux">Lux</option></select></label>
+            <p id="tier-description"></p><p id="collection-shape-note" class="setup-hint"></p>
+          </div>
           <div
             class="catalog-tabs"
             role="group"
@@ -161,7 +166,7 @@
             <button data-category="all" aria-pressed="true">All pieces</button
             ><button data-category="living" aria-pressed="false">Living</button
             ><button data-category="work" aria-pressed="false">Work</button
-            ><button data-category="details" aria-pressed="false">
+            ><button data-category="dining" aria-pressed="false">Dining</button><button data-category="storage" aria-pressed="false">Storage</button><button data-category="details" aria-pressed="false">
               Details
             </button>
           </div>
@@ -295,6 +300,7 @@
             <span class="eyebrow">SELECTED PIECE</span
             ><strong id="selected-name"></strong>
           </div>
+          <div id="selected-tier-options" class="selected-tier-options"><label>Piece tier<select id="piece-tier"><option value="standard">Standard</option><option value="premium">Premium</option><option value="lux">Lux</option></select></label><span id="selected-price"></span></div>
           <div class="selection-actions">
             <button data-move="left" aria-label="Move selected piece left">
               ←</button

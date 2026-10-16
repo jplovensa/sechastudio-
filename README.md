@@ -123,3 +123,13 @@ The four Styling Studio collection palettes (Warm Modern, Soft Contemporary, Ear
 Use **Add floor** to create up to six independently editable levels. A new level is empty, inherits the active floor’s dimensions and direction, and can be resized and furnished separately. The floor selector opens each level for editing or walking; stairs and continuous travel between levels are not simulated. Each floor keeps its own layout, dimensions, collection, finishing and lighting. The budget covers furniture on all floors, with a concept allowance per floor. Removing a floor, resetting its layout, and other edits can be undone. Switching space type starts a new project; Undo restores the previous project.
 
 Browser saves and JSON exports include every floor and the active level. Older single-level browser saves open as a ground-floor project. Run `npm run test:floors` for multi-floor isolation, persistence, export, undo, collection, limit, mobile and accessibility checks.
+
+### Collection furniture and tiers
+
+The residence uses collection-specific procedural furniture: exposed oak frames for **Warm Modern**, rounded wraparound seating and pale stone for **Soft Contemporary**, low walnut plinths for **Earthy Retreat**, and slim angular steel frames for **Urban Studio**. Selecting a collection updates existing furniture silhouettes and materials while retaining positions and footprints. Custom finish controls remain available.
+
+The home catalogue now includes 19 pieces across Living, Work, Dining, Storage and Details. Ten additions are a dining table and chair, sideboard, bookcase, wardrobe, entry console, ottoman, end-of-bed bench, bedside cabinet and sculpted side table. Home and commercial catalogues show relevant furniture separately.
+
+**Standard**, **Premium** and **Lux** are illustrative furniture tiers. Standard uses base prices, Premium uses 1.65× base prices, and Lux uses 2.8× base prices (rounded to the nearest IDR 1,000). Higher tiers add upholstery layers, joinery, hardware or stone/metal details. Tier selection applies to new pieces; the selected-piece tier control upgrades or downgrades one existing piece. Tiers retain the same footprints, are saved per item across floors, affect the project budget and export, and support undo. Older pieces default to Standard. These are simulation estimates, not products available for checkout or manufacturer replicas.
+
+`js/residential-furniture.js` defines home pieces, tier pricing and procedural geometry. Run `npm run test:residential` to check all 228 model/collection/tier footprints, distinct collection silhouettes, tier prices and upgrades, save/export, multi-floor persistence, invalid-tier rejection, mobile layout and accessibility.
