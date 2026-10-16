@@ -22,7 +22,7 @@ Replace inspiration photography with approved SECHA product photography before p
 
 - `styling-boutique-concept.png`: Image Gen editorial styling concept created for The Styling Studio™ boutique presentation. The room, furniture and objects are illustrative; this is not a photograph of a completed SECHA project. The secondary detail is a CSS crop of the same image.
 
-The Styling Studio™ collection galleries use eight new Image Gen interior concepts, generated on 2026-10-16 and encoded as WebP at their original 1536 × 1024 resolution. They are photorealistic illustrations of a style, not photographs of built SECHA projects or exact furniture catalogues. Each collection is visibly labeled as a generated interior concept. Source PNGs remain in `/workspace/generated_images` in the creation workspace; the portable website uses only these local WebP assets:
+The Styling Studio™ collection galleries use sixteen Image Gen interior concepts, generated on 2026-10-16 and encoded as WebP at their original 1536 × 1024 resolution. They are photorealistic illustrations of a style, not photographs of built SECHA projects or exact furniture catalogues. Each collection is visibly labeled as a generated interior concept. Source PNGs remain in `/workspace/generated_images` in the creation workspace; the portable website uses only these local WebP assets:
 
 - `styling/warm-modern-room.webp`, `styling/warm-modern-detail.webp`: honey oak, woven oatmeal linen, porous travertine and golden afternoon light; apartment living/dining composition and lounge corner detail.
 - `styling/soft-contemporary-room.webp`, `styling/soft-contemporary-detail.webp`: ivory bouclé, powder blue upholstery, chalky plaster, limestone and brushed steel; sculptural living room and chair vignette.
@@ -44,3 +44,13 @@ The drawings communicate catalogue scope and are schematic, not measured constru
 `process/brief.svg`, `direction.svg`, `visualise.svg`, `detail.svg` and `handover.svg` are original vector studio graphics for the five project stages. They replace the earlier room photographs and generated service images within How we work. `eps-assembly-study.svg` is an original exploded vector study of a surface finish, EPS core and project-specific supports, replacing the generated EPS image on the page. It illustrates a concept; it is not a measured or approved manufacturing drawing. Regenerate these six assets with `python3 scripts/create-studio-graphics.py` (Python standard library only).
 
 The Greenshift and Fjäll Group source PNGs remain unchanged. `css/studio-cards.css` uses their existing alpha silhouettes as CSS masks for an iridescent foil gradient, preserving logo proportions and accessible image names. The sheen shifts on hover, stays static with reduced motion, and falls back to a monochrome mark when masks are unsupported. This is a visual treatment of the existing supplied affiliation, not a new certification or partnership claim.
+
+
+Eight complementary Styling Studio views were added on 2026-10-16, with each collection's original room image used as a palette and photographic reference:
+
+- `styling/warm-modern-dining.webp`, `styling/warm-modern-kitchen.webp`: oak dining and kitchen spaces with linen, bronze, travertine and afternoon sunlight.
+- `styling/soft-contemporary-dining.webp`, `styling/soft-contemporary-bedroom.webp`: pale limestone, ivory upholstery, silver accents and soft blue details.
+- `styling/earthy-retreat-reading.webp`, `styling/earthy-retreat-dressing.webp`: clay plaster, walnut, woven flax and warm stone.
+- `styling/urban-studio-meeting.webp`, `styling/urban-studio-workspace.webp`: concrete, smoked oak, black steel and charcoal seating.
+
+These are generated complementary style studies, not measured views of the same built project. The new images retain their original 1536 × 1024 resolution and are encoded as WebP. The design-package and request sections reuse the authored SVG studio graphics in `process/`, with no new generated service covers.

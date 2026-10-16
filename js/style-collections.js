@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (image, index) => ({
               src: image.getAttribute("src"),
               alt: index === 0 ? photo.alt : image.dataset.viewAlt,
-              label: index === 0 ? "The space" : "The details",
+              label: image.dataset.viewLabel || image.closest("button").querySelector("span").textContent.replace(/^\d+\s*\/\s*/, ""),
             }),
           ),
           colours: [...card.querySelectorAll(".style-collection-meta i")].map(
@@ -67,6 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
     get("style-gallery-image").src = view.src;
     get("style-gallery-image").alt = view.alt;
     get("style-gallery-position").textContent = `${String(galleryIndex + 1).padStart(2, "0")} / ${String(galleryCollection.views.length).padStart(2, "0")} — ${view.label}`;
+    get("style-viewer-thumbnails").querySelectorAll("button").forEach((button, index) => {
+      button.setAttribute("aria-pressed", String(index === galleryIndex));
+    });
   }
   function moveGallery(direction) {
     galleryIndex = (galleryIndex + direction + galleryCollection.views.length) % galleryCollection.views.length;
@@ -77,6 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
     galleryIndex = Number(trigger.closest("[data-style]").dataset.activeView || 0);
     galleryOpener = trigger;
     get("style-gallery-title").textContent = galleryCollection.name;
+    get("style-viewer-thumbnails").innerHTML = galleryCollection.views.map((view, index) =>
+      `<button data-viewer-index="${index}" aria-pressed="${index === galleryIndex}" aria-controls="style-gallery-image" aria-label="Show ${C.escape(view.label)}"><img src="${view.src}" alt="" width="1536" height="1024" loading="lazy"><span>${String(index + 1).padStart(2, "0")} / ${C.escape(view.label)}</span></button>`
+    ).join("");
     renderGallery();
     document.body.classList.add("style-gallery-open");
     viewer.showModal();
@@ -84,6 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
   get("style-gallery-close").addEventListener("click", () => viewer.close());
   get("style-gallery-previous").addEventListener("click", () => moveGallery(-1));
   get("style-gallery-next").addEventListener("click", () => moveGallery(1));
+  get("style-viewer-thumbnails").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-viewer-index]");
+    if (!button) return;
+    galleryIndex = Number(button.dataset.viewerIndex);
+    renderGallery();
+  });
   viewer.addEventListener("keydown", (event) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();

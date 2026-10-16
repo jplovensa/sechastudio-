@@ -256,6 +256,7 @@ function updateCartUI() {
       "Browser storage unavailable. Keep this page open to retain your bag.",
     );
   if (document.getElementById("checkout-summary")) renderCheckoutSummary();
+  document.dispatchEvent(new CustomEvent("secha:bag-updated"));
 }
 function proceedToCheckout() {
   if (!cart.length) {

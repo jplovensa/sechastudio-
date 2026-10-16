@@ -60,6 +60,8 @@ async function waitForServer() {
               "#moodboards",
               "#playground",
               "#process",
+              "#investment",
+              "#onboarding",
             ],
           },
           {
@@ -379,13 +381,18 @@ async function waitForServer() {
       const galleryTrigger = card.locator("[data-open-style-gallery]");
       await galleryTrigger.click();
       assert.equal(await shopPage.locator("#style-gallery-title").textContent(), style.name);
-      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /02 \/ 02 — The details/);
+      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /02 \/ 04 — The details/);
       await shopPage.locator("#style-gallery-next").click();
-      assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-room.webp$/);
+      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /03 \/ 04/);
       await shopPage.keyboard.press("ArrowLeft");
       assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-detail.webp$/);
       await shopPage.locator("#style-gallery-image").dispatchEvent("pointerdown", { pointerType: "touch", clientX: 250, clientY: 100 });
       await shopPage.locator("#style-gallery-image").dispatchEvent("pointerup", { pointerType: "touch", clientX: 100, clientY: 100 });
+      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /03 \/ 04/);
+      assert.equal(await shopPage.locator("#style-viewer-thumbnails button").count(), 4);
+      await shopPage.locator('[data-viewer-index="3"]').click();
+      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /04 \/ 04/);
+      await shopPage.locator("#style-gallery-next").click();
       assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-room.webp$/);
       await shopPage.keyboard.press("Tab");
       assert.equal(await shopPage.evaluate(() => document.getElementById("style-gallery-viewer").contains(document.activeElement)), true, "Gallery contains keyboard focus");
@@ -503,7 +510,7 @@ async function waitForServer() {
       viewport: width,
       case: "curated style collections",
       filters: "passed",
-      imagery: "two optimized generated interior concepts per style",
+      imagery: "four optimized generated interior concepts per style",
       galleries: "thumbnails, arrow keys, swipe, focus restoration and shop handoff passed",
       shopping: "theme-specific finishes, builds and samples persist",
       accessibility: "passed",
