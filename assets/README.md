@@ -19,3 +19,5 @@ Replace inspiration photography with approved SECHA product photography before p
 - `eps-material-study.png`: generated EPS-core decorative-panel and finished-wall study. An illustration of the material concept, not a certified or approved panel section.
 
 - `playground-preview.png`: an actual local Chromium capture of the SECHA WebGL playground canvas, used to link into the interactive studio.
+
+- `styling-boutique-concept.png`: Image Gen editorial styling concept created for The Styling Studio™ boutique presentation. The room, furniture and objects are illustrative; this is not a photograph of a completed SECHA project. The secondary detail is a CSS crop of the same image.
