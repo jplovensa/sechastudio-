@@ -30,3 +30,10 @@ The Styling Studio™ collection galleries use eight new Image Gen interior conc
 - `styling/urban-studio-room.webp`, `styling/urban-studio-detail.webp`: concrete, smoked oak, charcoal wool, blackened steel and veined dark stone; creative loft workspace and desk detail.
 
 The room and detail images are independently generated compositions with a coordinated material palette; they are not measured views of one exact floor plan. No third-party reference images were used in generation. The earlier `styling-boutique-concept.png` and the existing Unsplash photographs remain available for their other uses; they are not used in the new collection galleries.
+
+
+## SECHA collection studio covers
+
+The six catalogue covers are authored SVG graphics in `collection/`: `modular-living.svg`, `modular-work.svg`, `modular-bedroom.svg`, `design-lite.svg`, `design-pro.svg`, and `design-premium.svg`. They replace the generated room and service images in the SECHA collection and its linked style-shop product previews. Each uses original vector linework, a consistent studio-sheet grid, and outlined Inter typography from the bundled licensed font. They have no raster imagery, remote resources or font-loading dependency.
+
+The drawings communicate catalogue scope and are schematic, not measured construction documents. Regenerate them from the repository root using `python3 scripts/create-collection-covers.py` with the optional `fonttools` package installed. The original concept PNGs remain archived assets and are no longer used as catalogue covers.

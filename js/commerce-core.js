@@ -20,7 +20,7 @@
         "Finish consultation + shop drawings",
         "Assembly scope confirmed after site survey",
       ],
-      image: "assets/modular-living-concept.png",
+      image: "assets/collection/modular-living.svg",
     },
     {
       id: "modular-work",
@@ -37,7 +37,7 @@
         "Cable management planning",
         "Site measurement before fabrication",
       ],
-      image: "assets/modular-work-concept.png",
+      image: "assets/collection/modular-work.svg",
     },
     {
       id: "modular-bedroom",
@@ -54,7 +54,7 @@
         "Material and colour coordination",
         "Final scope agreed with your designer",
       ],
-      image: "assets/modular-rest-concept.png",
+      image: "assets/collection/modular-bedroom.svg",
     },
     {
       id: "design-lite",
@@ -69,7 +69,7 @@
         "Curated material palette",
         "Digital design handover",
       ],
-      image: "assets/design-lite-service.png",
+      image: "assets/collection/design-lite.svg",
     },
     {
       id: "design-pro",
@@ -84,7 +84,7 @@
         "Room layout + 3D visualisation",
         "Designer review",
       ],
-      image: "assets/design-pro-service.png",
+      image: "assets/collection/design-pro.svg",
     },
     {
       id: "design-premium",
@@ -99,7 +99,7 @@
         "Detailed design drawings",
         "Build planning consultation",
       ],
-      image: "assets/design-premium-service.png",
+      image: "assets/collection/design-premium.svg",
     },
   ];
   const money = (n) =>

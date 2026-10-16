@@ -887,7 +887,8 @@ body.style-shop-open {
 .style-shop-build figure img {
   width: 100%;
   height: 280px;
-  object-fit: cover;
+  object-fit: contain;
+  background: #eae5da;
   display: block;
 }
 .style-shop-build figcaption {

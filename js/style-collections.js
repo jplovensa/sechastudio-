@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     get("style-build-price").textContent = money(product.price);
     get("style-build-image").src = product.image;
     get("style-build-image").alt =
-      `Illustrative SECHA ${product.room} modular setup`;
+      `Studio concept sheet for the SECHA ${product.room} system`;
     get("style-build-finish").innerHTML = materials
       .map(
         (material) =>
