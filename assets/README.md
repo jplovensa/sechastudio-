@@ -22,4 +22,11 @@ Replace inspiration photography with approved SECHA product photography before p
 
 - `styling-boutique-concept.png`: Image Gen editorial styling concept created for The Styling Studio™ boutique presentation. The room, furniture and objects are illustrative; this is not a photograph of a completed SECHA project. The secondary detail is a CSS crop of the same image.
 
-The Styling Studio™ collection gallery uses actual interior photography: `interior-living.jpg` (Warm Modern), `interior-rest.jpg` (Soft Contemporary), `modular-rest.jpg` (Earthy Retreat), and `modular-work.jpg` (Urban Studio). Source URLs are listed above. The earlier `styling-boutique-concept.png` remains a generated concept asset and is not used in the collection gallery.
+The Styling Studio™ collection galleries use eight new Image Gen interior concepts, generated on 2026-10-16 and encoded as WebP at their original 1536 × 1024 resolution. They are photorealistic illustrations of a style, not photographs of built SECHA projects or exact furniture catalogues. Each collection is visibly labeled as a generated interior concept. Source PNGs remain in `/workspace/generated_images` in the creation workspace; the portable website uses only these local WebP assets:
+
+- `styling/warm-modern-room.webp`, `styling/warm-modern-detail.webp`: honey oak, woven oatmeal linen, porous travertine and golden afternoon light; apartment living/dining composition and lounge corner detail.
+- `styling/soft-contemporary-room.webp`, `styling/soft-contemporary-detail.webp`: ivory bouclé, powder blue upholstery, chalky plaster, limestone and brushed steel; sculptural living room and chair vignette.
+- `styling/earthy-retreat-room.webp`, `styling/earthy-retreat-detail.webp`: walnut, flax linen, terracotta limewash and warm stone; bedroom sanctuary and tactile bedside detail.
+- `styling/urban-studio-room.webp`, `styling/urban-studio-detail.webp`: concrete, smoked oak, charcoal wool, blackened steel and veined dark stone; creative loft workspace and desk detail.
+
+The room and detail images are independently generated compositions with a coordinated material palette; they are not measured views of one exact floor plan. No third-party reference images were used in generation. The earlier `styling-boutique-concept.png` and the existing Unsplash photographs remain available for their other uses; they are not used in the new collection galleries.

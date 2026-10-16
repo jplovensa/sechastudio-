@@ -54,6 +54,7 @@ async function waitForServer() {
           {
             include: [
               "#designers",
+              "#styling-studio",
               "#shop",
               "#modular-build",
               "#moodboards",
@@ -297,7 +298,7 @@ async function waitForServer() {
     assert.equal(
       await shopPage
         .locator(
-          "#designers + #styling-studio + #curated-style-shop + #moodboards",
+          "#designers + #styling-studio + #curated-style-shop + #style-gallery-viewer + #moodboards",
         )
         .count(),
       1,
@@ -308,10 +309,10 @@ async function waitForServer() {
       await shopPage
         .locator(".style-collection-card img")
         .evaluateAll((images) =>
-          images.every((image) => image.getAttribute("src").endsWith(".jpg")),
+          images.every((image) => image.getAttribute("src").startsWith("assets/styling/") && image.getAttribute("src").endsWith(".webp")),
         ),
       true,
-      "Collections use actual interior photographs",
+      "Collections use locally served, optimized interior concept imagery",
     );
     await shopPage.locator('[data-style-filter="natural"]').click();
     assert.equal(
@@ -371,8 +372,37 @@ async function waitForServer() {
       },
     ];
     for (const style of expectations) {
+      const card = shopPage.locator(`[data-style="${style.id}"]`);
+      await card.locator('[data-style-view="1"]').click();
+      assert.match(await card.locator("figure > img").getAttribute("src"), /-detail.webp$/);
+      assert.equal(await card.locator('[data-style-view="1"]').getAttribute("aria-pressed"), "true");
+      const galleryTrigger = card.locator("[data-open-style-gallery]");
+      await galleryTrigger.click();
+      assert.equal(await shopPage.locator("#style-gallery-title").textContent(), style.name);
+      assert.match(await shopPage.locator("#style-gallery-position").textContent(), /02 \/ 02 — The details/);
+      await shopPage.locator("#style-gallery-next").click();
+      assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-room.webp$/);
+      await shopPage.keyboard.press("ArrowLeft");
+      assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-detail.webp$/);
+      await shopPage.locator("#style-gallery-image").dispatchEvent("pointerdown", { pointerType: "touch", clientX: 250, clientY: 100 });
+      await shopPage.locator("#style-gallery-image").dispatchEvent("pointerup", { pointerType: "touch", clientX: 100, clientY: 100 });
+      assert.match(await shopPage.locator("#style-gallery-image").getAttribute("src"), /-room.webp$/);
+      await shopPage.keyboard.press("Tab");
+      assert.equal(await shopPage.evaluate(() => document.getElementById("style-gallery-viewer").contains(document.activeElement)), true, "Gallery contains keyboard focus");
+      await shopPage.waitForFunction(() => { const image = document.getElementById("style-gallery-image"); return image.complete && image.naturalWidth > 0; });
+      const galleryViolations = await shopPage.evaluate(async () => (await axe.run(document.getElementById("style-gallery-viewer"), { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] } })).violations.map((v) => ({ id: v.id, targets: v.nodes.map((n) => n.target) })));
+      assert.deepEqual(galleryViolations, [], "Full-screen gallery accessibility");
+      if (style.id === "warm-modern") await shopPage.locator("#style-gallery-viewer").screenshot({ path: path.join(artifacts, `style-gallery-${width}.png`) });
+      await shopPage.keyboard.press("Escape");
+      await shopPage.waitForFunction((id) => document.querySelector(`[data-open-style-gallery="${id}"]`) === document.activeElement, style.id);
+      assert.equal(await galleryTrigger.evaluate((el) => el === document.activeElement), true, "Gallery restores its opener focus");
+      await card.locator('[data-style-view="0"]').click();
+      await shopPage.waitForFunction((id) => { const image = document.querySelector(`[data-style="${id}"] figure > img`); return image.complete && image.naturalWidth > 0; }, style.id);
+      if (style.id === "warm-modern") await card.screenshot({ path: path.join(artifacts, `style-collection-${width}.png`) });
       const trigger = shopPage.locator(`[data-shop-style="${style.id}"]`);
-      await trigger.click();
+      await galleryTrigger.click();
+      await shopPage.locator("#style-gallery-shop").click();
+      assert.equal(await shopPage.locator("#style-gallery-viewer").isVisible(), false, "Gallery hands off to the style shop");
       assert.equal(
         await shopPage.locator("#curated-style-shop").isVisible(),
         true,
@@ -433,6 +463,7 @@ async function waitForServer() {
       );
       assert.deepEqual(violations, [], "Curated style shop accessibility");
       await shopPage.keyboard.press("Escape");
+      await shopPage.waitForFunction((id) => document.querySelector(`[data-shop-style="${id}"]`) === document.activeElement, style.id);
       assert.equal(
         await shopPage.locator("#curated-style-shop").isVisible(),
         false,
@@ -472,7 +503,8 @@ async function waitForServer() {
       viewport: width,
       case: "curated style collections",
       filters: "passed",
-      photos: "real interior photography",
+      imagery: "two optimized generated interior concepts per style",
+      galleries: "thumbnails, arrow keys, swipe, focus restoration and shop handoff passed",
       shopping: "theme-specific finishes, builds and samples persist",
       accessibility: "passed",
     });

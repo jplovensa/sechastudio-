@@ -1,4 +1,4 @@
-/* Shop a photographed interior direction through the existing SECHA catalogue. */
+/* Explore interior concept galleries and shop the existing SECHA catalogue. */
 document.addEventListener("DOMContentLoaded", () => {
   const section = document.getElementById("styling-studio");
   const dialog = document.getElementById("curated-style-shop");
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: card.dataset.style,
           name: card.querySelector("h3").textContent,
           description: card
-            .querySelector(".style-collection-copy > p")
+            .querySelector(".style-collection-description")
             .textContent.trim(),
           board: MOODBOARDS.find(
             (board) => board.id === card.dataset.styleBoard,
@@ -24,6 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
           photo: photo.getAttribute("src"),
           alt: photo.alt,
+          views: [...card.querySelectorAll("[data-style-view] img")].map(
+            (image, index) => ({
+              src: image.getAttribute("src"),
+              alt: index === 0 ? photo.alt : image.dataset.viewAlt,
+              label: index === 0 ? "The space" : "The details",
+            }),
+          ),
           colours: [...card.querySelectorAll(".style-collection-meta i")].map(
             (swatch) => swatch.style.getPropertyValue("--tone"),
           ),
@@ -36,6 +43,76 @@ document.addEventListener("DOMContentLoaded", () => {
   const get = (id) => document.getElementById(id);
   const money = C.money;
   const hex = (value) => `#${value.toString(16).padStart(6, "0")}`;
+  const viewer = get("style-gallery-viewer");
+  let galleryCollection = null,
+    galleryIndex = 0,
+    galleryOpener = null;
+
+  function showCardView(card, index) {
+    const collection = collections.get(card.dataset.style);
+    const view = collection.views[index];
+    const image = card.querySelector("figure > img");
+    image.src = view.src;
+    image.alt = view.alt;
+    card.dataset.activeView = index;
+    card.querySelector("[data-gallery-caption]").textContent = view.label;
+    card.querySelectorAll("[data-style-view]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.styleView) === index));
+    });
+    get("style-gallery-announcement").textContent = `${collection.name}: ${view.label}, image ${index + 1} of ${collection.views.length}.`;
+  }
+
+  function renderGallery() {
+    const view = galleryCollection.views[galleryIndex];
+    get("style-gallery-image").src = view.src;
+    get("style-gallery-image").alt = view.alt;
+    get("style-gallery-position").textContent = `${String(galleryIndex + 1).padStart(2, "0")} / ${String(galleryCollection.views.length).padStart(2, "0")} — ${view.label}`;
+  }
+  function moveGallery(direction) {
+    galleryIndex = (galleryIndex + direction + galleryCollection.views.length) % galleryCollection.views.length;
+    renderGallery();
+  }
+  function openGallery(id, trigger) {
+    galleryCollection = collections.get(id);
+    galleryIndex = Number(trigger.closest("[data-style]").dataset.activeView || 0);
+    galleryOpener = trigger;
+    get("style-gallery-title").textContent = galleryCollection.name;
+    renderGallery();
+    document.body.classList.add("style-gallery-open");
+    viewer.showModal();
+  }
+  get("style-gallery-close").addEventListener("click", () => viewer.close());
+  get("style-gallery-previous").addEventListener("click", () => moveGallery(-1));
+  get("style-gallery-next").addEventListener("click", () => moveGallery(1));
+  viewer.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    moveGallery(event.key === "ArrowLeft" ? -1 : 1);
+  });
+  let swipeStart = null;
+  const galleryImage = get("style-gallery-image");
+  galleryImage.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch") return;
+    swipeStart = { x: event.clientX, y: event.clientY };
+  });
+  galleryImage.addEventListener("pointerup", (event) => {
+    if (!swipeStart) return;
+    const dx = event.clientX - swipeStart.x;
+    const dy = event.clientY - swipeStart.y;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) moveGallery(dx < 0 ? 1 : -1);
+    swipeStart = null;
+  });
+  galleryImage.addEventListener("pointercancel", () => { swipeStart = null; });
+  viewer.addEventListener("close", () => {
+    document.body.classList.remove("style-gallery-open");
+    if (!dialog.open) galleryOpener?.focus({ preventScroll: true });
+  });
+  get("style-gallery-shop").addEventListener("click", () => {
+    const id = galleryCollection.id;
+    const trigger = section.querySelector(`[data-shop-style="${id}"]`);
+    viewer.close();
+    openStyle(id, trigger);
+  });
 
   section.querySelectorAll("[data-style-filter]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -110,6 +187,10 @@ document.addEventListener("DOMContentLoaded", () => {
   section.addEventListener("click", (event) => {
     const button = event.target.closest("[data-shop-style]");
     if (button) openStyle(button.dataset.shopStyle, button);
+    const thumbnail = event.target.closest("[data-style-view]");
+    if (thumbnail) showCardView(thumbnail.closest("[data-style]"), Number(thumbnail.dataset.styleView));
+    const galleryButton = event.target.closest("[data-open-style-gallery]");
+    if (galleryButton) openGallery(galleryButton.dataset.openStyleGallery, galleryButton);
   });
   function addSelection(item) {
     if (
@@ -175,17 +256,19 @@ document.addEventListener("DOMContentLoaded", () => {
     dialog.close();
     toggleCart(true);
   });
-  dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
-    const rect = dialog.getBoundingClientRect();
+  function dismissBackdrop(modal, event) {
+    if (event.target !== modal) return;
+    const rect = modal.getBoundingClientRect();
     if (
       event.clientX < rect.left ||
       event.clientX > rect.right ||
       event.clientY < rect.top ||
       event.clientY > rect.bottom
     )
-      dialog.close();
-  });
+      modal.close();
+  }
+  dialog.addEventListener("click", (event) => dismissBackdrop(dialog, event));
+  viewer.addEventListener("click", (event) => dismissBackdrop(viewer, event));
   dialog.addEventListener("close", () => {
     document.body.classList.remove("style-shop-open");
     if (!isCartOpen && opener?.isConnected && opener.getClientRects().length)
