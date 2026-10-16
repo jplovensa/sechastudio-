@@ -200,11 +200,15 @@
       accent: "#424e46",
     },
   };
+  const residentialStyles = window.SECHA_DESIGN_OPTIONS.RESIDENTIAL_STYLES;
   const storageKey = "secha-playground-v1";
   const money = (n) => new Intl.NumberFormat("id-ID").format(n);
   let nextId = 1;
   const fresh = (type, startMode = "furnished", commercialType = "cafe") => ({
     type,
+    floors: [],
+    activeFloor: 0,
+    residentialStyle: type === "residence" ? "warm-modern" : null,
     startMode,
     commercialType,
     dimensions: { w: type === "commercial" ? commercialTypes[commercialType].w : spaces[type].w, d: type === "commercial" ? commercialTypes[commercialType].d : spaces[type].d },
@@ -282,6 +286,7 @@
   }
   function roomPalette() {
     if (state.palette) return palettes[state.palette];
+    if (state.type !== "commercial" && state.residentialStyle) return residentialStyles[state.residentialStyle];
     if (state.type === "commercial" && state.startMode !== "blank" && state.ambiance === commercialTypes[state.commercialType].board)
       return commercialTypes[state.commercialType].palette;
     const p = boards[state.ambiance].ambiance;
@@ -330,8 +335,35 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => $("status").classList.add("quiet"), 3800);
   }
+  const floorFields = ["startMode", "dimensions", "moodboard", "finishing", "finishTarget", "ambiance", "palette", "night", "items", "residentialStyle"];
+  function floorData() {
+    return JSON.parse(JSON.stringify(Object.fromEntries(floorFields.map(key => [key, state[key] ?? null]))));
+  }
+  function syncFloor() {
+    state.floors ??= [];
+    state.activeFloor ??= 0;
+    state.floors[state.activeFloor] = floorData();
+  }
   function snapshot() {
+    syncFloor();
     return JSON.stringify(state);
+  }
+  function allItems() {
+    syncFloor();
+    return state.floors.flatMap(floor => floor.items);
+  }
+  function openFloor(index) {
+    syncFloor();
+    state.activeFloor = index;
+    Object.assign(state, JSON.parse(JSON.stringify(state.floors[index])));
+    selected = placing = null;
+    $("scene").classList.remove("placing");
+    walked = 0;
+    destination = null;
+    keys.clear();
+    padDirection = null;
+    renderCatalog();
+    changed();
   }
   function remember(before = snapshot()) {
     history.push(before);
@@ -366,8 +398,14 @@
       ) && !wallColliders.some((w) => overlaps(b, w))
     );
   }
-  function validState(data) {
+  function validState(data, nested = false) {
     if (!data || !Object.hasOwn(spaces, data.type)) return false;
+    if (data.residentialStyle != null && !Object.hasOwn(residentialStyles, data.residentialStyle)) return false;
+    if (!nested && data.floors !== undefined) {
+      if (!Array.isArray(data.floors) || data.floors.length < 1 || data.floors.length > 6 || !Number.isInteger(data.activeFloor) || data.activeFloor < 0 || data.activeFloor >= data.floors.length) return false;
+      if (!data.floors.every(floor => floor && validState({ ...data, ...floor, floors: undefined }, true))) return false;
+      Object.assign(data, data.floors[data.activeFloor]);
+    }
     // Migrate layouts saved before moodboards and scratch builds were available.
     data.startMode ??= "furnished";
     data.commercialType ??= "cafe";
@@ -440,7 +478,7 @@
     const saved = JSON.parse(localStorage.getItem(storageKey));
     if (validState(saved)) {
       state = saved;
-      nextId = Math.max(0, ...state.items.map((i) => i.id)) + 1;
+      nextId = Math.max(0, ...allItems().map((i) => i.id)) + 1;
       $("save-state").textContent = "Saved project restored";
     }
   } catch {
@@ -462,6 +500,7 @@
     linkedDirection = true;
   }
   if (Object.hasOwn(boards, incoming.get("moodboard"))) {
+    state.residentialStyle = null;
     state.moodboard = incoming.get("moodboard");
     state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
     state.ambiance = state.moodboard;
@@ -474,6 +513,13 @@
     )
   ) {
     state.finishing = incoming.get("finishing");
+    linkedDirection = true;
+  }
+  if (Object.hasOwn(residentialStyles, incoming.get("style")) && state.type !== "commercial") {
+    state.residentialStyle = incoming.get("style");
+    state.moodboard = state.ambiance = residentialStyles[state.residentialStyle].board;
+    state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
+    state.palette = null;
     linkedDirection = true;
   }
   if (linkedDirection) {
@@ -512,25 +558,35 @@
       .join("");
   }
   function renderUI() {
+    syncFloor();
+    $("floor-select").innerHTML = state.floors.map((floor, index) => `<option value="${index}">${index === 0 ? "Ground floor" : `Floor ${index + 1}`} · ${floor.items.length} pieces</option>`).join("");
+    $("floor-select").value = state.activeFloor;
+    $("add-floor").disabled = state.floors.length >= 6;
+    $("remove-floor").disabled = state.floors.length === 1;
+    $("floor-summary").textContent = `${state.floors.length} / 6 floors · Editing ${state.activeFloor === 0 ? "ground floor" : `floor ${state.activeFloor + 1}`}`;
+    $("residential-style-options").hidden = state.type === "commercial";
+    $("residential-style").value = state.residentialStyle || "";
+    $("residential-swatches").innerHTML = state.residentialStyle ? ["wall", "floor", "fabric", "accent"].map(key => `<span style="background:${residentialStyles[state.residentialStyle][key]}" title="${key}"></span>`).join("") : "";
     const s = spaceConfig(),
-      total = state.items.reduce((v, i) => v + catalog[i.kind].price, 0);
+      total = allItems().reduce((v, i) => v + catalog[i.kind].price, 0),
+      budget = s.budget * state.floors.length;
     $("project-name").textContent = s.name;
     $("project-meta").textContent =
-      `${s.label} · ${s.w} × ${s.d} m${state.startMode === "blank" ? " · From scratch" : ""}`;
+      `${s.label} · ${s.w} × ${s.d} m · ${state.activeFloor === 0 ? "Ground floor" : `Floor ${state.activeFloor + 1}`}${state.startMode === "blank" ? " · From scratch" : ""}`;
     $("area-label").textContent = `${s.w * s.d} m²`;
     $("budget-total").textContent = money(total);
     $("budget-caption").textContent =
-      total > s.budget
-        ? `Rp ${money(total - s.budget)} over the concept budget`
-        : `Rp ${money(s.budget - total)} of ${money(s.budget)} left to play with`;
+      total > budget
+        ? `Rp ${money(total - budget)} over the concept budget`
+        : `Rp ${money(budget - total)} of ${money(budget)} left to play with`;
     $("budget-progress").style.width =
-      `${Math.min(100, (total / s.budget) * 100)}%`;
+      `${Math.min(100, (total / budget) * 100)}%`;
     $("budget-progress").style.background =
-      total > s.budget ? "#b56a4f" : "#788d55";
+      total > budget ? "#b56a4f" : "#788d55";
     $("piece-count").textContent = state.items.length;
     $("palette-name").textContent = state.palette
       ? palettes[state.palette].name
-      : boards[state.ambiance].ambiance.short;
+      : state.residentialStyle && state.type !== "commercial" ? residentialStyles[state.residentialStyle].name : boards[state.ambiance].ambiance.short;
     document
       .querySelectorAll("[data-space]")
       .forEach((b) =>
@@ -564,14 +620,15 @@
         b.setAttribute("aria-pressed", b.dataset.start === state.startMode),
       );
     $("moodboard-select").value = state.moodboard;
-    $("moodboard-description").textContent = boards[state.moodboard].desc;
+    $("moodboard-description").textContent = state.residentialStyle ? residentialStyles[state.residentialStyle].materials : boards[state.moodboard].desc;
     $("finishing-select").innerHTML = MATERIAL_PALETTES[state.moodboard]
       .map((f) => `<option value="${f.id}">${f.name}</option>`)
       .join("");
-    $("finishing-select").value = state.finishing;
+    if (state.residentialStyle) $("finishing-select").insertAdjacentHTML("afterbegin", '<option value="" disabled>Collection materials</option>');
+    $("finishing-select").value = state.residentialStyle ? "" : state.finishing;
     $("finish-target").value = state.finishTarget;
     $("finish-swatch").style.backgroundColor = hex(selectedFinish().color);
-    $("finish-description").textContent =
+    $("finish-description").textContent = state.residentialStyle ? "Collection materials · Choose a finish to customise" :
       `${selectedFinish().type} · Applied to ${{ joinery: "furniture & joinery", floor: "flooring", walls: "walls" }[state.finishTarget]}`;
     $("ambiance-select").value = state.ambiance;
     document
@@ -676,11 +733,11 @@
     const g = new THREE.Group(),
       p = roomPalette(),
       wood =
-        state.finishTarget === "joinery"
+        state.finishTarget === "joinery" && !state.residentialStyle
           ? finishMaterial()
-          : material("#a78661"),
+          : material(p.wood || "#a78661"),
       fabric =
-        state.finishTarget === "joinery" && selectedFinish().type === "Fabric"
+        state.finishTarget === "joinery" && !state.residentialStyle && selectedFinish().type === "Fabric"
           ? finishMaterial()
           : material(p.fabric),
       accent = material(p.accent),
@@ -692,7 +749,7 @@
           : material("#9f8b56", 0.35);
     if (window.SECHA_COMMERCIAL_FURNITURE.build(item.kind, g, {
       box, cylinder, sphere, material, palette: p,
-      finish: state.finishTarget === "joinery" && (state.type !== "commercial" || state.finishing !== commercialTypes[state.commercialType].finish || state.moodboard !== commercialTypes[state.commercialType].board) ? selectedFinish() : null,
+      finish: !state.residentialStyle && state.finishTarget === "joinery" && (state.type !== "commercial" || state.finishing !== commercialTypes[state.commercialType].finish || state.moodboard !== commercialTypes[state.commercialType].board) ? selectedFinish() : null,
       commercial: state.type === "commercial",
     })) {
       // Detailed commercial models use the same metric footprints as the plan.
@@ -822,8 +879,11 @@
       scene.userData.ground.material.color.copy(scene.background);
     box(room, s.w + 0.35, 0.25, s.d + 0.35, 0, -0.16, 0, material("#e8e5d7"));
     if (state.type === "commercial" && state.finishTarget !== "floor") floor.map = window.SECHA_COMMERCIAL_FURNITURE.texture(state.commercialType === "office" ? "wood" : "stone");
+    if (state.residentialStyle && state.finishTarget !== "floor") {
+      floor.map = window.SECHA_COMMERCIAL_FURNITURE.texture(["warm-modern", "earthy-retreat"].includes(state.residentialStyle) ? "wood" : "stone");
+    }
     box(room, s.w, 0.04, s.d, 0, -0.015, 0, floor);
-    if ((state.type !== "commercial" && (state.finishTarget !== "floor" || selectedFinish().type === "Wood")) || (state.type === "commercial" && state.commercialType === "office")) {
+    if ((state.type !== "commercial" && !["soft-contemporary", "urban-studio"].includes(state.residentialStyle) && (state.finishTarget !== "floor" || selectedFinish().type === "Wood")) || (state.type === "commercial" && state.commercialType === "office")) {
       for (let x = -s.w / 2 + 0.25; x < s.w / 2; x += 0.38)
         box(
           room,
@@ -1480,6 +1540,50 @@
       renderCatalog();
     }),
   );
+  $("residential-style").innerHTML = '<option value="">Custom moodboard</option>' + Object.entries(residentialStyles).map(([id, style]) => `<option value="${id}">${style.name}</option>`).join("");
+  $("residential-style").addEventListener("change", event => {
+    remember();
+    state.residentialStyle = event.target.value || null;
+    if (state.residentialStyle) {
+      state.moodboard = state.ambiance = residentialStyles[state.residentialStyle].board;
+      state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
+      state.finishTarget = "joinery";
+      state.palette = null;
+    }
+    state.quests.palette = true;
+    changed();
+    notify(state.residentialStyle ? `${residentialStyles[state.residentialStyle].name} collection applied to this floor.` : "Custom moodboard active.");
+  });
+  $("floor-select").addEventListener("change", event => {
+    remember();
+    openFloor(Number(event.target.value));
+    notify("Floor opened. Your other layouts are kept.");
+  });
+  $("add-floor").addEventListener("click", () => {
+    if (state.floors.length >= 6) return;
+    remember();
+    const floor = floorData();
+    floor.items = [];
+    floor.startMode = "blank";
+    state.floors.push(floor);
+    openFloor(state.floors.length - 1);
+    notify("New empty floor added. Set its dimensions and furnish it.");
+  });
+  $("remove-floor").addEventListener("click", () => {
+    if (state.floors.length <= 1) return;
+    remember();
+    state.floors.splice(state.activeFloor, 1);
+    state.activeFloor = Math.min(state.activeFloor, state.floors.length - 1);
+    Object.assign(state, JSON.parse(JSON.stringify(state.floors[state.activeFloor])));
+    selected = placing = null;
+    destination = null;
+    keys.clear();
+    padDirection = null;
+    $("scene").classList.remove("placing");
+    renderCatalog();
+    changed();
+    notify("Floor removed. Undo restores its layout.");
+  });
   function startLayout(type, startMode, commercialType) {
     remember();
     const previous = state;
@@ -1491,6 +1595,7 @@
       ambiance: previous.ambiance,
       palette: previous.palette,
       night: previous.night,
+      residentialStyle: type === "residence" ? previous.residentialStyle || "warm-modern" : null,
     };
     if (type === "commercial" && startMode !== "blank") {
       const direction = commercialTypes[commercialType];
@@ -1502,6 +1607,10 @@
       startMode === "blank"
     )
       state.dimensions = { ...previous.dimensions };
+    if (previous.type === type && previous.commercialType === commercialType) {
+      state.floors = previous.floors;
+      state.activeFloor = previous.activeFloor;
+    }
     walked = 0;
     choose(null);
     setMode("build");
@@ -1554,6 +1663,7 @@
   ).join("");
   $("moodboard-select").addEventListener("change", (e) => {
     remember();
+    state.residentialStyle = null;
     state.moodboard = e.target.value;
     state.finishing = MATERIAL_PALETTES[state.moodboard][0].id;
     state.ambiance = state.moodboard;
@@ -1566,6 +1676,7 @@
   });
   $("finish-target").addEventListener("change", (e) => {
     remember();
+    state.residentialStyle = null;
     state.finishTarget = e.target.value;
     state.quests.palette = true;
     changed();
@@ -1573,6 +1684,7 @@
   });
   $("finishing-select").addEventListener("change", (e) => {
     remember();
+    state.residentialStyle = null;
     state.finishing = e.target.value;
     state.quests.palette = true;
     changed();
@@ -1582,6 +1694,7 @@
   });
   $("ambiance-select").addEventListener("change", (e) => {
     remember();
+    state.residentialStyle = null;
     state.ambiance = e.target.value;
     state.palette = null;
     state.quests.palette = true;
@@ -1609,6 +1722,7 @@
     b.addEventListener("click", () => {
       if (state.palette === b.dataset.palette) return;
       remember();
+      state.residentialStyle = null;
       state.palette = b.dataset.palette;
       state.quests.palette = true;
       changed();
@@ -1685,6 +1799,7 @@
     }
   });
   $("export-project").addEventListener("click", () => {
+    syncFloor();
     const blob = new Blob(
       [
         JSON.stringify(
@@ -1693,7 +1808,7 @@
             version: 1,
             project: state,
             dimensions: { w: spaceConfig().w, d: spaceConfig().d },
-            estimatedTotal: state.items.reduce(
+            estimatedTotal: allItems().reduce(
               (n, i) => n + catalog[i.kind].price,
               0,
             ),
@@ -1717,6 +1832,9 @@
     const previous = state;
     state = {
       ...fresh(state.type, state.startMode, state.commercialType),
+      floors: previous.floors,
+      activeFloor: previous.activeFloor,
+      residentialStyle: previous.residentialStyle,
       dimensions: { ...previous.dimensions },
       moodboard: previous.moodboard,
       finishing: previous.finishing,

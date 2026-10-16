@@ -115,3 +115,11 @@ Run `node scripts/render-commercial-plans.cjs` after changing the shared layouts
 Section 03, **Design before you build**, is a compact guide with three choices: a starting direction, layout and 3D visualisation, or detailed drawings. Each choice filters the existing collection to design services and focuses the matching Lite, Pro or Premium card. Prices, inclusions and add-to-bag actions appear once, in the catalogue.
 
 Section 04, **Make it yours**, presents a single entry into the brief. An empty bag links to the collection; a populated bag offers **Prepare my brief**, which opens the existing contact form and request summary. The repeated package grid, journey steps, empty-state illustration and extra bag estimate have been removed. Cart changes publish `secha:bag-updated` to keep this entry current without overwriting an active form. Validation, consent and WhatsApp handoff retain their existing behavior. The sections use `js/design-journey.js` and `css/studio-expansion.css`.
+
+### Residence palettes and multiple floors
+
+The four Styling Studio collection palettes (Warm Modern, Soft Contemporary, Earthy Retreat and Urban Studio) are defined in `js/design-options.js` and shared with the residence playground. Each collection has a direct “Try this palette” link. Choosing a custom moodboard, ambiance, finish or quick colour variation releases the collection palette.
+
+Use **Add floor** to create up to six independently editable levels. A new level is empty, inherits the active floor’s dimensions and direction, and can be resized and furnished separately. The floor selector opens each level for editing or walking; stairs and continuous travel between levels are not simulated. Each floor keeps its own layout, dimensions, collection, finishing and lighting. The budget covers furniture on all floors, with a concept allowance per floor. Removing a floor, resetting its layout, and other edits can be undone. Switching space type starts a new project; Undo restores the previous project.
+
+Browser saves and JSON exports include every floor and the active level. Older single-level browser saves open as a ground-floor project. Run `npm run test:floors` for multi-floor isolation, persistence, export, undo, collection, limit, mobile and accessibility checks.

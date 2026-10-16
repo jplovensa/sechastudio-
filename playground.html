@@ -61,6 +61,12 @@
               ><strong>Commercial</strong><small>Work & hospitality</small>
             </button>
           </div>
+          <div class="floor-controls">
+            <label>Current floor<select id="floor-select"></select></label>
+            <div class="floor-actions"><button id="add-floor">＋ Add floor</button><button id="remove-floor">Remove floor</button></div>
+            <p id="floor-summary" class="setup-hint"></p>
+            <p class="setup-hint">Design and walk each floor separately. Up to six floors per project.</p>
+          </div>
           <div class="setup-options">
             <label id="commercial-options" hidden
               >Commercial type
@@ -118,6 +124,7 @@
             <h2 id="directions-heading">02 / Find your direction</h2>
             <span>SECHA collection</span>
           </div>
+          <div id="residential-style-options" class="residential-style-options"><label>Styling Studio collection<select id="residential-style"></select></label><div id="residential-swatches" aria-hidden="true"></div><p class="setup-hint">The same colours and material direction as our curated interiors.</p></div>
           <label>Moodboard<select id="moodboard-select"></select></label>
           <p class="direction-description" id="moodboard-description"></p>
           <label>Finishing<select id="finishing-select"></select></label>

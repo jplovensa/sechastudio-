@@ -290,7 +290,14 @@
       swatches: ["#f1eee7", "#d7cbb5", "#ffffff"],
     },
   ];
+  const RESIDENTIAL_STYLES = {
+    "warm-modern": { name: "Warm Modern", materials: "Honey oak · Woven linen · Travertine", board: "nomad", wall: "#e9e3d8", floor: "#bd9f76", fabric: "#e7dfd0", accent: "#45483d", wood: "#bd9f76", rug: "#e7dfd0" },
+    "soft-contemporary": { name: "Soft Contemporary", materials: "Bouclé · Limestone · Brushed steel", board: "dreamer", wall: "#f1eee7", floor: "#cdccc7", fabric: "#f1eee7", accent: "#9aa1a2", wood: "#cdccc7", rug: "#cdccc7" },
+    "earthy-retreat": { name: "Earthy Retreat", materials: "Walnut · Flax linen · Clay", board: "purist", wall: "#af5b3c", floor: "#8c734b", fabric: "#d9c2a3", accent: "#af5b3c", wood: "#8c734b", rug: "#d9c2a3" },
+    "urban-studio": { name: "Urban Studio", materials: "Concrete · Smoked oak · Steel", board: "architect", wall: "#888888", floor: "#746958", fabric: "#888888", accent: "#111111", wood: "#746958", rug: "#746958" },
+  };
   window.SECHA_DESIGN_OPTIONS = Object.freeze({
+    RESIDENTIAL_STYLES,
     MOODBOARDS,
     MATERIAL_PALETTES,
     AMBIANCE_PALETTES,
