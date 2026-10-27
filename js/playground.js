@@ -253,6 +253,7 @@
     sun,
     hemisphere,
     warmLight;
+  let play = null, residentModel = null;
   let meshes = [],
     wallColliders = [],
     raycaster,
@@ -268,6 +269,7 @@
     dragItem = null,
     dragOrigin = null,
     dragSnapshot = null;
+  let waypoints = [], arrivalTarget = null;
   let destination = null,
     walked = 0,
     keys = new Set(),
@@ -459,6 +461,7 @@
       if (
         !i ||
         !Object.hasOwn(catalog, i.kind) ||
+        (i.lightOn != null && typeof i.lightOn !== "boolean") ||
         (i.tier != null && !Object.hasOwn(residenceFurniture.tiers, i.tier)) ||
         !Number.isSafeInteger(i.id) ||
         i.id < 1 ||
@@ -890,6 +893,9 @@
       cylinder(g, 0.16, 0.3, 0.32, 0, 1.62, 0, cream);
       cylinder(g, 0.28, 0.28, 0.01, 0, 1.455, 0, material("#ebd7a1"));
     }
+    if (item.kind === "lamp" && item.lightOn === true) {
+      const glow = new THREE.PointLight("#ffd6a0", .9, 3.5);glow.position.set(0,1.4,0);g.add(glow);
+    }
     g.position.set(item.x, 0, item.z);
     g.rotation.y = (item.r * Math.PI) / 2;
     g.userData.itemId = item.id;
@@ -897,6 +903,7 @@
   }
   function rebuild() {
     if (!initialized) return;
+    play?.layoutChanged();
     disposeGroup(room);
     disposeGroup(furniture);
     room = new THREE.Group();
@@ -1072,7 +1079,25 @@
       !wallColliders.some((w) => overlaps(point, w, 0.025))
     );
   }
+  function walkRoute(point, itemId = null) {
+    const route = window.SECHA_PLAY_RULES.path(avatarPosition, point, walkable);
+    if (!route) return false;
+    waypoints = route;destination = waypoints.shift() || null;arrivalTarget=itemId;
+    $("scene").dataset.pathLength = route.length+1;
+    return true;
+  }
+  function approachItem(id) {
+    const item=state.items.find(piece=>piece.id===id);
+    if(!item || !window.SECHA_PLAY_RULES.actions(item.kind).length) return false;
+    const b=bounds(item), points=[{x:item.x,z:item.z+b.d/2+.26},{x:item.x,z:item.z-b.d/2-.26},{x:item.x+b.w/2+.26,z:item.z},{x:item.x-b.w/2-.26,z:item.z}];
+    if(window.SECHA_PLAY_RULES.seats.includes(item.kind)) {
+      const a=item.r*Math.PI/2;points.unshift({x:item.x+Math.sin(a)*(catalog[item.kind].d/2+.26),z:item.z+Math.cos(a)*(catalog[item.kind].d/2+.26)});
+    }
+    for(const point of points)if(walkRoute(point,id)){notify("Finding a clear route to your piece.");return true;}
+    notify("No clear route reaches this piece. Clear a little room in Build mode.");return true;
+  }
   function ensureAvatar() {
+    if (play?.seated()) return;
     if (!walkable(avatarPosition.x, avatarPosition.z)) {
       const s = spaceConfig();
       let found = false;
@@ -1085,7 +1110,7 @@
             break;
           }
     }
-    destination = null;
+    destination = null;waypoints=[];arrivalTarget=null;
     if (avatar) avatar.position.set(avatarPosition.x, 0, avatarPosition.z);
   }
   function updateHighlight() {
@@ -1206,11 +1231,19 @@
         new THREE.OctahedronGeometry(0.13),
         material("#b5d47e", 0.35),
       );
-      diamond.position.y = 1.65;
+      diamond.position.y = 1.98;
       avatar.add(diamond);
       avatar.userData.diamond = diamond;
       avatar.visible = false;
       scene.add(avatar);
+      window.SECHA_RESIDENT_AVATAR.load().then(model => {
+        for (const child of [...avatar.children]) if (child !== diamond) {
+          child.traverse(node => {node.geometry?.dispose();node.material?.dispose();});avatar.remove(child);
+        }
+        residentModel=model;avatar.add(model.object);
+        $("avatar-status").textContent="Resident ready";$("scene").dataset.avatarSource="makehuman";
+        model.setOutfit($("resident-outfit").value);renderPending=true;
+      }).catch(() => {$("avatar-status").textContent="Simple resident";$("scene").dataset.avatarSource="fallback";});
       raycaster = new THREE.Raycaster();
       floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       initialized = true;
@@ -1373,8 +1406,10 @@
       if (!cancelled && !pointer.moved && point) {
         if (mode === "build" && placing) addAt(point.x, point.z);
         else if (mode === "walk") {
-          if (walkable(point.x, point.z)) {
-            destination = { x: point.x, z: point.z };
+          if (play?.blocked()) { notify("Stand up or close the game to keep exploring."); }
+          else if (play?.pick(hitItem())) { /* Interact with a nearby piece. */ }
+          else if (approachItem(hitItem())) { /* Route around obstacles to an interaction. */ }
+          else if (walkable(point.x, point.z) && walkRoute({x:point.x,z:point.z})) {
             notify("On your way. Use the arrow keys to find your own path.");
           } else
             notify("That spot is occupied. Pick an open part of the floor.");
@@ -1427,8 +1462,9 @@
     changed();
   }
   function setMode(value) {
+    play?.mode(value);
     mode = value;
-    destination = null;
+    destination = null;waypoints=[];arrivalTarget=null;
     keys.clear();
     selected = null;
     placing = null;
@@ -1440,6 +1476,7 @@
     $("plan-view").setAttribute("aria-pressed", false);
     $("walk-pad").hidden = mode !== "walk";
     $("scene").classList.toggle("walking", mode === "walk");
+    $("workspace").classList.toggle("is-play-mode", mode === "walk");
     $("scene").classList.remove("placing");
     $("scene-hint").textContent =
       mode === "walk"
@@ -1483,19 +1520,23 @@
         dx -= 1;
       if (keys.has("d") || keys.has("arrowright") || padDirection === "right")
         dx += 1;
-      if (dx || dz) destination = null;
+      if (dx || dz) {destination = null;waypoints=[];arrivalTarget=null;}
       else if (destination) {
         dx = destination.x - avatarPosition.x;
         dz = destination.z - avatarPosition.z;
         if (Math.hypot(dx, dz) < 0.07) {
-          destination = null;
+          destination = waypoints.shift() || null;
+          if (!destination && arrivalTarget != null) {play?.pick(arrivalTarget);arrivalTarget=null;}
           dx = dz = 0;
         }
       }
+      if (play?.blocked()) {dx=dz=0;destination=null;}
       const len = Math.hypot(dx, dz);
       if (len) {
-        dx = (dx / len) * dt * 1.8;
-        dz = (dz / len) * dt * 1.8;
+        // Do not overshoot a waypoint when a slow WebGL frame has a large dt.
+        const travel = destination ? Math.min(len, dt * 1.8) : dt * 1.8;
+        dx = (dx / len) * travel;
+        dz = (dz / len) * travel;
         const old = { ...avatarPosition };
         // Small collision steps prevent crossing thin walls on a delayed frame.
         const steps = Math.max(1, Math.ceil(Math.hypot(dx, dz) / 0.08));
@@ -1533,6 +1574,7 @@
         }
         updateCamera();
       }
+      play?.tick(elapsed, len ? 1 : 0);
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
         avatar.userData.diamond.rotation.y += dt;
     }
@@ -1544,7 +1586,7 @@
       camera.lookAt(targetCamera.target);
     }
     const idleAnimation =
-      mode === "walk" &&
+      mode === "walk" && !$("play-game-dialog").open &&
       !matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (
       (renderPending || cameraMoving || idleAnimation) &&
@@ -1951,6 +1993,7 @@
     $("help-button").setAttribute("aria-expanded", open);
   });
   window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && $("play-game-dialog").open) return;
     if (e.key === "Escape") {
       placing = null;
       clearGhost();
@@ -1978,6 +2021,9 @@
         "No open spot fits this piece. Move or remove an existing piece first.",
       );
       return;
+    }
+    if (mode === "walk" && e.key.toLowerCase() === "e" && document.activeElement === $("scene")) {
+      e.preventDefault();play?.key();return;
     }
     if (
       mode === "walk" &&
@@ -2023,6 +2069,17 @@
     });
     b.addEventListener("keyup", () => (padDirection = null));
     b.addEventListener("blur", () => (padDirection = null));
+  });
+  play = window.SECHA_PLAYGROUND_PLAY.create({
+    state:()=>state,catalog,position:avatarPosition,
+    walkable,notify,
+    navigate(id){$("scene").scrollIntoView({block:"nearest"});$("scene").focus({preventScroll:true});return approachItem(id);},
+    stop(){destination=null;waypoints=[];arrivalTarget=null;keys.clear();padDirection=null;},
+    setPosition(x,z,rotation){avatarPosition.x=x;avatarPosition.z=z;if(avatar){avatar.position.set(x,0,z);avatar.rotation.y=rotation;}$("scene").focus({preventScroll:true});renderPending=true;updateCamera(true);},
+    invalidate(){renderPending=true;},
+    pose(options){residentModel?.pose(options);if(avatar)avatar.userData.pose=options.seated?"sitting":options.speed?"walking":"idle";},
+    outfit(color){residentModel?.setOutfit(color);},
+    toggleLamp(item){remember();item.lightOn=item.lightOn!==true;changed();},
   });
   renderCatalog();
   renderUI();

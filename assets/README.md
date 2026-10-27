@@ -82,3 +82,9 @@ Current generated sources (retained in `/workspace/generated_images`):
 - `sculpted-art.webp`: `exec-02b94459-3d6e-45cc-8348-08e5ca2c82ed.png`
 - `painted-walls.webp`: `exec-7e96fb68-5268-4ead-985a-815f8f37196a.png`
 - `hand-painted-art.webp`: `exec-b3cdf580-68dd-45d1-9692-d6b638e1450e.png`
+
+## MakeHuman resident — October 2026
+
+`assets/avatar/resident.bin` and `resident.json` derive from the official MakeHuman hm08 base mesh, default skeleton and default skin weights at revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482` in https://github.com/makehumancommunity/makehuman. These are CC0 assets; the original license is included as `assets/avatar/LICENSE.ASSETS.md`. The build manifest records exact source URLs, SHA-256 checksums and the binary checksum. No MakeHuman application code is redistributed.
+
+SECHA’s build script retains the head and hands, forms opaque shirt/trousers/shoe surfaces from the bundled clothing helper mesh, adds a cropped hair cap and uses the supplied rig weights. Non-rendering helpers and anatomical body geometry beneath the clothes are omitted. Eyes, a coffee mug, clothing colours and runtime poses are authored additions. The local asset has five material regions, approximately 10,000 vertices and 20,000 triangles; it is intended for the illustrative playground, not a scanned person or a manufacturer asset.

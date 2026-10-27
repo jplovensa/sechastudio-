@@ -1,0 +1,65 @@
+/* Play mode, resident actions and local tabletop games. */
+.walk-interactions { position:absolute; left:22px; bottom:88px; z-index:4; width:236px; background:#faf9f1f2; border:1px solid #bdc9b0; border-radius:14px; padding:15px; box-shadow:0 8px 24px #263d3214; color:#263d32; }
+.resident-heading { display:flex; align-items:center; gap:7px; font-size:10px; }
+.resident-heading button { margin-left:auto; min-height:28px; font:inherit; border:1px solid #b8c5ad; padding:6px 8px; border-radius:20px; background:#edf0e2; color:#263d32; cursor:pointer; }
+.resident-heading button + button { margin-left:0; }
+.walk-interactions label { font-size:9px; display:grid; grid-template-columns:42px minmax(0,1fr); align-items:center; gap:7px; margin:10px 0; }
+.walk-interactions select { min-width:0; width:100%; min-height:32px; border:1px solid #b6c0ad; border-radius:6px; background:#fffdf5; color:#263d32; padding:5px; font:inherit; font-size:10px; }
+#interaction-state { font-size:11px; line-height:1.5; margin:12px 0 6px; }
+#interaction-actions { display:flex; flex-wrap:wrap; gap:7px; }
+#interaction-actions button { flex:1; min-height:36px; font:inherit; font-size:11px; border:0; border-radius:7px; padding:8px; background:#304d3d; color:#fff8e7; cursor:pointer; }
+.resident-hint { display:block; font-size:8px; line-height:1.6; margin-top:9px; color:#52644f; }
+.walk-progress { display:flex; align-items:center; gap:8px; font-size:8px; margin-top:10px; color:#52644f; }
+.walk-progress strong { white-space:nowrap; color:#304d3d; }
+.play-session { border:1px solid #c5ceb7; border-radius:12px; background:#eff0e3; padding:16px; margin-bottom:20px; color:#263d32; }
+.play-session h3 { display:flex; gap:12px; justify-content:space-between; font-size:14px; font-weight:500; margin:10px 0; }
+#play-xp { font-size:12px; white-space:nowrap; }
+#play-wins { font-size:10px; }
+#start-room-quest { display:flex; justify-content:space-between; gap:15px; width:100%; min-height:40px; border:0; border-radius:6px; padding:10px; margin-top:14px; background:#304d3d; color:#fff8e7; font:inherit; font-size:10px; cursor:pointer; }
+#room-quest-list { list-style:none; padding:0; margin:14px 0; font-size:10px; line-height:2.1; }
+#room-quest-list .complete { color:#405d36; }
+.play-session small { font-size:9px; line-height:1.8; display:block; color:#52644f; }
+.play-destination-label { display:grid; gap:6px; font-size:10px; margin-top:14px; }
+#play-destination { width:100%; min-width:0; min-height:34px; border:1px solid #aebca1; background:#fffdf5; color:#263d32; padding:6px; border-radius:6px; font:inherit; }
+#go-play-destination { display:flex; justify-content:space-between; width:100%; min-height:36px; border:1px solid #aebca1; border-radius:6px; background:#f7f5eb; color:#263d32; font:inherit; font-size:10px; padding:8px; margin-top:7px; cursor:pointer; }
+.workspace:has(.walk-interactions:not([hidden])) > .toast { bottom:310px; }
+.workspace.is-play-mode > .challenge { display:none; }
+.play-game-dialog { margin:auto; width:min(500px,calc(100% - 28px)); max-height:90svh; overflow-y:auto; border:1px solid #b6c3aa; border-radius:18px; background:#f7f5eb; color:#263d32; padding:26px; font-family:Inter,Arial,sans-serif; }
+.play-game-dialog::backdrop { background:#183428b8; backdrop-filter:blur(6px); }
+.play-game-dialog header { display:flex; align-items:start; justify-content:space-between; gap:15px; }
+.play-game-dialog h2 { font-size:34px; font-weight:400; letter-spacing:-1.5px; margin:10px 0 20px; }
+#close-play-game { min-width:36px; min-height:36px; font-size:26px; background:transparent; border:0; color:#263d32; cursor:pointer; }
+.play-game-tabs { display:flex; gap:6px; }
+.play-game-tabs button { flex:1; min-height:40px; padding:8px; border:1px solid #acb9a0; border-radius:7px; background:#fffdf5; color:#263d32; font:inherit; font-size:11px; cursor:pointer; }
+.play-game-tabs [aria-pressed="true"] { background:#304d3d; color:#fff8e7; }
+#game-message { font-size:12px; line-height:1.7; min-height:40px; margin:18px 0 10px; }
+#table-board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+#table-board button { aspect-ratio:1; min-height:60px; font:500 40px Inter,Arial,sans-serif; border:1px solid #b1bea5; border-radius:10px; color:#304d3d; background:#e6e8d8; cursor:pointer; }
+#table-board button:disabled { opacity:1; cursor:default; }
+#memory-board { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+#memory-board button { aspect-ratio:.85; min-height:62px; font:500 12px Inter,Arial,sans-serif; border:1px solid #b1bea5; border-radius:10px; color:#304d3d; background:#e6e8d8; cursor:pointer; }
+#memory-board [aria-pressed="true"] { background:#d5d9bc; }
+#memory-board button:disabled { opacity:.65; }
+#memory-board [data-material="Oak"] { background:#d0b38a repeating-linear-gradient(0deg,transparent 0 5px,#90745345 6px,transparent 7px); }
+#memory-board [data-material="Linen"] { background:repeating-linear-gradient(90deg,#ece7db90 0 2px,transparent 2px 4px),repeating-linear-gradient(0deg,#c6bca590 0 1px,#e5dfd0 1px 4px); }
+#memory-board [data-material="Stone"] { background:#d2d0c2 radial-gradient(#a5a39475 .6px,transparent 1px) 0 0/5px 5px; }
+#memory-board [data-material="Clay"] { background:#c89274; }
+#table-board[hidden], #memory-board[hidden] { display:none; }
+#restart-play-game { min-height:40px; margin-top:18px; background:#304d3d; color:#fff8e7; border:0; border-radius:7px; padding:10px 16px; font:inherit; font-size:12px; cursor:pointer; }
+.game-note { font-size:10px; line-height:1.8; margin-bottom:0; color:#52644f; }
+.play-game-dialog :focus-visible,.walk-interactions :focus-visible,.play-session :focus-visible { outline:3px solid #a16e37; outline-offset:3px; }
+body.play-game-open { overflow:hidden; }
+@media(max-width:620px) {
+ .walk-interactions { width:calc(100% - 148px); max-width:205px; min-width:156px; left:12px; bottom:74px; padding:10px; border-radius:10px; }
+ .resident-heading { flex-wrap:wrap; font-size:9px; gap:5px; }
+ .resident-heading button { padding:4px 7px; font-size:9px; }
+ .walk-interactions label { grid-template-columns:1fr; gap:4px; margin:7px 0; font-size:8px; }
+ .walk-interactions select { min-height:28px; font-size:9px; }
+ #interaction-state { font-size:10px; margin:8px 0; }
+ #interaction-actions button { min-height:36px; font-size:10px; }
+ .resident-hint { font-size:7px; margin-top:6px; }
+ .workspace:has(.walk-interactions:not([hidden])) > .toast { bottom:330px; }
+ .play-game-dialog { padding:20px; }
+ .play-game-dialog h2 { font-size:29px; }
+ .play-game-tabs button { font-size:10px; }
+}
