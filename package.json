@@ -9,6 +9,7 @@
     "test:e2e": "node tests/e2e.cjs",
     "test:studio": "node tests/studio-experience.cjs",
     "test:play": "node tests/playground-play.cjs",
+    "test:motion": "node tests/resident-motion.cjs",
     "test:playground": "node tests/playground.cjs",
     "render:intro": "node scripts/render-intro.cjs",
     "test:art": "node tests/custom-art.cjs",

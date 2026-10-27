@@ -13,10 +13,12 @@
     <link rel="stylesheet" href="css/playground.css" />
     <link rel="stylesheet" href="css/playground-play.css" />
     <script defer src="vendor/three.r128.min.js"></script>
+    <script defer src="vendor/three-vrm-animation.2.1.3.min.js"></script>
     <script defer src="js/design-options.js"></script>
     <script defer src="js/commercial-layouts.js"></script>
     <script defer src="js/commercial-furniture.js"></script>
     <script defer src="js/residential-furniture.js"></script>
+    <script defer src="js/resident-motion.js"></script>
     <script defer src="js/resident-avatar.js"></script>
     <script defer src="js/playground-games-core.js"></script>
     <script defer src="js/playground-play.js"></script>
@@ -300,7 +302,7 @@
           <span id="quest-count">0/3</span>
         </div>
         <section id="walk-interactions" class="walk-interactions" hidden aria-label="Resident interactions">
-          <div class="resident-heading"><span class="tiny-dot"></span><strong id="avatar-status">Resident loading…</strong><button id="resident-wave" type="button" aria-label="Wave hello">Wave</button><button id="resident-quest" type="button">Quest</button></div><div class="walk-progress"><strong id="walk-xp">0 XP</strong><span id="walk-quest-hint">Make yourself at home.</span></div>
+          <div class="resident-heading"><span class="tiny-dot"></span><strong id="avatar-status">Resident loading…</strong><button id="resident-wave" type="button" aria-label="Wave hello">Wave</button><button id="resident-quest" type="button">Quest</button><button id="resident-run" type="button" aria-pressed="false">Run</button></div><div class="walk-progress"><strong id="walk-xp">0 XP</strong><span id="walk-quest-hint">Make yourself at home.</span></div>
           <label class="resident-outfit">Outfit<select id="resident-outfit"><option value="#70846d">Moss</option><option value="#444854">Ink</option><option value="#884f3b">Clay</option></select></label>
           <p id="interaction-state">Explore your room</p><label class="nearby-label">Nearby<select id="nearby-object"><option>Walk toward furniture</option></select></label>
           <div id="interaction-actions"></div><span class="resident-hint">E / interact · Stand up to walk</span>
@@ -406,7 +408,7 @@
       <span
         >SECHA PLAYGROUND <span class="footer-divider">/</span> A SPACE FOR
         WHAT’S NEXT.</span
-      ><span>Resident asset: MakeHuman / CC0 · Concept dimensions require a site survey.</span>
+      ><span>MakeHuman resident / CC0 · Mixamo motion · Concept dimensions require a site survey.</span>
     </footer>
   </body>
 </html>

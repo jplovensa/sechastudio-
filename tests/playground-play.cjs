@@ -3,13 +3,13 @@ const fs=require('node:fs/promises');
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox','--enable-unsafe-swiftshader']});
  try{
-  const page=await browser.newPage({viewport:{width:1440,height:1050},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);
+  const page=await browser.newPage({viewport:{width:1440,height:1050},reducedMotion:process.env.QA_MOTION==='normal'?'no-preference':'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);
   const base=process.env.QA_BASE_URL||'http://127.0.0.1:8055';
   await page.goto(base+'/playground.html');await page.locator('#save-project').click();
   await page.evaluate(()=>{const state=JSON.parse(localStorage.getItem('secha-playground-v1'));delete state.floors;delete state.activeFloor;Object.assign(state,{startMode:'blank',dimensions:{w:8,d:6},residentialStyle:'warm-modern',items:[{id:100,kind:'chair',x:-1,z:1.3,r:0},{id:101,kind:'table',x:1,z:1.3,r:0},{id:102,kind:'lamp',x:-2,z:-1,r:0},{id:103,kind:'plant',x:2,z:-1,r:0},{id:104,kind:'counter',x:0,z:-2,r:0}]});localStorage.setItem('secha-playground-v1',JSON.stringify(state));localStorage.removeItem('secha-play-v1');});
   await page.reload();await page.waitForFunction(()=>document.getElementById('scene').dataset.avatarSource==='makehuman');
   assert.equal(await page.locator('#webgl-fallback').isVisible(),false);
-  const rig=await page.evaluate(async()=>{const model=await SECHA_RESIDENT_AVATAR.load();model.pose({seated:true,seatHeight:.54});return {source:model.object.userData.source,bones:Object.keys(model.bones).length,knee:model.bones['lowerleg01.L'].rotation.x,hip:model.bones['upperleg01.L'].rotation.x,pose:model.object.userData.pose};});
+  const rig=await page.evaluate(async()=>{const model=await SECHA_RESIDENT_AVATAR.load();for(let i=0;i<120;i++)model.pose({time:i/60,dt:1/60,seated:true,seatHeight:.54});return {source:model.object.userData.source,bones:Object.keys(model.bones).length,knee:model.motion.normalized.leftLowerLeg.rotation.x,hip:model.motion.normalized.leftUpperLeg.rotation.x,pose:model.object.userData.pose};});
   assert.equal(rig.source,'MakeHuman');assert.equal(rig.bones,163);assert.equal(rig.pose,'sitting');assert.ok(rig.knee>1.5&&rig.hip< -1.5);
   await page.locator('[data-mode="walk"]').click();await page.locator('#resident-quest').click();
   await page.locator('#nearby-object').selectOption('101');await page.locator('[data-play-action="game"]').click();

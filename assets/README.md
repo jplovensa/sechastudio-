@@ -88,3 +88,17 @@ Current generated sources (retained in `/workspace/generated_images`):
 `assets/avatar/resident.bin` and `resident.json` derive from the official MakeHuman hm08 base mesh, default skeleton and default skin weights at revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482` in https://github.com/makehumancommunity/makehuman. These are CC0 assets; the original license is included as `assets/avatar/LICENSE.ASSETS.md`. The build manifest records exact source URLs, SHA-256 checksums and the binary checksum. No MakeHuman application code is redistributed.
 
 SECHA’s build script retains the head and hands, forms opaque shirt/trousers/shoe surfaces from the bundled clothing helper mesh, adds a cropped hair cap and uses the supplied rig weights. Non-rendering helpers and anatomical body geometry beneath the clothes are omitted. Eyes, a coffee mug, clothing colours and runtime poses are authored additions. The local asset has five material regions, approximately 10,000 vertices and 20,000 triangles; it is intended for the illustrative playground, not a scanned person or a manufacturer asset.
+
+## Mixamo motion and VRM clip adapter — October 2026
+
+`assets/avatar/motion/mixamo-motion.json` extracts the idle, walk, run and agree
+motions from the official Three.js Mixamo/Xbot example. Its source URL, revision,
+source hash and terms URL are recorded in the JSON manifest; the source model is
+not redistributed. See `assets/avatar/motion/README.md`. Mixamo motion terms are
+separate from the CC0 MakeHuman geometry license.
+
+`vendor/three-vrm-animation.2.1.3.min.js` is the unmodified official MIT-licensed
+UMD build from `@pixiv/three-vrm-animation` 2.1.3. Its license is included as
+`vendor/three-vrm-animation.LICENSE.txt`. Runtime animation retargeting, normalized
+humanoid mapping, authored interaction clips and blending are implemented in
+`js/resident-motion.js` with native JavaScript and the existing Three.js runtime.

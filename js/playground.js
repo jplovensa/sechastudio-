@@ -269,7 +269,7 @@
     dragItem = null,
     dragOrigin = null,
     dragSnapshot = null;
-  let waypoints = [], arrivalTarget = null;
+  let waypoints = [], arrivalTarget = null, arrivalAction = null, residentTransition = null;
   let destination = null,
     walked = 0,
     keys = new Set(),
@@ -1079,10 +1079,10 @@
       !wallColliders.some((w) => overlaps(point, w, 0.025))
     );
   }
-  function walkRoute(point, itemId = null) {
+  function walkRoute(point, itemId = null, onArrival = null) {
     const route = window.SECHA_PLAY_RULES.path(avatarPosition, point, walkable);
     if (!route) return false;
-    waypoints = route;destination = waypoints.shift() || null;arrivalTarget=itemId;
+    waypoints = route;destination = waypoints.shift() || null;arrivalTarget=itemId;arrivalAction=onArrival;
     $("scene").dataset.pathLength = route.length+1;
     return true;
   }
@@ -1110,7 +1110,7 @@
             break;
           }
     }
-    destination = null;waypoints=[];arrivalTarget=null;
+    destination = null;waypoints=[];arrivalTarget=null;arrivalAction=null;
     if (avatar) avatar.position.set(avatarPosition.x, 0, avatarPosition.z);
   }
   function updateHighlight() {
@@ -1464,7 +1464,7 @@
   function setMode(value) {
     play?.mode(value);
     mode = value;
-    destination = null;waypoints=[];arrivalTarget=null;
+    destination = null;waypoints=[];arrivalTarget=null;arrivalAction=null;residentTransition=null;movementSpeed=0;
     keys.clear();
     selected = null;
     placing = null;
@@ -1499,6 +1499,7 @@
   }
   let lastTime = 0,
     elapsed = 0,
+    movementSpeed = 0,
     active = true;
   new IntersectionObserver((entries) => {
     active = entries[0].isIntersecting;
@@ -1510,6 +1511,7 @@
     if (document.hidden || !active) return;
     elapsed += dt;
     if (mode === "walk") {
+      let measuredSpeed = 0;
       let dx = 0,
         dz = 0;
       if (keys.has("w") || keys.has("arrowup") || padDirection === "forward")
@@ -1520,21 +1522,25 @@
         dx -= 1;
       if (keys.has("d") || keys.has("arrowright") || padDirection === "right")
         dx += 1;
-      if (dx || dz) {destination = null;waypoints=[];arrivalTarget=null;}
+      if (dx || dz) {destination = null;waypoints=[];arrivalTarget=null;arrivalAction=null;}
       else if (destination) {
         dx = destination.x - avatarPosition.x;
         dz = destination.z - avatarPosition.z;
         if (Math.hypot(dx, dz) < 0.07) {
           destination = waypoints.shift() || null;
           if (!destination && arrivalTarget != null) {play?.pick(arrivalTarget);arrivalTarget=null;}
+          if (!destination && arrivalAction) {const action=arrivalAction;arrivalAction=null;action();}
           dx = dz = 0;
         }
       }
       if (play?.blocked()) {dx=dz=0;destination=null;}
+      if (residentTransition) {dx=dz=0;}
       const len = Math.hypot(dx, dz);
+      const desiredSpeed=keys.has('shift')||$("resident-run").getAttribute('aria-pressed')==='true'?2.8:1.35;
+      movementSpeed+=( (len?desiredSpeed:0)-movementSpeed)*(1-Math.exp(-dt*10));
       if (len) {
         // Do not overshoot a waypoint when a slow WebGL frame has a large dt.
-        const travel = destination ? Math.min(len, dt * 1.8) : dt * 1.8;
+        const travel = destination ? Math.min(len, dt * movementSpeed) : dt * movementSpeed;
         dx = (dx / len) * travel;
         dz = (dz / len) * travel;
         const old = { ...avatarPosition };
@@ -1551,19 +1557,18 @@
           avatarPosition.z - old.z,
         );
         walked += distance;
+        measuredSpeed=dt>0?distance/dt:0;
         if (distance < 0.0001 && destination) {
           destination = null;
           notify(
             "A piece is in the way. Try a clear path or use the arrow keys.",
           );
         }
-        avatar.rotation.y = Math.atan2(dx, dz);
+        const facing=Math.atan2(dx,dz),turn=Math.atan2(Math.sin(facing-avatar.rotation.y),Math.cos(facing-avatar.rotation.y));
+        avatar.rotation.y+=THREE.MathUtils.clamp(turn,-dt*5.2,dt*5.2);
         avatar.position.set(
           avatarPosition.x,
-          distance > 0 &&
-            !matchMedia("(prefers-reduced-motion: reduce)").matches
-            ? Math.sin(elapsed * 15) * 0.025
-            : 0,
+          0,
           avatarPosition.z,
         );
         if (walked > 1.5 && !state.quests.walk) {
@@ -1574,7 +1579,8 @@
         }
         updateCamera();
       }
-      play?.tick(elapsed, len ? 1 : 0);
+      play?.tick(elapsed, measuredSpeed, dt);
+      if(residentTransition){const transition=residentTransition,t=THREE.MathUtils.clamp((elapsed-transition.started)/transition.duration,0,1),ease=t*t*(3-2*t);avatar.position.lerpVectors(transition.from,transition.to,ease);avatar.rotation.y=transition.fromYaw+transition.turn*ease;renderPending=true;if(t===1)residentTransition=null;}
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
         avatar.userData.diamond.rotation.y += dt;
     }
@@ -2037,6 +2043,7 @@
         "arrowdown",
         "arrowleft",
         "arrowright",
+        "shift",
       ].includes(e.key.toLowerCase())
     ) {
       e.preventDefault();
@@ -2074,10 +2081,11 @@
     state:()=>state,catalog,position:avatarPosition,
     walkable,notify,
     navigate(id){$("scene").scrollIntoView({block:"nearest"});$("scene").focus({preventScroll:true});return approachItem(id);},
-    stop(){destination=null;waypoints=[];arrivalTarget=null;keys.clear();padDirection=null;},
-    setPosition(x,z,rotation){avatarPosition.x=x;avatarPosition.z=z;if(avatar){avatar.position.set(x,0,z);avatar.rotation.y=rotation;}$("scene").focus({preventScroll:true});renderPending=true;updateCamera(true);},
+    approachSeat(exit,action){return walkRoute(exit,null,action);},
+    stop(){destination=null;waypoints=[];arrivalTarget=null;arrivalAction=null;keys.clear();padDirection=null;movementSpeed=0;},
+    setPosition(x,z,rotation){avatarPosition.x=x;avatarPosition.z=z;if(avatar){const turn=Math.atan2(Math.sin(rotation-avatar.rotation.y),Math.cos(rotation-avatar.rotation.y));residentTransition={from:avatar.position.clone(),to:new THREE.Vector3(x,0,z),fromYaw:avatar.rotation.y,turn,started:elapsed,duration:matchMedia('(prefers-reduced-motion: reduce)').matches?.01:.65};}$("scene").focus({preventScroll:true});renderPending=true;updateCamera();},
     invalidate(){renderPending=true;},
-    pose(options){residentModel?.pose(options);if(avatar)avatar.userData.pose=options.seated?"sitting":options.speed?"walking":"idle";},
+    pose(options){residentModel?.pose(options);if(avatar)avatar.userData.pose=residentModel?.object.userData.pose||'idle';if(residentModel){$("scene").dataset.animationSource=residentModel.object.userData.animationSource;$("scene").dataset.motionState=residentModel.object.userData.pose;}},
     outfit(color){residentModel?.setOutfit(color);},
     toggleLamp(item){remember();item.lightOn=item.lightOn!==true;changed();},
   });

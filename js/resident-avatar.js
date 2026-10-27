@@ -1,4 +1,4 @@
-/* Local CC0 MakeHuman hm08 skin and skeleton; authored runtime poses. */
+/* Local CC0 MakeHuman skin with Mixamo / VRM animation and a static fallback. */
 (() => {
   async function load() {
     const [metaResponse, binaryResponse] = await Promise.all([fetch('assets/avatar/resident.json'),fetch('assets/avatar/resident.bin')]);
@@ -31,24 +31,26 @@
     const cupBody=new T.Mesh(new T.CylinderGeometry(.035,.03,.075,16),new T.MeshStandardMaterial({color:'#efe4ce',roughness:.6}));cup.add(cupBody);
     const handle=new T.Mesh(new T.TorusGeometry(.025,.007,8,16),cupBody.material);handle.position.x=.033;cup.add(handle);
     cup.position.set(0,-.04,.025);byName['wrist.R'].add(cup);cup.visible=false;
-    function pose({time=0,speed=0,seated=false,seatHeight=.53,wave=false,drink=false,reduced=false}={}) {
+    function fallbackPose({seated=false,seatHeight=.53,wave=false,drink=false}={}) {
       bones.forEach(bone=>bone.rotation.set(0,0,0));
-      const swing=reduced?0:Math.sin(time*8)*Math.min(1,speed)*.4;
       for(const [side,sign] of [['L',1],['R',-1]]) {
         byName[`upperarm01.${side}`].rotation.z=-sign*.55;
-        byName[`upperarm01.${side}`].rotation.x=seated?-.45:-swing*sign;
+        byName[`upperarm01.${side}`].rotation.x=seated?-.45:0;
         byName[`lowerarm01.${side}`].rotation.x=seated?-.6:-.12;
-        byName[`upperleg01.${side}`].rotation.x=seated?-Math.PI/2:swing*sign;
-        byName[`lowerleg01.${side}`].rotation.x=seated?Math.PI/2:Math.max(0,-swing*sign)*1.3;
+        byName[`upperleg01.${side}`].rotation.x=seated?-Math.PI/2:0;
+        byName[`lowerleg01.${side}`].rotation.x=seated?Math.PI/2:0;
       }
       cup.visible=drink;
       if(drink){byName['upperarm01.R'].rotation.x=-.9;byName['lowerarm01.R'].rotation.x=-1.3;}
-      if(wave&&!drink){byName['upperarm01.R'].rotation.z=-1.95;byName['lowerarm01.R'].rotation.z=reduced?-.3:Math.sin(time*9)*.2;}
+      if(wave&&!drink){byName['upperarm01.R'].rotation.z=-1.95;byName['lowerarm01.R'].rotation.z=-.3;}
       object.position.y=seated?seatHeight-meta.bones.find(bone=>bone.name==='upperleg01.L').head[1]:0;
-      object.userData.pose=seated?'sitting':wave?'waving':speed>.05?'walking':'idle';
+      object.userData.pose=seated?'sitting':wave?'waving':'idle';
     }
-    pose();object.userData.source='MakeHuman';object.userData.license='CC0-1.0';
-    return {object,pose,setOutfit(color){materials[1].color.set(color).convertSRGBToLinear();},bones:byName};
+    let motion;
+    try { motion=await window.SECHA_RESIDENT_MOTION.create({object,mesh,bones:byName,meta,cup}); }
+    catch(error) { fallbackPose();object.userData.animationSource='static-fallback';object.userData.animationError=error.message; }
+    object.userData.source='MakeHuman';object.userData.license='CC0-1.0';
+    return {object,pose:motion?.pose||fallbackPose,motion,setOutfit(color){materials[1].color.set(color).convertSRGBToLinear();},bones:byName};
   }
   window.SECHA_RESIDENT_AVATAR={load};
 })();

@@ -155,3 +155,32 @@ Walk close to furniture and choose an action, or focus the room and press **E**.
 Room quests adapt to furniture on the active floor. Activities earn local XP and unlock resident titles; game completions earn 20 XP, and completing a room quest earns 30 XP. Profile XP, game counts and deduplicated activity rewards save separately in `secha-play-v1`. No accounts, real currency, leaderboard or external submission are involved. Quests and transient poses reset on layout or floor changes. Games pause movement and trap focus in a native dialog; Escape returns to the room.
 
 Run `npm test` for game rules (including exhaustive unbeatable-opponent checks), collision-aware routes and MakeHuman asset integrity. `npm run test:play` checks actual rig loading and seated poses, sitting/standing, both games, quests, lamp persistence, avatar fallback, mobile and WCAG. It expects the app served at `QA_BASE_URL` (default `http://127.0.0.1:8055`); start a local HTTP server first. Existing build/edit/save/export checks remain under `npm run test:playground`.
+
+### Mixamo animation blending (plain Three.js)
+
+The resident now uses real **Mixamo idle, walk and run animation tracks** from the
+pinned official Three.js Xbot example, retargeted onto the existing MakeHuman
+skin. The official **three-vrm-animation 2.1.3** clip factory creates clips for a
+normalized humanoid adapter; `AnimationMixer` blends them and transfers the pose
+to the original 163-bone skin. No React, React Three Fiber, new renderer, or
+framework migration was introduced. The application still uses its existing
+Three.js r128 runtime and native JavaScript; the VRM integration uses the clip
+APIs, not the full VRM model loader.
+
+Idle/walk/run weights crossfade, stride playback follows measured movement speed,
+turning is limited smoothly, and the old sinusoidal limb rotations and artificial
+body bob are removed. Walk speed is 1.35 m/s; hold Shift or toggle **Run** to use
+2.8 m/s. A blocked resident returns toward idle instead of animating a walk in
+place against a wall. Sitting first approaches the front of the seat, then eases
+into it; stand, wave and coffee are authored keyframe clips blended through the
+same mixer. These interaction clips are not labelled as captured Mixamo motion.
+Reduced-motion preferences retain static locomotion poses. A failed motion asset
+falls back to a relaxed static resident without preventing layout editing or play.
+
+The animation bundle is local (about 457 KB), plus a 13 KB official plugin. Asset
+provenance and Mixamo terms are documented in `assets/avatar/motion/README.md`;
+Mixamo motions are not covered by the MakeHuman mesh's CC0 license. Regenerate
+with `python3 scripts/build-resident-motion.py`. `npm run test:motion` checks actual
+clip loading and blending, skin bounds, sit/stand, run controls, mobile/WCAG and
+motion-load fallback. Like `test:play`, it expects a local server at `QA_BASE_URL`
+(default `http://127.0.0.1:8056` for motion tests).

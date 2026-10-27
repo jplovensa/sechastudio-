@@ -28,8 +28,8 @@
    bridge.stop();
    if(action==='sit'){
     const exit=accessibleFront(item);if(!exit){bridge.notify('Walk around to the open front of this seat.');return;}
-    seated={id:item.id,exit,before:{...bridge.position},rotation:item.r*Math.PI/2};
-    bridge.setPosition(item.x,item.z,item.r*Math.PI/2);award('sit',item);bridge.notify('Take a moment. Press E or Stand up to get moving.');
+    const takeSeat=()=>{if(mode!=='walk'||!bridge.state().items.some(piece=>piece.id===item.id))return;bridge.stop();seated={id:item.id,exit,before:{...bridge.position},rotation:item.r*Math.PI/2};bridge.setPosition(item.x,item.z,item.r*Math.PI/2);award('sit',item);signature='';bridge.notify('Take a moment. Press E or Stand up to get moving.');};
+    if(Math.hypot(exit.x-bridge.position.x,exit.z-bridge.position.z)>.12){bridge.approachSeat(exit,takeSeat);bridge.notify('Walking to the front of your seat.');}else takeSeat();
    }else if(action==='game'){openGame(item);}
    else if(action==='light'){bridge.toggleLamp(item);award('light',item);bridge.notify(item.lightOn?'A warmer corner. Lamp switched on.':'Lamp switched off.');}
    else {waveUntil=performance.now()+2000;if(action==='coffee')drinkUntil=performance.now()+4000;award(action,item);bridge.notify(action==='care'?'Plant cared for. A little daily ritual.':'Coffee break. Enjoy your space.');}
@@ -48,6 +48,7 @@
   $('interaction-actions').addEventListener('click',event=>{const button=event.target.closest('[data-play-action]');if(button)interact(button.dataset.playAction);});
   $('go-play-destination').addEventListener('click',()=>{if(mode!=='walk'||!stand())return;bridge.stop();bridge.navigate(Number($('play-destination').value));});
   $('resident-wave').addEventListener('click',()=>{bridge.stop();waveUntil=performance.now()+2500;bridge.invalidate();bridge.notify('Hello from your new space.');});
+  $('resident-run').addEventListener('click',event=>{const button=event.currentTarget;button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));$('scene').focus({preventScroll:true});bridge.notify(button.getAttribute('aria-pressed')==='true'?'Run mode. Choose a destination or use the direction controls.':'Back to a comfortable walking pace.');});
   $('resident-outfit').addEventListener('change',event=>{bridge.outfit(event.target.value);bridge.invalidate();});
   $('resident-quest').addEventListener('click',()=>{$('start-room-quest').click();$('scene').focus({preventScroll:true});});
   $('start-room-quest').addEventListener('click',()=>{
@@ -77,7 +78,7 @@
    mode(value){reset();mode=value;$('walk-interactions').hidden=value!=='walk';$('play-session').hidden=value!=='walk';signature='';if(value==='walk')updateHUD();},
    layoutChanged(){const state=bridge.state();const next=JSON.stringify([state.type,state.commercialType,state.activeFloor,state.dimensions,state.items.map(item=>[item.id,item.kind,item.x,item.z,item.r,item.tier])]);if(next!==layoutSignature){reset();layoutSignature=next;}}, blocked(){return !!seated||dialog.open;}, key(){if(dialog.open)return;interact(seated?'stand':rules.actions(nearby().find(item=>item.id===targetId)?.kind||'')[0]);},
    pick(id){if(nearby().some(item=>item.id===id)){targetId=id;signature='';updateHUD();bridge.notify('Piece selected. Choose an activity or press E.');return true;}return false;},
-   tick(time,speed){if(mode!=='walk')return;$('scene').dataset.avatarX=bridge.position.x.toFixed(3);$('scene').dataset.avatarZ=bridge.position.z.toFixed(3);updateHUD();const now=performance.now();bridge.pose({time,speed,seated:!!seated,seatHeight:seated?(['stool'].includes(bridge.state().items.find(item=>item.id===seated.id)?.kind)?.91:.54):.54,wave:now<waveUntil,drink:now<drinkUntil,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});},
+   tick(time,speed,dt){if(mode!=='walk')return;$('scene').dataset.avatarX=bridge.position.x.toFixed(3);$('scene').dataset.avatarZ=bridge.position.z.toFixed(3);updateHUD();const now=performance.now();bridge.pose({time,dt,speed,seated:!!seated,seatHeight:seated?(['stool'].includes(bridge.state().items.find(item=>item.id===seated.id)?.kind)?.91:.54):.54,wave:now<waveUntil,drink:now<drinkUntil,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});},
    reset, seated(){return !!seated;}, active(){return mode==='walk';}
   };
  }};
