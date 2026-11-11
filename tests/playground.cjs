@@ -99,7 +99,7 @@ async function floorScreen(page, x, z, y = 0) {
     newId = project.items.at(-1).id;
   assert.deepEqual([project.items.at(-1).x, project.items.at(-1).z], [-2, 1.5]);
   assert.equal(project.quests.add, true);
-  assert.equal(await page.locator("#budget-total").textContent(), "14.350.000");
+  assert.equal(await page.locator("#budget-total").textContent(), "15.785.000");
 
   const dragStart = await floorScreen(page, -2, 1.5, 0.7),
     dragEnd = await floorScreen(page, -2.75, 1.5, 0.7);

@@ -595,22 +595,12 @@
     $("residential-style-options").hidden = state.type === "commercial";
     $("residential-style").value = state.residentialStyle || "";
     $("residential-swatches").innerHTML = state.residentialStyle ? ["wall", "floor", "fabric", "accent"].map(key => `<span style="background:${residentialStyles[state.residentialStyle][key]}" title="${key}"></span>`).join("") : "";
-    const s = spaceConfig(),
-      total = allItems().reduce((v, i) => v + itemPrice(i), 0),
-      budget = s.budget * state.floors.length;
+    const s = spaceConfig();
     $("project-name").textContent = s.name;
     $("project-meta").textContent =
       `${s.label} · ${s.w} × ${s.d} m · ${state.activeFloor === 0 ? "Ground floor" : `Floor ${state.activeFloor + 1}`}${state.startMode === "blank" ? " · From scratch" : ""}`;
     $("area-label").textContent = `${s.w * s.d} m²`;
-    $("budget-total").textContent = money(total);
-    $("budget-caption").textContent =
-      total > budget
-        ? `Rp ${money(total - budget)} over the concept budget`
-        : `Rp ${money(budget - total)} of ${money(budget)} left to play with`;
-    $("budget-progress").style.width =
-      `${Math.min(100, (total / budget) * 100)}%`;
-    $("budget-progress").style.background =
-      total > budget ? "#b56a4f" : "#788d55";
+    window.SECHA_UPDATE_BUDGET?.();
     $("piece-count").textContent = state.items.length;
     $("palette-name").textContent = state.palette
       ? palettes[state.palette].name

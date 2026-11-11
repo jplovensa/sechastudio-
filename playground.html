@@ -306,7 +306,7 @@
           <span id="quest-count">0/3</span>
         </div>
         <section id="walk-interactions" class="walk-interactions" hidden aria-label="Resident interactions">
-          <div class="resident-heading"><span class="tiny-dot"></span><strong id="avatar-status">Resident loading…</strong><button id="resident-wave" type="button" aria-label="Wave hello">Wave</button><button id="resident-quest" type="button">Quest</button><button id="resident-run" type="button" aria-pressed="false">Run</button></div><div class="walk-progress"><strong id="walk-xp">0 XP</strong><span id="walk-quest-hint">Make yourself at home.</span></div>
+          <div class="resident-heading"><span class="tiny-dot"></span><strong id="avatar-status">Resident loading…</strong><button id="resident-wave" type="button" aria-label="Wave hello">Wave</button><button id="resident-quest" type="button">Quest</button><button id="resident-run" type="button" aria-pressed="false">Run</button></div><div class="walk-progress"><strong id="walk-budget">Budget not set</strong><span id="walk-quest-hint">Make yourself at home.</span></div>
           <label class="resident-outfit">Outfit<select id="resident-outfit"><option value="#70846d">Moss</option><option value="#444854">Ink</option><option value="#884f3b">Clay</option></select></label>
           <p id="interaction-state">Explore your room</p><label class="nearby-label">Nearby<select id="nearby-object"><option>Walk toward furniture</option></select></label>
           <div id="interaction-actions"></div><span class="resident-hint">E / interact · Stand up to walk</span>
@@ -376,13 +376,14 @@
           <span class="eyebrow">THE BIG PICTURE</span>
           <h2>Your space<br />in the making.</h2>
         </div>
-        <section id="play-session" class="play-session" hidden aria-labelledby="play-session-heading"><p class="eyebrow">LIFE IN YOUR SPACE</p><h3 id="play-session-heading"><span id="play-level">Room explorer</span><strong id="play-xp">0 XP</strong></h3><p id="play-wins">0 games completed</p><label class="play-destination-label">Walk to a piece<select id="play-destination"></select></label><button id="go-play-destination" type="button">Go to piece <span aria-hidden="true">→</span></button><button id="start-room-quest" type="button">Start a room quest <span aria-hidden="true">↗</span></button><ul id="room-quest-list"></ul><small>Find a seat, care for your space and discover games at a table. XP is saved in this browser.</small></section>
+        <section id="play-session" class="play-session" hidden aria-labelledby="play-session-heading"><p class="eyebrow">LIFE IN YOUR SPACE</p><h3 id="play-session-heading"><span id="play-level">Room explorer</span><strong id="play-budget">Budget not set</strong></h3><p id="play-wins">0 games completed</p><label class="play-destination-label">Walk to a piece<select id="play-destination"></select></label><button id="go-play-destination" type="button">Go to piece <span aria-hidden="true">→</span></button><button id="start-room-quest" type="button">Start a room quest <span aria-hidden="true">↗</span></button><ul id="room-quest-list"></ul><small>Find a seat, care for your space and discover games at a table. Project costs follow your furniture selections and entered allowances.</small></section>
         <div class="budget-card">
           <div class="section-label">
-            <h3>Concept budget</h3>
+            <h3>Project estimate</h3>
             <span>IDR</span>
           </div>
           <strong id="budget-total">0</strong>
+          <div id="budget-breakdown" class="budget-breakdown"></div>
           <div class="budget-track"><i id="budget-progress"></i></div>
           <p id="budget-caption"></p>
           <small
@@ -416,9 +417,9 @@
 <p id="engine-status" class="engine-status" role="status">Design checks use concept data. Neural recommendations are not connected yet.</p>
 <div id="engine-result"></div>
 <button type="button" id="engine-continue" class="engine-primary" hidden>Continue in Studio+ OS ↗</button>
-<button type="button" id="engine-download" hidden>Download project passport ↓</button>
+<button type="button" id="engine-download" hidden>Print passport / Save as PDF ↓</button>
 <p class="engine-warning">OS currently requires an authorised Google account. You will review the transferred project before saving. This does not submit an order or send a message to SECHA.</p>
-<label>Restore a project passport<input class="engine-file" id="engine-file" type="file" accept=".json,application/json"></label>
+<label>Restore legacy project data (JSON)<input class="engine-file" id="engine-file" type="file" accept=".json,application/json"></label>
 </section>
 <div class="design-note">
           <span aria-hidden="true">✳</span>
@@ -427,7 +428,7 @@
         </div>
       </aside>
     </main>
-    <dialog id="play-game-dialog" class="play-game-dialog" aria-labelledby="play-game-title"><header><div><p class="eyebrow">A LITTLE PLAY. A LITTLE PAUSE.</p><h2 id="play-game-title">The table club.</h2></div><button id="close-play-game" type="button" aria-label="Close table games">×</button></header><div class="play-game-tabs" role="group" aria-label="Choose a game"><button type="button" data-game-kind="table" aria-pressed="true">Noughts &amp; crosses</button><button type="button" data-game-kind="memory" aria-pressed="false">Material match</button></div><p id="game-message" role="status" aria-live="polite">You are X. Choose a square.</p><div id="table-board" aria-label="Noughts and crosses board"></div><div id="memory-board" hidden aria-label="Material matching cards"></div><button id="restart-play-game" type="button">Play again ↗</button><p class="game-note">Finish a game to earn XP. Escape returns to your room.</p></dialog>
+    <dialog id="play-game-dialog" class="play-game-dialog" aria-labelledby="play-game-title"><header><div><p class="eyebrow">A LITTLE PLAY. A LITTLE PAUSE.</p><h2 id="play-game-title">The table club.</h2></div><button id="close-play-game" type="button" aria-label="Close table games">×</button></header><div class="play-game-tabs" role="group" aria-label="Choose a game"><button type="button" data-game-kind="table" aria-pressed="true">Noughts &amp; crosses</button><button type="button" data-game-kind="memory" aria-pressed="false">Material match</button></div><p id="game-message" role="status" aria-live="polite">You are X. Choose a square.</p><div id="table-board" aria-label="Noughts and crosses board"></div><div id="memory-board" hidden aria-label="Material matching cards"></div><button id="restart-play-game" type="button">Play again ↗</button><p class="game-note">Games do not change your project budget. Escape returns to your room.</p></dialog>
     <footer class="app-footer">
       <span
         >SECHA PLAYGROUND <span class="footer-divider">/</span> A SPACE FOR

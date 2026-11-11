@@ -15,7 +15,7 @@ const fs=require('node:fs/promises');
   await page.locator('#nearby-object').selectOption('101');await page.locator('[data-play-action="game"]').click();
   assert.equal(await page.locator('#play-game-dialog').isVisible(),true);assert.equal(await page.locator('#memory-board').isVisible(),false);
   while(await page.locator('#table-board button:not([disabled])').count()){await page.locator('#table-board button:not([disabled])').first().click();}
-  assert.match(await page.locator('#game-message').textContent(),/XP/);assert.match(await page.locator('#play-wins').textContent(),/^1 /);
+  assert.doesNotMatch(await page.locator('#game-message').textContent(),/XP/);assert.match(await page.locator('#play-wins').textContent(),/^1 /);
   await page.locator('[data-game-kind="memory"]').click();assert.equal(await page.locator('#table-board').isVisible(),false);
   const known={};for(let i=0;i<8;i+=2){for(const j of [i,i+1]){const card=page.locator(`[data-card="${j}"]`);if(await card.isDisabled())continue;await card.click();known[j]=await card.locator('span').textContent();}await page.waitForTimeout(900);}
   const pairs={};for(const [id,name]of Object.entries(known))(pairs[name]??=[]).push(id);
@@ -33,13 +33,13 @@ const fs=require('node:fs/promises');
   await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});
   const audit=async()=>assert.deepEqual(await page.evaluate(async()=>(await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)}))),[]);
   await audit();await page.setViewportSize({width:390,height:844});await page.locator('#workspace').scrollIntoViewIfNeeded();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await audit();await page.screenshot({path:'qa-artifacts/resident-mobile.png'});
-  const xp=await page.locator('#play-xp').textContent();await page.reload();await page.locator('[data-mode="walk"]').click();assert.equal(await page.locator('#play-xp').textContent(),xp);
+  const budget=await page.locator('#play-budget').textContent();await page.reload();await page.locator('[data-mode="walk"]').click();assert.equal(await page.locator('#play-budget').textContent(),budget);
   await page.locator('#nearby-object').selectOption('100');await page.locator('[data-play-action="sit"]').click();
   await page.locator('#add-floor').click();await page.waitForFunction(()=>document.getElementById('scene').dataset.residentPose==='standing');
   assert.equal(await page.locator('#interaction-actions button').count(),0);assert.equal(await page.locator('#nearby-object').isDisabled(),true);
   await page.locator('#undo-action').click();assert.equal(await page.locator('#floor-select option').count(),1);
   await page.locator('[data-mode="build"]').click();assert.equal(await page.locator('#walk-interactions').isVisible(),false);
   const fallback=await browser.newPage();await fallback.route('**/assets/avatar/resident.bin',route=>route.abort());await fallback.goto(base+'/playground.html');await fallback.waitForFunction(()=>document.getElementById('scene').dataset.avatarSource==='fallback');assert.equal(await fallback.locator('#webgl-fallback').isVisible(),false);await fallback.close();
-  assert.deepEqual(errors,[]);console.log('PASS: CC0 MakeHuman rig, sitting/standing, collision-safe navigation, tabletop AI, material match, room quest, working lamps, outfits, local XP, asset fallback, mobile and WCAG');
+  assert.deepEqual(errors,[]);console.log('PASS: CC0 MakeHuman rig, sitting/standing, collision-safe navigation, tabletop AI, material match, room quest, working lamps, outfits, budget tracking, asset fallback, mobile and WCAG');
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -152,7 +152,7 @@ Walk through now includes a local **MakeHuman hm08 resident** using the official
 
 Walk close to furniture and choose an action, or focus the room and press **E**. Seats support sitting and standing with a checked exit at the front. Tables open **Noughts & crosses** (a minimax opponent) and **Material match** (four pairs). Plants support a care gesture, counters a coffee break, and floor lamps gain a working warm local light with saved/undoable on/off state. Outfit colours and a wave control are available. The project sidebar’s **Go to piece** routes through collision-checked floor space; clicking an interactive piece also approaches it. Empty or blocked layouts give guidance instead of teleporting the resident. Stand up before moving.
 
-Room quests adapt to furniture on the active floor. Activities earn local XP and unlock resident titles; game completions earn 20 XP, and completing a room quest earns 30 XP. Profile XP, game counts and deduplicated activity rewards save separately in `secha-play-v1`. No accounts, real currency, leaderboard or external submission are involved. Quests and transient poses reset on layout or floor changes. Games pause movement and trap focus in a native dialog; Escape returns to the room.
+Room quests adapt to furniture on the active floor. Activities and games do not award XP or change project costs. The walk HUD shows the project estimate in IDR. Game counts save separately in `secha-play-v1`; old XP values are ignored. Quests and transient poses reset on layout or floor changes. Games pause movement and trap focus in a native dialog; Escape returns to the room.
 
 Run `npm test` for game rules (including exhaustive unbeatable-opponent checks), collision-aware routes and MakeHuman asset integrity. `npm run test:play` checks actual rig loading and seated poses, sitting/standing, both games, quests, lamp persistence, avatar fallback, mobile and WCAG. It expects the app served at `QA_BASE_URL` (default `http://127.0.0.1:8055`); start a local HTTP server first. Existing build/edit/save/export checks remain under `npm run test:playground`.
 
@@ -184,3 +184,11 @@ with `python3 scripts/build-resident-motion.py`. `npm run test:motion` checks ac
 clip loading and blending, skin bounds, sit/stand, run controls, mobile/WCAG and
 motion-load fallback. Like `test:play`, it expects a local server at `QA_BASE_URL`
 (default `http://127.0.0.1:8056` for motion tests).
+
+### Budget tracking and printable project passport
+
+The budget card and Studio+ review use `StudioEngine.analyze`: catalogue furniture across every floor plus entered installation, delivery and tax, then contingency on that subtotal. The project budget is a single user-entered limit; adding floors does not increase it. Blank allowances remain incomplete; entering zero explicitly confirms no allowance. Budget inputs persist locally in `secha-budget-v1`. These are illustrative costs requiring supplier and designer review.
+
+After **Review my project**, choose **Print passport / Save as PDF**. The print window includes the brief, IDR breakdown, budget balance, review notes, per-floor plans and furniture schedules. Its print button opens the browser dialog; select Save as PDF. PDF is for review, while Continue in Studio+ OS carries the editable layout and budget assumptions via the existing structured handoff. Legacy JSON imports and the separate Export layout backup remain supported. Projects exceeding the existing OS link limit need OS-side transfer support; they no longer silently download a JSON passport.
+
+Run `node tests/budget-passport.cjs` for budget persistence, multi-floor cost parity, actual PDF generation, safe text rendering, OS payload parity, zero budgets, incomplete allowances, mobile layout and accessibility checks.

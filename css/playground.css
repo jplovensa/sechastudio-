@@ -629,6 +629,10 @@ button:hover:not(:disabled) {
   display: flex;
   flex-direction: column;
 }
+/* Scroll the panel instead of collapsing sections when the brief grows. */
+.project-panel > * {
+  flex-shrink: 0;
+}
 .project-panel-head .eyebrow {
   font-size: 7px;
   color: #7a826e;

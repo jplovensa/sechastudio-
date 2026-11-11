@@ -61,7 +61,7 @@ const fs=require('node:fs/promises');
   assert.equal((await save()).items.at(-1).tier,'premium');assert.equal(await page.locator('#selected-price').textContent(),'Rp 1.815.000');
   await page.locator('#undo-action').click();assert.equal((await save()).items.at(-1).tier,'lux');
   const currency=n=>new Intl.NumberFormat('id-ID').format(n);
-  assert.equal(await page.locator('#budget-total').textContent(),currency(Number(total.replaceAll('.',''))+3080000));
+  assert.equal(await page.locator('#budget-total').textContent(),currency(Number(total.replaceAll('.',''))+3388000));
   for(const style of ['warm-modern','soft-contemporary','earthy-retreat','urban-studio']){
    await page.locator('#residential-style').selectOption(style);assert.equal((await save()).items.at(-1).tier,'lux');
    await page.locator('#workspace').screenshot({path:`qa-artifacts/residence-${style}.png`});
@@ -71,7 +71,7 @@ const fs=require('node:fs/promises');
   assert.equal((await save()).items.at(-1).tier,'lux');
   const download=page.waitForEvent('download');await page.locator('#export-project').click();const file=await download;const exported=JSON.parse(await fs.readFile(await file.path(),'utf8'));assert.equal(exported.project.floors[0].items.at(-1).tier,'lux');
   assert.equal(exported.furnitureModels[0].models.length,project.items.length);
-  assert.equal(exported.estimatedTotal,Number((await page.locator('#budget-total').textContent()).replaceAll('.','')));
+  assert.equal(Math.round(exported.estimatedTotal*1.1),Number((await page.locator('#budget-total').textContent()).replaceAll('.','')));
   await page.setViewportSize({width:390,height:844});
   await page.locator(`[data-select="${piece.id}"]`).click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
