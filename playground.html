@@ -22,8 +22,12 @@
     <script defer src="js/resident-avatar.js"></script>
     <script defer src="js/playground-games-core.js"></script>
     <script defer src="js/playground-play.js"></script>
-    <script defer src="js/playground.js"></script>
-  </head>
+    <script defer src="js/studio-engine.js"></script>
+<script defer src="js/studio-engine-ui.js"></script>
+<script defer src="js/playground.js"></script>
+<script defer src="js/studio-engine-bridge.js"></script>
+  <link rel="stylesheet" href="css/studio-engine.css">
+</head>
   <body>
     <a class="pg-skip" href="#workspace">Skip to the playground</a>
     <header class="topbar">
@@ -396,7 +400,27 @@
           ><button id="export-project">↓ Export layout</button
           ><button id="reset-project">↺ Reset this space</button>
         </div>
-        <div class="design-note">
+        <section class="engine-card" id="studio-engine-card" aria-labelledby="engine-heading">
+<p class="eyebrow">STUDIO+ / DESIGN INTELLIGENCE</p><h3 id="engine-heading">Make the idea workable.</h3>
+<p>Review layout footprints and budget allowances, then carry this exact project into Studio+ OS.</p>
+<label>Project name<input id="engine-name" maxlength="100"></label>
+<label>Your design brief<textarea id="engine-brief" maxlength="1500" placeholder="What should stay? What needs to change?"></textarea></label>
+<label>Project budget (IDR)<input id="engine-budget" type="number" min="0" max="1000000000000" step="1000"></label>
+<details><summary>Cost allowances</summary>
+<label>Installation (IDR)<input id="engine-installation" type="number" min="0" max="1000000000000"></label>
+<label>Delivery (IDR)<input id="engine-delivery" type="number" min="0" max="1000000000000"></label>
+<label>Tax allowance (IDR)<input id="engine-tax" type="number" min="0" max="1000000000000"></label>
+<label>Contingency (%)<input id="engine-contingency" type="number" min="0" max="50" value="10"></label></details>
+<label class="engine-check"><input id="engine-no-demolition" type="checkbox" checked>Keep this as a no-demolition brief</label>
+<button type="button" id="engine-review" class="engine-primary">Review my project ↗</button>
+<p id="engine-status" class="engine-status" role="status">Design checks use concept data. Neural recommendations are not connected yet.</p>
+<div id="engine-result"></div>
+<button type="button" id="engine-continue" class="engine-primary" hidden>Continue in Studio+ OS ↗</button>
+<button type="button" id="engine-download" hidden>Download project passport ↓</button>
+<p class="engine-warning">OS currently requires an authorised Google account. You will review the transferred project before saving. This does not submit an order or send a message to SECHA.</p>
+<label>Restore a project passport<input class="engine-file" id="engine-file" type="file" accept=".json,application/json"></label>
+</section>
+<div class="design-note">
           <span aria-hidden="true">✳</span>
           <p>Good spaces begin<br />with a little curiosity.</p>
           <small>Explore freely. There’s always undo.</small>
@@ -412,3 +436,4 @@
     </footer>
   </body>
 </html>
+

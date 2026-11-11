@@ -718,6 +718,7 @@
     updateHighlight();
   }
   function changed() {
+    document.dispatchEvent(new Event('studio:changed'));
     if (!placing) clearGhost();
     markDirty();
     renderUI();
@@ -2089,8 +2090,24 @@
     outfit(color){residentModel?.setOutfit(color);},
     toggleLamp(item){remember();item.lightOn=item.lightOn!==true;changed();},
   });
+
+  let studioProjectId;
+  try{studioProjectId=sessionStorage.getItem('studio-engine-project-id');}catch{}
+  if(!/^[a-zA-Z0-9_-]{8,80}$/.test(studioProjectId||''))studioProjectId='sp_'+crypto.randomUUID();
+  try{sessionStorage.setItem('studio-engine-project-id',studioProjectId);}catch{}
+  window.SECHA_PLAYGROUND_BRIDGE={
+    capture(){syncFloor();return {projectId:studioProjectId,name:spaceConfig().name,budget:spaceConfig().budget,layout:JSON.parse(snapshot())};},
+    restore(input){
+      const p=window.StudioEngine.normalize(input),candidate=JSON.parse(JSON.stringify(p.layout));
+      if(!validState(candidate))throw Error('This layout cannot be opened in the playground. The original project is unchanged.');
+      remember();state=candidate;studioProjectId=p.projectId;try{sessionStorage.setItem('studio-engine-project-id',studioProjectId);}catch{}
+      nextId=Math.max(0,...allItems().map(i=>i.id))+1;selected=placing=null;renderCatalog();changed();notify('Studio+ project restored. Your floor positions and finishes are retained.');
+    }
+  };
+
   renderCatalog();
   renderUI();
   init3D();
   toastTimer = setTimeout(() => $("status").classList.add("quiet"), 4500);
 })();
+
